@@ -35,17 +35,16 @@ html, body {
   width: clamp(380px, 52vw, 680px);
   height: clamp(320px, 38vh, 480px);
   z-index: 2;
-  pointer-events: none;
-  overflow: hidden;
-  background: linear-gradient(to top, rgba(10, 11, 13, 0.75) 0%, rgba(10, 11, 13, 0.45) 50%, rgba(10, 11, 13, 0.15) 100%);
+  pointer-events: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  background: rgba(10, 11, 13, 0.82);
+  border-radius: 14px;
+  border: 1px solid rgba(244, 240, 230, 0.12);
 }
 .verse-text-scroller {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 0 24px 20px;
-  will-change: transform;
+  padding: 18px 22px 24px;
 }
 .verse-text-scroller p {
   margin: 0 0 12px;
@@ -69,13 +68,13 @@ html, body {
 }
 @media (max-width: 700px) {
   .verse-text-viewport {
-    right: 18px;
-    bottom: calc(118px + env(safe-area-inset-bottom));
+    right: 14px;
+    bottom: calc(96px + env(safe-area-inset-bottom));
     width: clamp(240px, 55vw, 400px);
     height: clamp(240px, 30vh, 360px);
   }
   .verse-text-scroller {
-    padding: 0 16px 14px;
+    padding: 14px 16px 18px;
   }
   .verse-text-scroller p {
     font-size: clamp(0.8rem, 1.7vw, 1rem);

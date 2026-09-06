@@ -22,10 +22,6 @@ const VOICE_KEY = "daily-chapter-voice-accent";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
 let voiceVolume = 1;
-let crawlRAF = null;
-let verseTimings = [];
-let verseElements = [];
-let englishStartOffset = 0;
 let savedBook = "romans";
 let currentChapter = 0;
 let viewingBook = "";
@@ -341,87 +337,15 @@ function restoreCompleted() {
   nowPick = (packBase() || "") + "/data/kjv/" + done.book + "/" + done.chapter + "/now-live.json";
 }
 
-function stopCrawl() {
-  if (crawlRAF) {
-    cancelAnimationFrame(crawlRAF);
-    crawlRAF = null;
-  }
+function showVerseOverlay() {
+  var viewport = document.getElementById("verse-text-viewport");
+  if (!viewport) return;
+  viewport.hidden = !showText;
 }
 
-function getCurrentVerseIndex(currentTime) {
-  if (verseTimings.length === 0) return -1;
-  if (currentTime < verseTimings[0].start) return 0;
-  for (var i = 0; i < verseTimings.length; i++) {
-    if (currentTime >= verseTimings[i].start && currentTime < verseTimings[i].end) {
-      return i;
-    }
-  }
-  if (currentTime >= verseTimings[verseTimings.length - 1].end) {
-    return verseTimings.length - 1;
-  }
-  return 0;
-}
-
-function updateCrawlPosition() {
-  const viewport = document.getElementById("verse-text-viewport");
-  const scroller = document.getElementById("verse-text-scroller");
-  if (!showText || !playing || !scroller) {
-    if (viewport) viewport.hidden = true;
-    stopCrawl();
-    return;
-  }
-  if (verseTimings.length === 0 || verseElements.length === 0) {
-    if (viewport) viewport.hidden = true;
-    stopCrawl();
-    return;
-  }
-  const voice = document.getElementById("voice");
-  if (!voice || !voice.duration || !isFinite(voice.duration)) {
-    if (viewport) viewport.hidden = true;
-    stopCrawl();
-    return;
-  }
-  viewport.hidden = false;
-  const currentTime = voice.currentTime || 0;
-  const currentVerseIdx = getCurrentVerseIndex(currentTime);
-  if (currentVerseIdx < 0 || currentVerseIdx >= verseElements.length) {
-    scroller.style.transform = "translateY(0px)";
-  } else {
-    const currentVerse = verseElements[currentVerseIdx];
-    const viewportHeight = viewport.clientHeight || 320;
-    const verseTop = currentVerse.offsetTop;
-    const targetScroll = verseTop - (viewportHeight * 0.15);
-    scroller.style.transform = "translateY(-" + Math.max(0, targetScroll) + "px)";
-  }
-  if (playing) {
-    crawlRAF = requestAnimationFrame(updateCrawlPosition);
-  }
-}
-
-function startCrawl() {
-  stopCrawl();
-  if (!showText) return;
-  if (verseTimings.length === 0 || verseElements.length === 0) {
-    var voice = document.getElementById("voice");
-    var scroller = document.getElementById("verse-text-scroller");
-    if (voice && voice.duration && isFinite(voice.duration) && scroller && scroller.childElementCount > 0) {
-      if (verseTimings.length === 0) {
-        var verses = [];
-        scroller.querySelectorAll("p").forEach(function (p) {
-          verses.push({ verse: p.getAttribute("data-verse") || "", text: p.textContent });
-        });
-        if (verses.length > 0) {
-          verseTimings = calculateVerseTimings(verses, voice.duration, englishStartOffset);
-        }
-      }
-      if (verseElements.length === 0) {
-        scroller.querySelectorAll("p").forEach(function (p) {
-          verseElements.push(p);
-        });
-      }
-    }
-  }
-  updateCrawlPosition();
+function hideVerseOverlay() {
+  var viewport = document.getElementById("verse-text-viewport");
+  if (viewport) viewport.hidden = true;
 }
 
 function setPlaying(on) {
@@ -443,12 +367,10 @@ function setPlaying(on) {
       interpretFrozen = false;
       startSlideshow();
     }
-    startCrawl();
   } else {
     voice.pause();
     hymn.pause();
     if (btn) btn.textContent = "Play";
-    stopCrawl();
   }
 }
 
@@ -642,67 +564,11 @@ function bookNameForAPI(bookId) {
   return bookId.charAt(0).toUpperCase() + bookId.slice(1);
 }
 
-function probeNoGreekDuration(book, chapter) {
-  return new Promise(function (resolve) {
-    var stem = audioStem(book);
-    if (!stem) { resolve(0); return; }
-    var url = mediaUrl("/data/audio/" + stem + chapter + "-nogrk.mp3");
-    var tmp = new Audio();
-    var done = false;
-    function finish(dur) {
-      if (done) return;
-      done = true;
-      tmp.removeAttribute("src");
-      resolve(dur || 0);
-    }
-    tmp.preload = "metadata";
-    tmp.addEventListener("loadedmetadata", function () {
-      finish(tmp.duration);
-    });
-    tmp.addEventListener("error", function () { finish(0); });
-    setTimeout(function () { finish(0); }, 8000);
-    tmp.src = url;
-  });
-}
-
-function calculateVerseTimings(verses, audioDuration, offset) {
-  if (!verses || verses.length === 0 || !audioDuration) return [];
-  var englishStart = offset || 0;
-  var englishDuration = audioDuration - englishStart;
-  if (englishDuration <= 0) englishDuration = audioDuration;
-  var totalChars = verses.reduce(function (sum, v) {
-    return sum + (String(v.text || "").trim().length || 1);
-  }, 0);
-  if (totalChars === 0) return [];
-  var cumulativeTime = englishStart;
-  return verses.map(function (v) {
-    var text = String(v.text || "").trim();
-    var charCount = text.length || 1;
-    var verseShare = charCount / totalChars;
-    var verseDuration = englishDuration * verseShare;
-    var timing = {
-      verse: v.verse || 0,
-      start: cumulativeTime,
-      end: cumulativeTime + verseDuration,
-      charCount: charCount
-    };
-    cumulativeTime += verseDuration;
-    return timing;
-  });
-}
-
-function renderVersesToScroller(verses, audioDuration, preserveTimings) {
+function renderVersesToScroller(verses) {
   var scroller = document.getElementById("verse-text-scroller");
   if (!scroller) return;
   scroller.innerHTML = "";
-  if (!preserveTimings) {
-    verseTimings = [];
-  }
-  verseElements = [];
   if (!verses || verses.length === 0) return;
-  if (!preserveTimings && audioDuration && isFinite(audioDuration)) {
-    verseTimings = calculateVerseTimings(verses, audioDuration, englishStartOffset);
-  }
   var bk = bookNameForDisplay(savedBook);
   var ch = currentChapter || "";
   verses.forEach(function (v, idx) {
@@ -712,16 +578,8 @@ function renderVersesToScroller(verses, audioDuration, preserveTimings) {
     var p = document.createElement("p");
     var label = bk && ch ? (bk + " " + ch + ":" + verseNum) : verseNum;
     p.textContent = label + " " + verseText;
-    p.setAttribute("data-verse", String(verseNum));
     scroller.appendChild(p);
-    verseElements.push(p);
   });
-  if (!preserveTimings && verseTimings.length === 0 && (!audioDuration || !isFinite(audioDuration))) {
-    var voice = document.getElementById("voice");
-    if (voice && voice.duration && isFinite(voice.duration)) {
-      verseTimings = calculateVerseTimings(verses, voice.duration, englishStartOffset);
-    }
-  }
 }
 
 async function fetchKJVText(book, chapter) {
@@ -739,14 +597,10 @@ async function fetchKJVText(book, chapter) {
 }
 
 async function loadVerses(book, chapter) {
-  verseTimings = [];
-  verseElements = [];
-  englishStartOffset = 0;
   var scroller = document.getElementById("verse-text-scroller");
   if (scroller) scroller.innerHTML = "";
   if (!book || !chapter) return;
   var versesData = null;
-  var hasPreTimings = false;
   try {
     var pack = packBase();
     var path = (pack || "") + "/data/kjv/" + book + "/" + chapter + "/verses.json";
@@ -754,16 +608,12 @@ async function loadVerses(book, chapter) {
     if (res.ok) {
       var data = await res.json();
       if (Array.isArray(data) && data.length > 0) {
-        if (data[0].start !== undefined && data[0].end !== undefined) {
-          hasPreTimings = true;
-          verseTimings = data.map(function (v) {
-            return { verse: v.verse || 0, start: v.start || 0, end: v.end || 0 };
-          });
-          versesData = data.map(function (v) {
-            return { verse: v.verse || "", text: (v.lines || []).join(" ") || v.text || "" };
-          });
-        } else if (data[0].text) {
+        if (data[0].text) {
           versesData = data;
+        } else if (data[0].lines) {
+          versesData = data.map(function (v) {
+            return { verse: v.verse || "", text: (v.lines || []).join(" ") || "" };
+          });
         }
       }
     }
@@ -772,18 +622,9 @@ async function loadVerses(book, chapter) {
     versesData = await fetchKJVText(book, chapter);
   }
   if (versesData && versesData.length > 0) {
-    if (!hasPreTimings && hearGreek) {
-      var voice = document.getElementById("voice");
-      var fullDuration = (voice && voice.duration && isFinite(voice.duration)) ? voice.duration : 0;
-      var noGrkDuration = await probeNoGreekDuration(book, chapter);
-      if (noGrkDuration > 0 && fullDuration > 0 && noGrkDuration < fullDuration) {
-        englishStartOffset = fullDuration - noGrkDuration;
-      }
-    }
-    var voice2 = document.getElementById("voice");
-    var audioDuration = (voice2 && voice2.duration && isFinite(voice2.duration)) ? voice2.duration : null;
-    renderVersesToScroller(versesData, audioDuration, hasPreTimings);
+    renderVersesToScroller(versesData);
   }
+  showVerseOverlay();
 }
 
 async function load(playAfter) {
@@ -1036,15 +877,8 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
     showText = !showText;
     paintText();
     savePrefs();
-    if (!showText) {
-      const viewport = document.getElementById("verse-text-viewport");
-      if (viewport) viewport.hidden = true;
-      stopCrawl();
-    } else {
-      if (playing) {
-        startCrawl();
-      }
-    }
+    if (showText) showVerseOverlay();
+    else hideVerseOverlay();
   }
   if (kind === "voice") {
     voiceAccent = voiceAccent === "british" ? "american" : "british";
@@ -1107,39 +941,8 @@ document.getElementById("interpretation").addEventListener("click", (e) => {
   e.preventDefault();
   toggleInterpret();
 });
-const voiceEl = document.getElementById("voice");
-voiceEl.addEventListener("loadedmetadata", function () {
-  if (verseTimings.length === 0 && verseElements.length > 0) {
-    var dur = voiceEl.duration;
-    if (dur && isFinite(dur)) {
-      var verses = [];
-      document.querySelectorAll("#verse-text-scroller p").forEach(function (p) {
-        verses.push({ verse: p.getAttribute("data-verse") || "", text: p.textContent });
-      });
-      if (verses.length > 0) {
-        verseTimings = calculateVerseTimings(verses, dur, englishStartOffset);
-      }
-    }
-  }
-  if (playing && showText) {
-    startCrawl();
-  }
-});
-voiceEl.addEventListener("seeked", () => {
-  if (playing && showText) {
-    updateCrawlPosition();
-  }
-});
-voiceEl.addEventListener("timeupdate", () => {
-  if (playing && showText) {
-    updateCrawlPosition();
-  }
-});
-voiceEl.addEventListener("ended", () => {
+document.getElementById("voice").addEventListener("ended", function () {
   setPlaying(false);
-  stopCrawl();
-  const viewport = document.getElementById("verse-text-viewport");
-  if (viewport) viewport.hidden = true;
   if (currentChapter >= 1) writeCompleted(savedBook || "romans", currentChapter);
 });
 
