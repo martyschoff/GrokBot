@@ -29,9 +29,10 @@ html, body {
 }
 .verse-text-viewport {
   position: absolute;
-  left: 0;
-  right: 0;
+  left: auto;
+  right: 28px;
   bottom: 88px;
+  width: clamp(280px, 42vw, 520px);
   height: clamp(180px, 22vh, 280px);
   z-index: 2;
   pointer-events: none;
@@ -43,31 +44,42 @@ html, body {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0 28px 20px;
+  padding: 0 24px 20px;
   will-change: transform;
 }
 .verse-text-scroller p {
   margin: 0 0 12px;
   font-family: var(--serif);
-  font-size: clamp(1rem, 2.2vw, 1.35rem);
-  line-height: 1.55;
+  font-size: clamp(0.95rem, 2vw, 1.25rem);
+  line-height: 1.5;
   color: var(--text);
   text-align: center;
   text-shadow: 0 2px 8px rgba(0,0,0,0.9), 0 0 24px rgba(0,0,0,0.6);
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
-@media (max-width: 700px) {
+@media (max-width: 900px) {
   .verse-text-viewport {
-    bottom: calc(96px + env(safe-area-inset-bottom));
-    height: clamp(160px, 20vh, 240px);
-  }
-  .verse-text-scroller {
-    padding: 0 18px 16px;
+    width: clamp(240px, 38vw, 380px);
   }
   .verse-text-scroller p {
-    font-size: clamp(0.9rem, 2vw, 1.15rem);
-    margin: 0 0 10px;
+    font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+  }
+}
+@media (max-width: 700px) {
+  .verse-text-viewport {
+    right: 18px;
+    bottom: calc(118px + env(safe-area-inset-bottom));
+    width: clamp(200px, 45vw, 320px);
+    height: clamp(140px, 18vh, 220px);
+  }
+  .verse-text-scroller {
+    padding: 0 16px 14px;
+  }
+  .verse-text-scroller p {
+    font-size: clamp(0.8rem, 1.7vw, 1rem);
+    margin: 0 0 9px;
+    line-height: 1.45;
   }
 }
 .bar {
