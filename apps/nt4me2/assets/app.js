@@ -1067,8 +1067,8 @@ document.getElementById("interpretation").addEventListener("click", (e) => {
 });
 const voiceEl = document.getElementById("voice");
 voiceEl.addEventListener("loadedmetadata", () => {
-  if (scrollerHeight === 0) {
-    measureScrollerHeight();
+  if (playing && showText && verseTimings.length === 0) {
+    startCrawl();
   }
 });
 voiceEl.addEventListener("seeked", () => {
@@ -1077,7 +1077,7 @@ voiceEl.addEventListener("seeked", () => {
   }
 });
 voiceEl.addEventListener("timeupdate", () => {
-  if (playing && showText && scrollerHeight > 0) {
+  if (playing && showText) {
     updateCrawlPosition();
   }
 });
