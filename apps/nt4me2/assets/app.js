@@ -22,9 +22,8 @@ const VOICE_KEY = "daily-chapter-voice-accent";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
 let voiceVolume = 1;
-let verseTimer = null;
-let currentVerses = [];
-let pendingKJVVerses = null;
+let crawlRAF = null;
+let scrollerHeight = 0;
 let savedBook = "romans";
 let currentChapter = 0;
 let viewingBook = "";
@@ -340,54 +339,41 @@ function restoreCompleted() {
   nowPick = (packBase() || "") + "/data/kjv/" + done.book + "/" + done.chapter + "/now-live.json";
 }
 
-function stopVerseTimer() {
-  if (verseTimer) {
-    clearInterval(verseTimer);
-    verseTimer = null;
+function stopCrawl() {
+  if (crawlRAF) {
+    cancelAnimationFrame(crawlRAF);
+    crawlRAF = null;
   }
 }
 
-function updateVerseDisplay() {
-  const textEl = document.getElementById("verse-text");
-  if (!showText || !playing) {
-    textEl.hidden = true;
-    return;
-  }
-  if (currentVerses.length === 0) {
-    textEl.hidden = true;
+function updateCrawlPosition() {
+  const viewport = document.getElementById("verse-text-viewport");
+  const scroller = document.getElementById("verse-text-scroller");
+  if (!showText || !playing || !scroller || scrollerHeight === 0) {
+    if (viewport) viewport.hidden = true;
+    stopCrawl();
     return;
   }
   const voice = document.getElementById("voice");
-  const time = voice.currentTime || 0;
-  let found = null;
-  for (let i = 0; i < currentVerses.length; i++) {
-    const v = currentVerses[i];
-    if (time >= v.start && time < v.end) {
-      found = v;
-      break;
-    }
+  if (!voice || !voice.duration || !isFinite(voice.duration)) {
+    if (viewport) viewport.hidden = true;
+    stopCrawl();
+    return;
   }
-  if (found && Array.isArray(found.lines)) {
-    const lines = textEl.querySelectorAll(".verse-line");
-    for (let i = 0; i < 4; i++) {
-      lines[i].textContent = (i < found.lines.length) ? found.lines[i] : "";
-    }
-    textEl.hidden = false;
-  } else {
-    textEl.hidden = true;
+  viewport.hidden = false;
+  const progress = (voice.currentTime || 0) / voice.duration;
+  const clampedProgress = Math.max(0, Math.min(1, progress));
+  const translateY = -(clampedProgress * scrollerHeight);
+  scroller.style.transform = "translateY(" + translateY + "px)";
+  if (playing) {
+    crawlRAF = requestAnimationFrame(updateCrawlPosition);
   }
 }
 
-function startVerseTimer() {
-  stopVerseTimer();
-  if (pendingKJVVerses && buildTimedVerses()) {
-    if (showText && currentVerses.length > 0) {
-      updateVerseDisplay();
-      verseTimer = setInterval(updateVerseDisplay, 250);
-    }
-  } else if (showText && currentVerses.length > 0) {
-    updateVerseDisplay();
-    verseTimer = setInterval(updateVerseDisplay, 250);
+function startCrawl() {
+  stopCrawl();
+  if (showText && scrollerHeight > 0) {
+    updateCrawlPosition();
   }
 }
 
@@ -410,12 +396,12 @@ function setPlaying(on) {
       interpretFrozen = false;
       startSlideshow();
     }
-    startVerseTimer();
+    startCrawl();
   } else {
     voice.pause();
     hymn.pause();
     btn.textContent = "Play";
-    stopVerseTimer();
+    stopCrawl();
   }
 }
 
@@ -604,35 +590,23 @@ function bookNameForAPI(bookId) {
   return bookId.charAt(0).toUpperCase() + bookId.slice(1);
 }
 
-function groupVersesIntoPages(verses) {
-  if (!verses || verses.length === 0) return [];
-  const pages = [];
-  let currentPage = [];
-  for (let i = 0; i < verses.length; i++) {
-    const verseText = String(verses[i].text || "").trim();
-    if (!verseText) continue;
-    const verseNum = verses[i].verse || (i + 1);
-    const line = verseNum + " " + verseText;
-    currentPage.push(line);
-    if (currentPage.length === 4 || i === verses.length - 1) {
-      pages.push(currentPage.slice());
-      currentPage = [];
-    }
-  }
-  if (currentPage.length > 0) {
-    pages.push(currentPage);
-  }
-  return pages;
-}
-
-function createTimedPages(pages, audioDuration) {
-  if (!pages || pages.length === 0 || !audioDuration) return [];
-  const segmentDuration = audioDuration / pages.length;
-  return pages.map((lines, i) => ({
-    start: i * segmentDuration,
-    end: (i + 1) * segmentDuration,
-    lines: lines
-  }));
+function renderVersesToScroller(verses) {
+  const scroller = document.getElementById("verse-text-scroller");
+  if (!scroller) return;
+  scroller.innerHTML = "";
+  scrollerHeight = 0;
+  if (!verses || verses.length === 0) return;
+  verses.forEach((v) => {
+    const verseText = String(v.text || "").trim();
+    if (!verseText) return;
+    const verseNum = v.verse || "";
+    const p = document.createElement("p");
+    p.textContent = verseNum + " " + verseText;
+    scroller.appendChild(p);
+  });
+  requestAnimationFrame(() => {
+    scrollerHeight = scroller.offsetHeight;
+  });
 }
 
 async function fetchKJVText(book, chapter) {
@@ -649,36 +623,29 @@ async function fetchKJVText(book, chapter) {
   return null;
 }
 
-function buildTimedVerses() {
-  if (!pendingKJVVerses) return false;
-  const voice = document.getElementById("voice");
-  if (!voice || !voice.duration || !isFinite(voice.duration)) return false;
-  currentVerses = createTimedPages(pendingKJVVerses, voice.duration);
-  pendingKJVVerses = null;
-  return true;
-}
-
 async function loadVerses(book, chapter) {
-  currentVerses = [];
-  pendingKJVVerses = null;
+  scrollerHeight = 0;
+  const scroller = document.getElementById("verse-text-scroller");
+  if (scroller) scroller.innerHTML = "";
   if (!book || !chapter) return;
+  let verses = null;
   try {
     const pack = packBase();
     const path = (pack || "") + "/data/kjv/" + book + "/" + chapter + "/verses.json";
     const res = await fetch(path, { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
-      if (Array.isArray(data)) {
-        currentVerses = data;
-        return;
+      if (Array.isArray(data) && data.length > 0 && data[0].text) {
+        verses = data;
       }
     }
   } catch (e) {}
-  const kjvVerses = await fetchKJVText(book, chapter);
-  if (!kjvVerses || kjvVerses.length === 0) return;
-  const pages = groupVersesIntoPages(kjvVerses);
-  pendingKJVVerses = pages;
-  buildTimedVerses();
+  if (!verses) {
+    verses = await fetchKJVText(book, chapter);
+  }
+  if (verses && verses.length > 0) {
+    renderVersesToScroller(verses);
+  }
 }
 
 async function load(playAfter) {
@@ -931,7 +898,13 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
     showText = !showText;
     paintText();
     savePrefs();
-    if (!showText) document.getElementById("verse-text").hidden = true;
+    if (!showText) {
+      const viewport = document.getElementById("verse-text-viewport");
+      if (viewport) viewport.hidden = true;
+      stopCrawl();
+    } else if (playing) {
+      startCrawl();
+    }
   }
   if (kind === "voice") {
     voiceAccent = voiceAccent === "british" ? "american" : "british";
@@ -995,15 +968,21 @@ document.getElementById("interpretation").addEventListener("click", (e) => {
   toggleInterpret();
 });
 const voiceEl = document.getElementById("voice");
-voiceEl.addEventListener("loadedmetadata", () => {
-  if (pendingKJVVerses && voiceEl.duration && isFinite(voiceEl.duration)) {
-    buildTimedVerses();
+voiceEl.addEventListener("seeked", () => {
+  if (playing && showText) {
+    updateCrawlPosition();
+  }
+});
+voiceEl.addEventListener("timeupdate", () => {
+  if (playing && showText && scrollerHeight > 0) {
+    updateCrawlPosition();
   }
 });
 voiceEl.addEventListener("ended", () => {
   setPlaying(false);
-  stopVerseTimer();
-  document.getElementById("verse-text").hidden = true;
+  stopCrawl();
+  const viewport = document.getElementById("verse-text-viewport");
+  if (viewport) viewport.hidden = true;
   if (currentChapter >= 1) writeCompleted(savedBook || "romans", currentChapter);
 });
 

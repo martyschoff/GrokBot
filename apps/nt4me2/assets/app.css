@@ -27,36 +27,48 @@ html, body {
   pointer-events: none;
   z-index: 1;
 }
-.verse-text {
+.verse-text-viewport {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  text-align: left;
+  left: 0;
+  right: 0;
+  bottom: 88px;
+  height: clamp(180px, 22vh, 280px);
   z-index: 2;
   pointer-events: none;
-  max-width: 85%;
-  max-height: 60vh;
-  padding: 20px 28px;
-  background: rgba(10, 11, 13, 0.85);
-  border-radius: 12px;
   overflow: hidden;
+  background: linear-gradient(to top, rgba(10, 11, 13, 0.75) 0%, rgba(10, 11, 13, 0.45) 50%, rgba(10, 11, 13, 0.15) 100%);
 }
-.verse-line {
-  margin: 0 0 6px;
+.verse-text-scroller {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 28px 20px;
+  will-change: transform;
+}
+.verse-text-scroller p {
+  margin: 0 0 12px;
   font-family: var(--serif);
-  font-size: clamp(0.95rem, 2vw, 1.25rem);
-  line-height: 1.5;
+  font-size: clamp(1rem, 2.2vw, 1.35rem);
+  line-height: 1.55;
   color: var(--text);
-  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.9), 0 0 24px rgba(0,0,0,0.6);
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
-.verse-line:last-child {
-  margin-bottom: 0;
-}
-.verse-line:empty {
-  display: none;
+@media (max-width: 700px) {
+  .verse-text-viewport {
+    bottom: calc(96px + env(safe-area-inset-bottom));
+    height: clamp(160px, 20vh, 240px);
+  }
+  .verse-text-scroller {
+    padding: 0 18px 16px;
+  }
+  .verse-text-scroller p {
+    font-size: clamp(0.9rem, 2vw, 1.15rem);
+    margin: 0 0 10px;
+  }
 }
 .bar {
   position: absolute; top: 0; left: 0; right: 0;
