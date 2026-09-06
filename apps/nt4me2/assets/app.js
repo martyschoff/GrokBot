@@ -14,10 +14,16 @@ let interpretIndex = {};
 let cardCache = {};
 let nowPick = "";
 let hearGreek = true;
+let showText = false;
+let voiceAccent = "british";
 const PREF_KEY = "daily-chapter-hear-greek";
+const TEXT_KEY = "daily-chapter-show-text";
+const VOICE_KEY = "daily-chapter-voice-accent";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
 let voiceVolume = 1;
+let verseTimer = null;
+let currentVerses = [];
 let savedBook = "romans";
 let currentChapter = 0;
 let viewingBook = "";
@@ -333,6 +339,48 @@ function restoreCompleted() {
   nowPick = (packBase() || "") + "/data/kjv/" + done.book + "/" + done.chapter + "/now-live.json";
 }
 
+function stopVerseTimer() {
+  if (verseTimer) {
+    clearInterval(verseTimer);
+    verseTimer = null;
+  }
+}
+
+function updateVerseDisplay() {
+  const textEl = document.getElementById("verse-text");
+  if (!showText || !playing || currentVerses.length === 0) {
+    textEl.hidden = true;
+    return;
+  }
+  const voice = document.getElementById("voice");
+  const time = voice.currentTime || 0;
+  let found = null;
+  for (let i = 0; i < currentVerses.length; i++) {
+    const v = currentVerses[i];
+    if (time >= v.start && time < v.end) {
+      found = v;
+      break;
+    }
+  }
+  if (found && found.lines) {
+    const lines = textEl.querySelectorAll(".verse-line");
+    for (let i = 0; i < 4; i++) {
+      lines[i].textContent = found.lines[i] || "";
+    }
+    textEl.hidden = false;
+  } else {
+    textEl.hidden = true;
+  }
+}
+
+function startVerseTimer() {
+  stopVerseTimer();
+  if (showText && currentVerses.length > 0) {
+    updateVerseDisplay();
+    verseTimer = setInterval(updateVerseDisplay, 250);
+  }
+}
+
 function setPlaying(on) {
   playing = on;
   const voice = document.getElementById("voice");
@@ -352,10 +400,12 @@ function setPlaying(on) {
       interpretFrozen = false;
       startSlideshow();
     }
+    startVerseTimer();
   } else {
     voice.pause();
     hymn.pause();
     btn.textContent = "Play";
+    stopVerseTimer();
   }
 }
 
@@ -395,11 +445,21 @@ function mediaUrl(path) {
 
 async function loadPrefs() {
   hearGreek = true;
+  showText = false;
+  voiceAccent = "british";
   voiceVolume = 1;
   try {
     const v = localStorage.getItem(PREF_KEY);
     if (v === "0") hearGreek = false;
     if (v === "1") hearGreek = true;
+  } catch (e) {}
+  try {
+    const t = localStorage.getItem(TEXT_KEY);
+    if (t === "1") showText = true;
+  } catch (e) {}
+  try {
+    const a = localStorage.getItem(VOICE_KEY);
+    if (a === "american" || a === "british") voiceAccent = a;
   } catch (e) {}
   try {
     const raw = localStorage.getItem(VOL_KEY);
@@ -417,10 +477,14 @@ async function loadPrefs() {
   } catch (e) {}
   applyVoiceVolume();
   paintGreek();
+  paintText();
+  paintVoice();
 }
 
 async function savePrefs() {
   try { localStorage.setItem(PREF_KEY, hearGreek ? "1" : "0"); } catch (e) {}
+  try { localStorage.setItem(TEXT_KEY, showText ? "1" : "0"); } catch (e) {}
+  try { localStorage.setItem(VOICE_KEY, voiceAccent); } catch (e) {}
   try { localStorage.setItem(VOL_KEY, String(voiceVolume)); } catch (e) {}
   try {
     await fetch("/api/prefs", {
@@ -434,6 +498,16 @@ async function savePrefs() {
 function paintGreek() {
   const btn = document.getElementById("ur-greek");
   if (btn) btn.textContent = hearGreek ? "Greek: on" : "Greek: off";
+}
+
+function paintText() {
+  const btn = document.getElementById("ur-text");
+  if (btn) btn.textContent = showText ? "Text" : "Notext";
+}
+
+function paintVoice() {
+  const btn = document.getElementById("ur-voice");
+  if (btn) btn.textContent = "Voice: " + (voiceAccent === "american" ? "American" : "British");
 }
 
 function bookLabel(id) {
@@ -505,6 +579,20 @@ async function fetchNow() {
   return {};
 }
 
+async function loadVerses(book, chapter) {
+  currentVerses = [];
+  if (!book || !chapter) return;
+  try {
+    const pack = packBase();
+    const path = (pack || "") + "/data/kjv/" + book + "/" + chapter + "/verses.json";
+    const res = await fetch(path, { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data)) currentVerses = data;
+    }
+  } catch (e) {}
+}
+
 async function load(playAfter) {
   const data = await fetchNow();
   document.getElementById("title").textContent = data.title || "Daily reading";
@@ -514,12 +602,14 @@ async function load(playAfter) {
   if (data && data.book) savedBook = String(data.book);
   const ch = chapterFromData(data);
   if (ch) currentChapter = ch;
+  await loadVerses(savedBook, currentChapter);
   const stem = audioStem(savedBook);
   if (stem && isLiveChapter(savedBook, currentChapter)) {
-    if (!hearGreek) {
-      data.audio = mediaUrl("/data/audio/" + stem + currentChapter + "-nogrk.mp3");
-    } else if (!data.audio || data.waiting_audio) {
-      data.audio = mediaUrl("/data/audio/" + stem + currentChapter + ".mp3");
+    let suffix = "";
+    if (voiceAccent === "american") suffix = "-american";
+    if (!hearGreek) suffix += "-nogrk";
+    if (!data.audio || data.waiting_audio) {
+      data.audio = mediaUrl("/data/audio/" + stem + currentChapter + suffix + ".mp3");
     }
   }
   if (data.audio) {
@@ -567,6 +657,8 @@ function openUrMenu() {
   document.getElementById("ur-panel").hidden = true;
   menu.hidden = !open;
   document.getElementById("ur-btn").setAttribute("aria-expanded", open ? "true" : "false");
+  paintText();
+  paintVoice();
   paintGreek();
 }
 
@@ -747,6 +839,18 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
   const btn = e.target.closest("button");
   if (!btn) return;
   const kind = btn.getAttribute("data-ur");
+  if (kind === "text") {
+    showText = !showText;
+    paintText();
+    savePrefs();
+    if (!showText) document.getElementById("verse-text").hidden = true;
+  }
+  if (kind === "voice") {
+    voiceAccent = voiceAccent === "british" ? "american" : "british";
+    paintVoice();
+    savePrefs();
+    load(playing);
+  }
   if (kind === "version") showVersion();
   if (kind === "greek") {
     hearGreek = !hearGreek;
@@ -804,6 +908,8 @@ document.getElementById("interpretation").addEventListener("click", (e) => {
 });
 document.getElementById("voice").addEventListener("ended", () => {
   setPlaying(false);
+  stopVerseTimer();
+  document.getElementById("verse-text").hidden = true;
   if (currentChapter >= 1) writeCompleted(savedBook || "romans", currentChapter);
 });
 

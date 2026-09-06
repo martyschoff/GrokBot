@@ -27,6 +27,30 @@ html, body {
   pointer-events: none;
   z-index: 1;
 }
+.verse-text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
+  pointer-events: none;
+  max-width: 90%;
+  padding: 24px 32px;
+  background: rgba(10, 11, 13, 0.75);
+  border-radius: 12px;
+}
+.verse-line {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+  line-height: 1.6;
+  color: var(--text);
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+}
+.verse-line:last-child {
+  margin-bottom: 0;
+}
 .bar {
   position: absolute; top: 0; left: 0; right: 0;
   display: flex; justify-content: space-between; align-items: flex-end;

@@ -14,6 +14,12 @@
     <img id="art" alt="" hidden>
     <div id="art-empty" class="empty-art">Waiting on open-access art.</div>
     <div class="veil"></div>
+    <div class="verse-text" id="verse-text" hidden>
+      <p class="verse-line"></p>
+      <p class="verse-line"></p>
+      <p class="verse-line"></p>
+      <p class="verse-line"></p>
+    </div>
     <div class="caption" id="caption" hidden>
       <p class="cap-title" id="cap-title"></p>
       <p class="cap-place" id="cap-place"></p>
@@ -29,7 +35,9 @@
       <span class="ur-lines" aria-hidden="true"></span>
     </button>
     <nav id="ur-menu" class="ur-menu" hidden>
-      <button type="button" data-ur="version">Version</button>
+      <button type="button" data-ur="text" id="ur-text">Text</button>
+      <button type="button" data-ur="voice" id="ur-voice">Voice</button>
+      <button type="button" data-ur="version">Bible version</button>
       <button type="button" data-ur="greek" id="ur-greek">Greek</button>
       <button type="button" data-ur="volume">Volume</button>
       <button type="button" data-ur="book">book/chapter start</button>
