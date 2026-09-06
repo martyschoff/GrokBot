@@ -32,8 +32,8 @@ html, body {
   left: auto;
   right: 28px;
   bottom: 88px;
-  width: clamp(280px, 42vw, 520px);
-  height: clamp(180px, 22vh, 280px);
+  width: clamp(380px, 52vw, 680px);
+  height: clamp(320px, 38vh, 480px);
   z-index: 2;
   pointer-events: none;
   overflow: hidden;
@@ -60,7 +60,8 @@ html, body {
 }
 @media (max-width: 900px) {
   .verse-text-viewport {
-    width: clamp(240px, 38vw, 380px);
+    width: clamp(320px, 48vw, 520px);
+    height: clamp(280px, 34vh, 420px);
   }
   .verse-text-scroller p {
     font-size: clamp(0.85rem, 1.8vw, 1.1rem);
@@ -70,8 +71,8 @@ html, body {
   .verse-text-viewport {
     right: 18px;
     bottom: calc(118px + env(safe-area-inset-bottom));
-    width: clamp(200px, 45vw, 320px);
-    height: clamp(140px, 18vh, 220px);
+    width: clamp(240px, 55vw, 400px);
+    height: clamp(240px, 30vh, 360px);
   }
   .verse-text-scroller {
     padding: 0 16px 14px;

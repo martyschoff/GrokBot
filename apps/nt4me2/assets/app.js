@@ -23,7 +23,8 @@ const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
 let voiceVolume = 1;
 let crawlRAF = null;
-let scrollerHeight = 0;
+let verseTimings = [];
+let verseElements = [];
 let savedBook = "romans";
 let currentChapter = 0;
 let viewingBook = "";
@@ -346,6 +347,19 @@ function stopCrawl() {
   }
 }
 
+function getCurrentVerseIndex(currentTime) {
+  if (verseTimings.length === 0) return -1;
+  for (let i = 0; i < verseTimings.length; i++) {
+    if (currentTime >= verseTimings[i].start && currentTime < verseTimings[i].end) {
+      return i;
+    }
+  }
+  if (currentTime >= verseTimings[verseTimings.length - 1].end) {
+    return verseTimings.length - 1;
+  }
+  return 0;
+}
+
 function updateCrawlPosition() {
   const viewport = document.getElementById("verse-text-viewport");
   const scroller = document.getElementById("verse-text-scroller");
@@ -354,10 +368,7 @@ function updateCrawlPosition() {
     stopCrawl();
     return;
   }
-  if (scrollerHeight === 0 && scroller.childElementCount > 0) {
-    measureScrollerHeight();
-  }
-  if (scrollerHeight === 0) {
+  if (verseTimings.length === 0 || verseElements.length === 0) {
     if (viewport) viewport.hidden = true;
     stopCrawl();
     return;
@@ -369,10 +380,17 @@ function updateCrawlPosition() {
     return;
   }
   viewport.hidden = false;
-  const progress = (voice.currentTime || 0) / voice.duration;
-  const clampedProgress = Math.max(0, Math.min(1, progress));
-  const translateY = -(clampedProgress * scrollerHeight);
-  scroller.style.transform = "translateY(" + translateY + "px)";
+  const currentTime = voice.currentTime || 0;
+  const currentVerseIdx = getCurrentVerseIndex(currentTime);
+  if (currentVerseIdx < 0 || currentVerseIdx >= verseElements.length) {
+    scroller.style.transform = "translateY(0px)";
+  } else {
+    const currentVerse = verseElements[currentVerseIdx];
+    const viewportHeight = viewport.clientHeight || 320;
+    const verseTop = currentVerse.offsetTop;
+    const targetScroll = verseTop - (viewportHeight * 0.15);
+    scroller.style.transform = "translateY(-" + Math.max(0, targetScroll) + "px)";
+  }
   if (playing) {
     crawlRAF = requestAnimationFrame(updateCrawlPosition);
   }
@@ -380,10 +398,23 @@ function updateCrawlPosition() {
 
 function startCrawl() {
   stopCrawl();
-  if (scrollerHeight === 0) {
-    measureScrollerHeight();
+  if (verseTimings.length === 0) {
+    const voice = document.getElementById("voice");
+    const scroller = document.getElementById("verse-text-scroller");
+    if (voice && voice.duration && isFinite(voice.duration) && scroller && scroller.childElementCount > 0) {
+      const verses = [];
+      scroller.querySelectorAll("p").forEach((p) => {
+        verses.push({
+          verse: p.getAttribute("data-verse") || "",
+          text: p.textContent
+        });
+      });
+      if (verses.length > 0) {
+        verseTimings = calculateVerseTimings(verses, voice.duration);
+      }
+    }
   }
-  if (showText && scrollerHeight > 0) {
+  if (showText && verseTimings.length > 0) {
     updateCrawlPosition();
   }
 }
@@ -601,35 +632,55 @@ function bookNameForAPI(bookId) {
   return bookId.charAt(0).toUpperCase() + bookId.slice(1);
 }
 
-function measureScrollerHeight() {
-  const viewport = document.getElementById("verse-text-viewport");
-  const scroller = document.getElementById("verse-text-scroller");
-  if (!viewport || !scroller) return;
-  const wasHidden = viewport.hidden;
-  viewport.hidden = false;
-  viewport.style.visibility = "hidden";
-  scrollerHeight = scroller.offsetHeight;
-  viewport.style.visibility = "";
-  if (wasHidden && !showText) viewport.hidden = true;
+function calculateVerseTimings(verses, audioDuration) {
+  if (!verses || verses.length === 0 || !audioDuration) return [];
+  const totalWords = verses.reduce((sum, v) => {
+    const text = String(v.text || "").trim();
+    return sum + (text.split(/\s+/).length || 1);
+  }, 0);
+  let cumulativeTime = 0;
+  return verses.map((v) => {
+    const text = String(v.text || "").trim();
+    const wordCount = text.split(/\s+/).length || 1;
+    const verseShare = wordCount / totalWords;
+    const verseDuration = audioDuration * verseShare;
+    const timing = {
+      verse: v.verse || 0,
+      start: cumulativeTime,
+      end: cumulativeTime + verseDuration,
+      wordCount: wordCount
+    };
+    cumulativeTime += verseDuration;
+    return timing;
+  });
 }
 
-function renderVersesToScroller(verses) {
+function renderVersesToScroller(verses, audioDuration) {
   const scroller = document.getElementById("verse-text-scroller");
   if (!scroller) return;
   scroller.innerHTML = "";
-  scrollerHeight = 0;
+  verseTimings = [];
+  verseElements = [];
   if (!verses || verses.length === 0) return;
-  verses.forEach((v) => {
+  if (audioDuration && isFinite(audioDuration)) {
+    verseTimings = calculateVerseTimings(verses, audioDuration);
+  }
+  verses.forEach((v, idx) => {
     const verseText = String(v.text || "").trim();
     if (!verseText) return;
     const verseNum = v.verse || "";
     const p = document.createElement("p");
     p.textContent = verseNum + " " + verseText;
+    p.setAttribute("data-verse", verseNum);
     scroller.appendChild(p);
+    verseElements.push(p);
   });
-  requestAnimationFrame(() => {
-    measureScrollerHeight();
-  });
+  if (!audioDuration || !isFinite(audioDuration)) {
+    const voice = document.getElementById("voice");
+    if (voice && voice.duration && isFinite(voice.duration)) {
+      verseTimings = calculateVerseTimings(verses, voice.duration);
+    }
+  }
 }
 
 async function fetchKJVText(book, chapter) {
@@ -647,27 +698,48 @@ async function fetchKJVText(book, chapter) {
 }
 
 async function loadVerses(book, chapter) {
-  scrollerHeight = 0;
+  verseTimings = [];
+  verseElements = [];
   const scroller = document.getElementById("verse-text-scroller");
   if (scroller) scroller.innerHTML = "";
   if (!book || !chapter) return;
-  let verses = null;
+  let versesData = null;
+  let hasPreTimings = false;
   try {
     const pack = packBase();
     const path = (pack || "") + "/data/kjv/" + book + "/" + chapter + "/verses.json";
     const res = await fetch(path, { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
-      if (Array.isArray(data) && data.length > 0 && data[0].text) {
-        verses = data;
+      if (Array.isArray(data) && data.length > 0) {
+        if (data[0].start !== undefined && data[0].end !== undefined) {
+          hasPreTimings = true;
+          verseTimings = data.map((v) => ({
+            verse: v.verse || 0,
+            start: v.start || 0,
+            end: v.end || 0,
+            lines: v.lines || []
+          }));
+          versesData = data.map((v) => ({
+            verse: v.verse || "",
+            text: (v.lines || []).join(" ") || v.text || ""
+          }));
+        } else if (data[0].text) {
+          versesData = data;
+        }
       }
     }
   } catch (e) {}
-  if (!verses) {
-    verses = await fetchKJVText(book, chapter);
+  if (!versesData) {
+    versesData = await fetchKJVText(book, chapter);
   }
-  if (verses && verses.length > 0) {
-    renderVersesToScroller(verses);
+  if (versesData && versesData.length > 0) {
+    const voice = document.getElementById("voice");
+    const audioDuration = (voice && voice.duration && isFinite(voice.duration)) ? voice.duration : null;
+    renderVersesToScroller(versesData, audioDuration);
+    if (hasPreTimings && verseTimings.length > 0) {
+      return;
+    }
   }
 }
 
