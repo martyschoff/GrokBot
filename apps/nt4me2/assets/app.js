@@ -14,7 +14,7 @@ let interpretIndex = {};
 let cardCache = {};
 let nowPick = "";
 let hearGreek = true;
-let showText = false;
+let showText = true;
 let voiceAccent = "british";
 const PREF_KEY = "daily-chapter-hear-greek";
 const TEXT_KEY = "daily-chapter-show-text";
@@ -483,7 +483,7 @@ function mediaUrl(path) {
 
 async function loadPrefs() {
   hearGreek = true;
-  showText = false;
+  showText = true;
   voiceAccent = "british";
   voiceVolume = 1;
   try {
@@ -493,7 +493,8 @@ async function loadPrefs() {
   } catch (e) {}
   try {
     const t = localStorage.getItem(TEXT_KEY);
-    if (t === "1") showText = true;
+    if (t === "0") showText = false;
+    else showText = true;
   } catch (e) {}
   try {
     const a = localStorage.getItem(VOICE_KEY);
@@ -998,9 +999,6 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
       if (viewport) viewport.hidden = true;
       stopCrawl();
     } else {
-      if (scrollerHeight === 0) {
-        measureScrollerHeight();
-      }
       if (playing) {
         startCrawl();
       }
