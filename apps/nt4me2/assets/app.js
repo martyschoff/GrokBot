@@ -644,35 +644,39 @@ function bookNameForAPI(bookId) {
 
 function calculateVerseTimings(verses, audioDuration) {
   if (!verses || verses.length === 0 || !audioDuration) return [];
-  const totalWords = verses.reduce((sum, v) => {
+  const totalChars = verses.reduce((sum, v) => {
     const text = String(v.text || "").trim();
-    return sum + (text.split(/\s+/).length || 1);
+    return sum + text.length;
   }, 0);
+  if (totalChars === 0) return [];
   let cumulativeTime = 0;
   return verses.map((v) => {
     const text = String(v.text || "").trim();
-    const wordCount = text.split(/\s+/).length || 1;
-    const verseShare = wordCount / totalWords;
+    const charCount = text.length || 1;
+    const verseShare = charCount / totalChars;
     const verseDuration = audioDuration * verseShare;
     const timing = {
       verse: v.verse || 0,
       start: cumulativeTime,
       end: cumulativeTime + verseDuration,
-      wordCount: wordCount
+      charCount: charCount
     };
     cumulativeTime += verseDuration;
     return timing;
   });
 }
 
-function renderVersesToScroller(verses, audioDuration) {
+function renderVersesToScroller(verses, audioDuration, preserveTimings) {
   const scroller = document.getElementById("verse-text-scroller");
   if (!scroller) return;
   scroller.innerHTML = "";
-  verseTimings = [];
+  const hadTimings = verseTimings.length > 0;
+  if (!preserveTimings) {
+    verseTimings = [];
+  }
   verseElements = [];
   if (!verses || verses.length === 0) return;
-  if (audioDuration && isFinite(audioDuration)) {
+  if (!preserveTimings && audioDuration && isFinite(audioDuration)) {
     verseTimings = calculateVerseTimings(verses, audioDuration);
   }
   const bookLabel = bookNameForDisplay(savedBook);
@@ -688,7 +692,7 @@ function renderVersesToScroller(verses, audioDuration) {
     scroller.appendChild(p);
     verseElements.push(p);
   });
-  if (!audioDuration || !isFinite(audioDuration)) {
+  if (!preserveTimings && !hadTimings && (!audioDuration || !isFinite(audioDuration))) {
     const voice = document.getElementById("voice");
     if (voice && voice.duration && isFinite(voice.duration)) {
       verseTimings = calculateVerseTimings(verses, voice.duration);
@@ -749,10 +753,7 @@ async function loadVerses(book, chapter) {
   if (versesData && versesData.length > 0) {
     const voice = document.getElementById("voice");
     const audioDuration = (voice && voice.duration && isFinite(voice.duration)) ? voice.duration : null;
-    renderVersesToScroller(versesData, audioDuration);
-    if (hasPreTimings && verseTimings.length > 0) {
-      return;
-    }
+    renderVersesToScroller(versesData, audioDuration, hasPreTimings);
   }
 }
 
