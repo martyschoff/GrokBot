@@ -398,25 +398,30 @@ function updateCrawlPosition() {
 
 function startCrawl() {
   stopCrawl();
-  if (verseTimings.length === 0) {
+  if (!showText) return;
+  if (verseTimings.length === 0 || verseElements.length === 0) {
     const voice = document.getElementById("voice");
     const scroller = document.getElementById("verse-text-scroller");
     if (voice && voice.duration && isFinite(voice.duration) && scroller && scroller.childElementCount > 0) {
-      const verses = [];
-      scroller.querySelectorAll("p").forEach((p) => {
-        verses.push({
-          verse: p.getAttribute("data-verse") || "",
-          text: p.textContent
+      if (verseTimings.length === 0) {
+        const verses = [];
+        scroller.querySelectorAll("p").forEach((p) => {
+          const verse = p.getAttribute("data-verse") || "";
+          const text = p.textContent;
+          verses.push({ verse: verse, text: text });
         });
-      });
-      if (verses.length > 0) {
-        verseTimings = calculateVerseTimings(verses, voice.duration);
+        if (verses.length > 0) {
+          verseTimings = calculateVerseTimings(verses, voice.duration);
+        }
+      }
+      if (verseElements.length === 0) {
+        scroller.querySelectorAll("p").forEach((p) => {
+          verseElements.push(p);
+        });
       }
     }
   }
-  if (showText && verseTimings.length > 0) {
-    updateCrawlPosition();
-  }
+  updateCrawlPosition();
 }
 
 function setPlaying(on) {
@@ -555,6 +560,10 @@ function bookLabel(id) {
   return id || "";
 }
 
+function bookNameForDisplay(id) {
+  return bookLabel(id);
+}
+
 function decorateNow(data) {
   if (!data || typeof data !== "object") return {};
   if (data.audio) data.audio = mediaUrl(data.audio);
@@ -666,12 +675,15 @@ function renderVersesToScroller(verses, audioDuration) {
   if (audioDuration && isFinite(audioDuration)) {
     verseTimings = calculateVerseTimings(verses, audioDuration);
   }
+  const bookLabel = bookNameForDisplay(savedBook);
+  const chapterNum = currentChapter || "";
   verses.forEach((v, idx) => {
     const verseText = String(v.text || "").trim();
     if (!verseText) return;
-    const verseNum = v.verse || "";
+    const verseNum = v.verse || (idx + 1);
     const p = document.createElement("p");
-    p.textContent = verseNum + " " + verseText;
+    const label = bookLabel && chapterNum ? (bookLabel + " " + chapterNum + ":" + verseNum) : verseNum;
+    p.textContent = label + " " + verseText;
     p.setAttribute("data-verse", verseNum);
     scroller.appendChild(p);
     verseElements.push(p);
