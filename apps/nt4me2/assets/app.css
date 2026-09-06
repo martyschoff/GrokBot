@@ -122,7 +122,8 @@ h1 {
 .caption {
   position: absolute;
   left: 28px;
-  right: 28px;
+  right: auto;
+  max-width: clamp(220px, 40vw, 480px);
   bottom: 88px;
   pointer-events: none;
 }
@@ -221,7 +222,8 @@ h1 {
   h1 { font-size: 2.2rem; }
   .caption {
     left: 18px;
-    right: 18px;
+    right: auto;
+    max-width: clamp(180px, 42vw, 360px);
     bottom: 118px;
   }
   .dock {
