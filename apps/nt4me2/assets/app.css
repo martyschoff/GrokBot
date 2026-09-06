@@ -32,24 +32,31 @@ html, body {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  text-align: center;
+  text-align: left;
   z-index: 2;
   pointer-events: none;
-  max-width: 90%;
-  padding: 24px 32px;
-  background: rgba(10, 11, 13, 0.75);
+  max-width: 85%;
+  max-height: 60vh;
+  padding: 20px 28px;
+  background: rgba(10, 11, 13, 0.85);
   border-radius: 12px;
+  overflow: hidden;
 }
 .verse-line {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   font-family: var(--serif);
-  font-size: clamp(1.1rem, 2.2vw, 1.5rem);
-  line-height: 1.6;
+  font-size: clamp(0.95rem, 2vw, 1.25rem);
+  line-height: 1.5;
   color: var(--text);
-  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 .verse-line:last-child {
   margin-bottom: 0;
+}
+.verse-line:empty {
+  display: none;
 }
 .bar {
   position: absolute; top: 0; left: 0; right: 0;
