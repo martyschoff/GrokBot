@@ -349,7 +349,15 @@ function stopCrawl() {
 function updateCrawlPosition() {
   const viewport = document.getElementById("verse-text-viewport");
   const scroller = document.getElementById("verse-text-scroller");
-  if (!showText || !playing || !scroller || scrollerHeight === 0) {
+  if (!showText || !playing || !scroller) {
+    if (viewport) viewport.hidden = true;
+    stopCrawl();
+    return;
+  }
+  if (scrollerHeight === 0 && scroller.childElementCount > 0) {
+    measureScrollerHeight();
+  }
+  if (scrollerHeight === 0) {
     if (viewport) viewport.hidden = true;
     stopCrawl();
     return;
@@ -372,6 +380,9 @@ function updateCrawlPosition() {
 
 function startCrawl() {
   stopCrawl();
+  if (scrollerHeight === 0) {
+    measureScrollerHeight();
+  }
   if (showText && scrollerHeight > 0) {
     updateCrawlPosition();
   }
@@ -391,7 +402,7 @@ function setPlaying(on) {
     } else {
       hymn.pause();
     }
-    btn.textContent = "Pause";
+    if (btn) btn.textContent = "Pause";
     if (!interpretOpen && interpretFrozen) {
       interpretFrozen = false;
       startSlideshow();
@@ -400,7 +411,7 @@ function setPlaying(on) {
   } else {
     voice.pause();
     hymn.pause();
-    btn.textContent = "Play";
+    if (btn) btn.textContent = "Play";
     stopCrawl();
   }
 }
@@ -590,6 +601,18 @@ function bookNameForAPI(bookId) {
   return bookId.charAt(0).toUpperCase() + bookId.slice(1);
 }
 
+function measureScrollerHeight() {
+  const viewport = document.getElementById("verse-text-viewport");
+  const scroller = document.getElementById("verse-text-scroller");
+  if (!viewport || !scroller) return;
+  const wasHidden = viewport.hidden;
+  viewport.hidden = false;
+  viewport.style.visibility = "hidden";
+  scrollerHeight = scroller.offsetHeight;
+  viewport.style.visibility = "";
+  if (wasHidden && !showText) viewport.hidden = true;
+}
+
 function renderVersesToScroller(verses) {
   const scroller = document.getElementById("verse-text-scroller");
   if (!scroller) return;
@@ -605,7 +628,7 @@ function renderVersesToScroller(verses) {
     scroller.appendChild(p);
   });
   requestAnimationFrame(() => {
-    scrollerHeight = scroller.offsetHeight;
+    measureScrollerHeight();
   });
 }
 
@@ -902,8 +925,13 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
       const viewport = document.getElementById("verse-text-viewport");
       if (viewport) viewport.hidden = true;
       stopCrawl();
-    } else if (playing) {
-      startCrawl();
+    } else {
+      if (scrollerHeight === 0) {
+        measureScrollerHeight();
+      }
+      if (playing) {
+        startCrawl();
+      }
     }
   }
   if (kind === "voice") {
@@ -968,6 +996,11 @@ document.getElementById("interpretation").addEventListener("click", (e) => {
   toggleInterpret();
 });
 const voiceEl = document.getElementById("voice");
+voiceEl.addEventListener("loadedmetadata", () => {
+  if (scrollerHeight === 0) {
+    measureScrollerHeight();
+  }
+});
 voiceEl.addEventListener("seeked", () => {
   if (playing && showText) {
     updateCrawlPosition();
