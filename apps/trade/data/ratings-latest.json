@@ -1,0 +1,42 @@
+{
+  "fetched_at": "2026-08-17T08:35:56-04:00",
+  "source": "Seeking Alpha",
+  "portfolio_id": "65102829",
+  "ratings": [
+    {
+      "ticker": "IAU",
+      "rating": "Buy",
+      "previous": null,
+      "changed_at": null,
+      "url": "https://seekingalpha.com/symbol/IAU"
+    },
+    {
+      "ticker": "AAPL",
+      "rating": "Hold",
+      "previous": "Buy",
+      "changed_at": "2026-08-10T09:00:00-04:00",
+      "url": "https://seekingalpha.com/symbol/AAPL"
+    },
+    {
+      "ticker": "ET",
+      "rating": "Strong Buy",
+      "previous": null,
+      "changed_at": null,
+      "url": "https://seekingalpha.com/symbol/ET"
+    },
+    {
+      "ticker": "JEPI",
+      "rating": "Buy",
+      "previous": null,
+      "changed_at": null,
+      "url": "https://seekingalpha.com/symbol/JEPI"
+    },
+    {
+      "ticker": "MSFT",
+      "rating": "Buy",
+      "previous": null,
+      "changed_at": null,
+      "url": "https://seekingalpha.com/symbol/MSFT"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Trade Recommendations Schema",
+  "description": "Unified Seeking Alpha and Yahoo Finance recommendations for portfolio tickers",
+  "type": "object",
+  "required": ["schema_version", "as_of", "bucket", "key", "floor", "exceptions", "ungraded", "tickers"],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "description": "Schema version number",
+      "const": 1
+    },
+    "as_of": {
+      "type": "object",
+      "description": "Timestamps for data source freshness",
+      "required": ["sa", "yahoo", "universe"],
+      "properties": {
+        "sa": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Seeking Alpha data timestamp (ISO 8601)"
+        },
+        "yahoo": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Yahoo Finance data timestamp (ISO 8601)"
+        },
+        "universe": {
+          "type": "string",
+          "format": "date",
+          "description": "Holdings universe date (YYYY-MM-DD)"
+        }
+      }
+    },
+    "bucket": {
+      "type": "string",
+      "description": "S3 bucket name",
+      "const": "martin-trade"
+    },
+    "key": {
+      "type": "string",
+      "description": "S3 object key",
+      "const": "recommendations.json"
+    },
+    "floor": {
+      "type": "number",
+      "description": "Minimum holding value for inclusion",
+      "minimum": 0
+    },
+    "exceptions": {
+      "type": "array",
+      "description": "Tickers always included regardless of floor",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ungraded": {
+      "type": "array",
+      "description": "Tickers excluded from rating (e.g., VFIAX, cash, money-market)",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tickers": {
+      "type": "array",
+      "description": "Array of ticker recommendation objects",
+      "items": {
+        "type": "object",
+        "required": ["ticker"],
+        "properties": {
+          "ticker": {
+            "type": "string",
+            "description": "Stock ticker symbol"
+          },
+          "sa": {
+            "type": "object",
+            "description": "Seeking Alpha rating",
+            "properties": {
+              "rating": {
+                "type": ["string", "null"],
+                "description": "SA rating (Buy, Sell, Hold, etc.) or null/empty if unavailable"
+              },
+              "previous": {
+                "type": ["string", "null"],
+                "description": "Previous rating or null"
+              },
+              "changed_at": {
+                "type": ["string", "null"],
+                "format": "date-time",
+                "description": "Timestamp of rating change or null"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "URL to Seeking Alpha ticker page"
+              }
+            }
+          },
+          "yahoo": {
+            "type": "object",
+            "description": "Yahoo Finance analyst recommendation",
+            "properties": {
+              "rating": {
+                "type": ["string", "null"],
+                "description": "Yahoo rating or null/empty if unavailable"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "URL to Yahoo Finance analysis page"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

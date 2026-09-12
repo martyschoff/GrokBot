@@ -1,0 +1,12 @@
+{
+  "as_of": "2026-08-16",
+  "floor": 5000,
+  "count": 5,
+  "holdings": [
+    {"ticker": "IAU", "value": 12500.00},
+    {"ticker": "AAPL", "value": 8200.00},
+    {"ticker": "ET", "value": 3200.00},
+    {"ticker": "JEPI", "value": 4100.00},
+    {"ticker": "MSFT", "value": 9800.00}
+  ]
+}
