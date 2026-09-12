@@ -32,7 +32,8 @@ const TRADITION_BY_FILE = {
   "mass-bolsena-raphael-vatican.jpg": "rc",
   "holy-sepulchre-roberts-jerusalem.jpg": "rc",
   "holy-sepulchre-crypt-roberts.jpg": "rc",
-  "annunciation-leonardo-uffizi.jpg": "rc"
+  "annunciation-leonardo-uffizi.jpg": "rc",
+  "disputation-sacrament-raphael-vatican.jpg": "rc"
 };
 let voiceVolume = 1;
 let savedBook = "romans";
