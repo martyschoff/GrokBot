@@ -642,16 +642,39 @@ async function load(playAfter) {
     let suffix = "";
     if (voiceAccent === "american") suffix = "-american";
     if (!hearGreek) suffix += "-nogrk";
-    if (!data.audio || data.waiting_audio) {
-      data.audio = mediaUrl("/data/audio/" + stem + currentChapter + suffix + ".mp3");
+    let preferredUrl = mediaUrl("/data/audio/" + stem + currentChapter + suffix + ".mp3");
+    
+    // Always rebuild live audio URL from voiceAccent + greek-off; don't let now-live.audio lock british
+    if (voiceAccent === "american" || !hearGreek) {
+      data.audio = preferredUrl;
+      hint.textContent = "";
+      // Try to fetch to see if american audio exists
+      if (voiceAccent === "american") {
+        try {
+          const res = await fetch(preferredUrl, { method: "HEAD", cache: "no-store" });
+          if (!res.ok) {
+            // American audio not available, fall back to british equivalent
+            let fallbackSuffix = "";
+            if (!hearGreek) fallbackSuffix = "-nogrk";
+            data.audio = mediaUrl("/data/audio/" + stem + currentChapter + fallbackSuffix + ".mp3");
+            hint.textContent = "American audio not on pack yet — playing British.";
+          }
+        } catch (e) {
+          // Network error; try to use the URL anyway
+        }
+      }
+    } else if (!data.audio || data.waiting_audio) {
+      data.audio = preferredUrl;
     }
   }
   if (data.audio) {
     if (voice.getAttribute("src") !== data.audio) voice.src = data.audio;
     applyVoiceVolume();
-    hint.textContent = HYMN_ENABLED
-      ? (data.waiting_hymn ? "Voice ready. Waiting on a public-domain hymn." : "Hymn stays very quiet under the voice.")
-      : "";
+    if (!hint.textContent) {
+      hint.textContent = HYMN_ENABLED
+        ? (data.waiting_hymn ? "Voice ready. Waiting on a public-domain hymn." : "Hymn stays very quiet under the voice.")
+        : "";
+    }
   } else {
     voice.removeAttribute("src");
     hint.textContent = "Waiting on the audio.";
