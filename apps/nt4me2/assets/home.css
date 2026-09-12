@@ -1,0 +1,169 @@
+:root {
+  --text: #3d3d2d;
+  --gold: #c19a3a;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --sans: "Avenir Next", "Segoe UI", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html, body {
+  height: 100%;
+  height: 100dvh;
+  margin: 0;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/parchment-sample.png);
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #e8dcc8;
+  color: var(--text);
+  font-family: var(--sans);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: 
+    repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,.02) 2px, rgba(0,0,0,.02) 4px),
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,.01) 2px, rgba(0,0,0,.01) 4px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.parchment-home {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.parchment-header {
+  text-align: center;
+  padding: clamp(2rem, 8vh, 4rem) clamp(1.5rem, 5vw, 2rem);
+  border-bottom: 2px solid rgba(61, 61, 45, 0.15);
+}
+
+.parchment-header h1 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+}
+
+.parchment-columns {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  gap: clamp(1rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 4vh, 2.5rem) clamp(1.5rem, 5vw, 2rem);
+}
+
+.parchment-column {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.parchment-left {
+  flex: 1;
+}
+
+.parchment-right {
+  flex: 1;
+  opacity: 0.3;
+}
+
+.books-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.books-nav a {
+  display: block;
+  padding: clamp(0.75rem, 2vh, 1.25rem) clamp(1rem, 3vw, 1.5rem);
+  margin-bottom: clamp(0.5rem, 1.5vh, 1rem);
+  text-decoration: none;
+  color: var(--text);
+  background: rgba(255,255,255,0.4);
+  border: 1px solid rgba(61, 61, 45, 0.2);
+  border-radius: 4px;
+  font-family: var(--serif);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.books-nav a:hover {
+  background: rgba(255,255,255,0.6);
+  border-color: var(--gold);
+  color: var(--gold);
+  transform: translateX(8px);
+}
+
+.books-nav a:active {
+  background: rgba(255,255,255,0.8);
+}
+
+@media (max-width: 900px) {
+  .parchment-columns {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .parchment-left {
+    flex: 0 1 auto;
+  }
+
+  .parchment-right {
+    display: none;
+  }
+
+  .parchment-header {
+    padding: clamp(1.5rem, 4vh, 2.5rem) clamp(1rem, 4vw, 1.5rem);
+  }
+
+  .parchment-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .parchment-home {
+    padding-top: max(0, env(safe-area-inset-top));
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .parchment-header {
+    padding: clamp(1rem, 3vh, 1.5rem) clamp(0.75rem, 3vw, 1rem);
+  }
+
+  .parchment-header h1 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .parchment-columns {
+    padding: clamp(1rem, 2vh, 1.5rem) clamp(0.75rem, 3vw, 1rem);
+    gap: 0;
+  }
+
+  .books-nav a {
+    padding: clamp(0.6rem, 1.5vh, 1rem) clamp(0.8rem, 2.5vw, 1.2rem);
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    margin-bottom: clamp(0.4rem, 1vh, 0.8rem);
+  }
+}
