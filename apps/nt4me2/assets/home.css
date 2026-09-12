@@ -17,7 +17,10 @@ html, body {
   height: 100%;
   height: 100dvh;
   margin: 0;
-  background: linear-gradient(135deg, #e8dcc8 0%, #f0ebe0 50%, #e6dcc2 100%);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/parchment-sample.png);
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #e8dcc8;
   color: var(--text);
   font-family: var(--sans);
 }

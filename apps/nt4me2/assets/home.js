@@ -97,11 +97,13 @@ async function renderBooks() {
   
   if (!nav) return;
   
-  const liveBooks = (catalog.books || []).filter((b) => isLiveBook(b.id));
+  const allowlist = ["romans", "1corinthians"];
+  const liveBooks = (catalog.books || [])
+    .filter((b) => allowlist.includes(b.id) && isLiveBook(b.id));
   
   liveBooks.forEach((book) => {
     const a = document.createElement("a");
-    a.href = `player.html?book=${book.id}`;
+    a.href = `player.html?book=${book.id}&chapter=1`;
     a.textContent = book.label || book.id;
     nav.appendChild(a);
   });

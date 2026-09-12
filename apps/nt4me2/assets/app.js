@@ -961,6 +961,14 @@ function getQueryParam(name) {
     savedBook = bookParam;
   }
   
+  const chapterParam = getQueryParam("chapter");
+  if (chapterParam) {
+    const ch = Number(chapterParam);
+    if (ch >= 1 && isLiveChapter(savedBook, ch)) {
+      currentChapter = ch;
+    }
+  }
+  
   loadIndex();
   load();
   setInterval(load, 15000);
