@@ -73,6 +73,8 @@ function audioStem(book) {
   if (book === "romans") return "romans-";
   if (book === "1corinthians") return "1cor-";
   if (book === "hebrews") return "hebrews-";
+  if (book === "titus") return "titus-";
+  if (book === "philemon") return "philemon-";
   return "";
 }
 
@@ -821,8 +823,8 @@ const NT_FALLBACK = {
     {id:"2thessalonians",label:"2 Thessalonians",live:false,chapters:0},
     {id:"1timothy",label:"1 Timothy",live:false,chapters:0},
     {id:"2timothy",label:"2 Timothy",live:false,chapters:0},
-    {id:"titus",label:"Titus",live:false,chapters:0},
-    {id:"philemon",label:"Philemon",live:false,chapters:0},
+    {id:"titus",label:"Titus",live:true,chapters:3},
+    {id:"philemon",label:"Philemon",live:true,chapters:1},
     {id:"hebrews",label:"Hebrews",live:true,chapters:13},
     {id:"james",label:"James",live:false,chapters:0},
     {id:"1peter",label:"1 Peter",live:false,chapters:0},
