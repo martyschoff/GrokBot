@@ -1,7 +1,7 @@
 const NT_FALLBACK = {
   version: "KJV",
   books: [
-    {id:"matthew",label:"Matthew",live:false,chapters:0},
+    {id:"matthew",label:"Matthew",live:true,chapters:28},
     {id:"mark",label:"Mark",live:false,chapters:0},
     {id:"luke",label:"Luke",live:false,chapters:0},
     {id:"john",label:"John",live:false,chapters:0},
@@ -50,7 +50,7 @@ function normalizeLiveTable(data) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json"];
+  const urls = [(pack || "") + "/data/live.json?v=20260912hj"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -77,7 +77,7 @@ function packBase() {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json"] : ["/data/books.json"];
+  const urls = pack ? [pack + "/data/books.json?v=20260912hj"] : ["/data/books.json?v=20260912hj"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
