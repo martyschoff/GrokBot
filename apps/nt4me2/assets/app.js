@@ -72,6 +72,7 @@ function isLiveChapter(book, n) {
 function audioStem(book) {
   if (book === "romans") return "romans-";
   if (book === "1corinthians") return "1cor-";
+  if (book === "hebrews") return "hebrews-";
   return "";
 }
 
@@ -822,7 +823,7 @@ const NT_FALLBACK = {
     {id:"2timothy",label:"2 Timothy",live:false,chapters:0},
     {id:"titus",label:"Titus",live:false,chapters:0},
     {id:"philemon",label:"Philemon",live:false,chapters:0},
-    {id:"hebrews",label:"Hebrews",live:false,chapters:0},
+    {id:"hebrews",label:"Hebrews",live:true,chapters:13},
     {id:"james",label:"James",live:false,chapters:0},
     {id:"1peter",label:"1 Peter",live:false,chapters:0},
     {id:"2peter",label:"2 Peter",live:false,chapters:0},

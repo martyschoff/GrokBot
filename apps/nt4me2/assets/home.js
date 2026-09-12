@@ -97,9 +97,8 @@ async function renderBooks() {
   
   if (!nav) return;
   
-  const allowlist = ["romans", "1corinthians"];
   const liveBooks = (catalog.books || [])
-    .filter((b) => allowlist.includes(b.id) && isLiveBook(b.id));
+    .filter((b) => isLiveBook(b.id));
   
   liveBooks.forEach((book) => {
     const a = document.createElement("a");
