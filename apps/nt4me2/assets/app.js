@@ -26,11 +26,11 @@ const BELIEF_KEY = "daily-chapter-beliefs";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
 const TRADITION_BY_FILE = {
-  // Seeded rc tags. Join by file name; now-live art rows may omit tradition.
+  // MartinStatus2 pictures.json currently tags exactly these three as tradition: rc.
+  // Join by file basename; now-live art rows may omit tradition.
   "mass-bolsena-raphael-vatican.jpg": "rc",
   "holy-sepulchre-roberts-jerusalem.jpg": "rc",
-  "holy-sepulchre-crypt-roberts.jpg": "rc",
-  "annunciation-leonardo-uffizi.jpg": "rc"
+  "holy-sepulchre-crypt-roberts.jpg": "rc"
 };
 let voiceVolume = 1;
 let savedBook = "romans";
@@ -102,32 +102,24 @@ function normalizeBeliefs(v) {
 
 function mergeTraditionMap(data) {
   if (!data) return;
-  const rows = Array.isArray(data) ? data
-    : Array.isArray(data.items) ? data.items
-    : Array.isArray(data.pictures) ? data.pictures
-    : null;
-  if (rows) {
-    rows.forEach((row) => {
-      if (!row || typeof row !== "object") return;
-      const file = artFile(row);
-      const t = String(row.tradition || "").trim().toLowerCase();
-      if (file && t) TRADITION_BY_FILE[file] = t;
+  const seen = new Set();
+  const walk = (node) => {
+    if (!node || seen.has(node)) return;
+    if (typeof node !== "object") return;
+    seen.add(node);
+    if (Array.isArray(node)) {
+      node.forEach(walk);
+      return;
+    }
+    const file = artFile(node) || String(node.file || "").trim();
+    const t = String(node.tradition || "").trim().toLowerCase();
+    if (file && t) TRADITION_BY_FILE[file] = t;
+    Object.keys(node).forEach((key) => {
+      if (key === "file" || key === "src" || key === "tradition") return;
+      walk(node[key]);
     });
-    return;
-  }
-  if (typeof data === "object") {
-    Object.keys(data).forEach((key) => {
-      const row = data[key];
-      if (row && typeof row === "object") {
-        const file = artFile(row) || key;
-        const t = String(row.tradition || "").trim().toLowerCase();
-        if (file && t) TRADITION_BY_FILE[file] = t;
-      } else if (typeof row === "string") {
-        const t = row.trim().toLowerCase();
-        if (key && t) TRADITION_BY_FILE[key] = t;
-      }
-    });
-  }
+  };
+  walk(data);
 }
 
 function traditionOf(item) {
@@ -627,7 +619,8 @@ async function loadTraditionMap() {
   const urls = [
     (pack || "") + "/data/art/pictures.json",
     (pack || "") + "/data/pictures.json",
-    (pack || "") + "/data/art/status.json"
+    (pack || "") + "/data/art/status.json",
+    (pack || "") + "/status/pictures.json"
   ];
   for (const url of urls) {
     try {
