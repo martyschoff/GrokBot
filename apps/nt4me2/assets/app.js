@@ -26,11 +26,13 @@ const BELIEF_KEY = "daily-chapter-beliefs";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
 const TRADITION_BY_FILE = {
-  // MartinStatus2 pictures.json currently tags exactly these three as tradition: rc.
-  // Join by file basename; now-live art rows may omit tradition.
+  // Locked rc seed (file basename). Live MartinStatus2 pictures.json tags the
+  // first three; Leonardo Annunciation is in the NT pool as this display file.
+  // Album-shaped pictures.json (current_album/albums) is merged when mounted.
   "mass-bolsena-raphael-vatican.jpg": "rc",
   "holy-sepulchre-roberts-jerusalem.jpg": "rc",
-  "holy-sepulchre-crypt-roberts.jpg": "rc"
+  "holy-sepulchre-crypt-roberts.jpg": "rc",
+  "annunciation-leonardo-uffizi.jpg": "rc"
 };
 let voiceVolume = 1;
 let savedBook = "romans";
@@ -627,8 +629,8 @@ async function loadTraditionMap() {
       const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) continue;
       const data = await res.json();
+      // Album-shaped status catalogs (current_album / albums) or flat lists.
       mergeTraditionMap(data);
-      return;
     } catch (e) {}
   }
 }
