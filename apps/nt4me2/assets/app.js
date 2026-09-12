@@ -1187,6 +1187,7 @@ function getQueryParam(name) {
     const ch = Number(chapterParam);
     if (ch >= 1 && isLiveChapter(savedBook, ch)) {
       currentChapter = ch;
+      nowPick = (packBase() || "") + "/data/kjv/" + savedBook + "/" + ch + "/now-live.json";
     }
   }
   
@@ -1197,3 +1198,11 @@ function getQueryParam(name) {
   setInterval(loadLiveTable, 15000);
   setInterval(loadTraditionMap, 60000);
 })();
+
+window.ntArtState = function () {
+  return {
+    beliefs: beliefs,
+    files: art.map(artFile),
+    raw: artRaw.map(artFile)
+  };
+};
