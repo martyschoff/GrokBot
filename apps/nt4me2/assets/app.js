@@ -946,10 +946,21 @@ document.getElementById("voice").addEventListener("ended", function () {
   if (currentChapter >= 1) writeCompleted(savedBook || "romans", currentChapter);
 });
 
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
+
 (async function boot() {
   await loadPrefs();
   await loadLiveTable();
   restoreCompleted();
+  
+  const bookParam = getQueryParam("book");
+  if (bookParam && isLiveBook(bookParam)) {
+    savedBook = bookParam;
+  }
+  
   loadIndex();
   load();
   setInterval(load, 15000);

@@ -4,60 +4,27 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Daily chapter">
+  <meta name="apple-mobile-web-app-title" content="NT Daily">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Daily chapter</title>
-  <link rel="stylesheet" href="/assets/app.css?v=20260912a">
+  <title>New Testament Daily</title>
+  <link rel="stylesheet" href="/assets/home.css?v=20260912b">
 </head>
 <body>
-  <div class="stage">
-    <img id="art" alt="" hidden>
-    <div id="art-empty" class="empty-art">Waiting on open-access art.</div>
-    <div class="veil"></div>
-    <div class="verse-text-viewport" id="verse-text-viewport" hidden>
-      <div class="verse-text-scroller" id="verse-text-scroller"></div>
-    </div>
-    <div class="caption" id="caption" hidden>
-      <p class="cap-title" id="cap-title"></p>
-      <p class="cap-place" id="cap-place"></p>
-      <p class="cap-artist" id="cap-artist"></p>
-    </div>
-    <header class="bar">
-      <div>
-        <p class="kicker">Daily chapter</p>
-        <h1 id="title">Daily reading</h1>
-      </div>
+  <div class="parchment-home">
+    <header class="parchment-header">
+      <h1>New Testament</h1>
     </header>
-    <button type="button" id="ur-btn" class="ur-btn" aria-label="Menu" aria-expanded="false">
-      <span class="ur-lines" aria-hidden="true"></span>
-    </button>
-    <nav id="ur-menu" class="ur-menu" hidden>
-      <button type="button" data-ur="text" id="ur-text">Text</button>
-      <button type="button" data-ur="voice" id="ur-voice">Voice</button>
-      <button type="button" data-ur="version">Bible version</button>
-      <button type="button" data-ur="greek" id="ur-greek">Greek</button>
-      <button type="button" data-ur="volume">Volume</button>
-      <button type="button" data-ur="book">book/chapter start</button>
-      <button type="button" data-ur="help">Help</button>
-    </nav>
-    <aside id="ur-panel" class="ur-panel" hidden></aside>
-    <aside id="interpret-bubble" class="interpret-bubble" hidden>
-      <div class="interpret-scroll" id="interpret-scroll"></div>
-    </aside>
-    <aside id="help-bubble" class="interpret-bubble" hidden>
-      <div class="interpret-scroll" id="help-scroll"></div>
-    </aside>
-    <footer class="dock">
-      <button type="button" id="play" class="play">Play</button>
-      <button type="button" id="repeat" class="play">Repeat</button>
-      <button type="button" id="back" class="play">Back</button>
-      <button type="button" id="next" class="play">Next</button>
-      <p class="hint" id="hint">Waiting on the audio.</p>
-    </footer>
-    <button type="button" id="interpretation" class="play interpret-no art-interpret" aria-pressed="false">Art Interpretation</button>
-    <audio id="voice" preload="auto"></audio>
-    <audio id="hymn" preload="auto" loop></audio>
+    <div class="parchment-columns">
+      <div class="parchment-column parchment-left">
+        <nav class="books-nav" id="books-nav">
+          <!-- Books will be populated here -->
+        </nav>
+      </div>
+      <div class="parchment-column parchment-right">
+        <!-- Right column empty for now -->
+      </div>
+    </div>
   </div>
-  <script src="/assets/app.js?v=20260912a"></script>
+  <script src="/assets/home.js?v=20260912b"></script>
 </body>
 </html>

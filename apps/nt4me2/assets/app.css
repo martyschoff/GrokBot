@@ -5,6 +5,10 @@
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
   --sans: "Avenir Next", "Segoe UI", "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
 }
+
+.parchment-home {
+  background: linear-gradient(135deg, #e8dcc8 0%, #f0ebe0 50%, #e6dcc2 100%);
+}
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html, body {
