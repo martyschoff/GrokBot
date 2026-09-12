@@ -1,0 +1,6 @@
+# Dan alerts / holdings — never commit (Martin lock 2026-09-12)
+**/dan-alerts.json
+**/dan-alerts-universe.json
+**/dan-alerts*.json
+**/holdings-latest.csv
+**/holdings*.csv
