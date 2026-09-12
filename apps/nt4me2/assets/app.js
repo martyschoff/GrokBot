@@ -2,6 +2,7 @@ const HYMN_ENABLED = false;
 const HYMN_GAIN = 0.15;
 const ART_MS = 12500;
 let art = [];
+let artRaw = [];
 let artIndex = 0;
 let artTimer = null;
 let playing = false;
@@ -16,11 +17,21 @@ let nowPick = "";
 let hearGreek = true;
 let showText = true;
 let voiceAccent = "british";
+const BELIEF_OPTIONS = ["evangelical", "roman catholic", "orthodox", "none"];
+let beliefs = "evangelical";
 const PREF_KEY = "daily-chapter-hear-greek";
 const TEXT_KEY = "daily-chapter-show-text";
 const VOICE_KEY = "daily-chapter-voice-accent";
+const BELIEF_KEY = "daily-chapter-beliefs";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
+const TRADITION_BY_FILE = {
+  // Seeded rc tags. Join by file name; now-live art rows may omit tradition.
+  "mass-bolsena-raphael-vatican.jpg": "rc",
+  "holy-sepulchre-roberts-jerusalem.jpg": "rc",
+  "holy-sepulchre-crypt-roberts.jpg": "rc",
+  "annunciation-leonardo-uffizi.jpg": "rc"
+};
 let voiceVolume = 1;
 let savedBook = "romans";
 let currentChapter = 0;
@@ -84,6 +95,115 @@ function artFile(item) {
   return i >= 0 ? src.slice(i + 1) : src;
 }
 
+function normalizeBeliefs(v) {
+  const s = String(v || "").trim().toLowerCase();
+  return BELIEF_OPTIONS.indexOf(s) >= 0 ? s : "evangelical";
+}
+
+function mergeTraditionMap(data) {
+  if (!data) return;
+  const rows = Array.isArray(data) ? data
+    : Array.isArray(data.items) ? data.items
+    : Array.isArray(data.pictures) ? data.pictures
+    : null;
+  if (rows) {
+    rows.forEach((row) => {
+      if (!row || typeof row !== "object") return;
+      const file = artFile(row);
+      const t = String(row.tradition || "").trim().toLowerCase();
+      if (file && t) TRADITION_BY_FILE[file] = t;
+    });
+    return;
+  }
+  if (typeof data === "object") {
+    Object.keys(data).forEach((key) => {
+      const row = data[key];
+      if (row && typeof row === "object") {
+        const file = artFile(row) || key;
+        const t = String(row.tradition || "").trim().toLowerCase();
+        if (file && t) TRADITION_BY_FILE[file] = t;
+      } else if (typeof row === "string") {
+        const t = row.trim().toLowerCase();
+        if (key && t) TRADITION_BY_FILE[key] = t;
+      }
+    });
+  }
+}
+
+function traditionOf(item) {
+  const direct = String((item && item.tradition) || "").trim().toLowerCase();
+  if (direct) return direct;
+  return String(TRADITION_BY_FILE[artFile(item)] || "").toLowerCase();
+}
+
+function filterArtByBeliefs(list, belief) {
+  const pool = (list || []).slice();
+  if (normalizeBeliefs(belief) === "evangelical") {
+    return pool.filter((item) => traditionOf(item) !== "rc");
+  }
+  return pool;
+}
+
+function cleanVisibleText(s) {
+  return String(s || "")
+    .replace(/\s*\(\s*rc\s*\)/gi, "")
+    .replace(/\s*\[\s*rc\s*\]/gi, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
+function fallbackArtItem() {
+  const fb = window.FALLBACK_ART || {};
+  return {
+    src: fb.src || "/assets/descent-cross-novgorod-tretyakov.jpg",
+    file: fb.file || "descent-cross-novgorod-tretyakov.jpg",
+    title: fb.title || "The Descent from the Cross",
+    place: fb.place || "Tretyakov Gallery, Moscow",
+    artist: fb.artist || "unknown",
+    _fallback: true
+  };
+}
+
+function paintArtCaption(item) {
+  const title = cleanVisibleText(item && item.title);
+  const place = cleanVisibleText(item && item.place);
+  let artist = cleanVisibleText(item && item.artist);
+  if (!artist || artist.toLowerCase() === "unknown") artist = "unknown";
+  document.getElementById("cap-title").textContent = title;
+  document.getElementById("cap-place").textContent = place;
+  document.getElementById("cap-artist").textContent = artist;
+  document.getElementById("caption").hidden = !(title || place || artist);
+}
+
+function showFallbackArt() {
+  const item = fallbackArtItem();
+  const img = document.getElementById("art");
+  if (!img || !item.src) return;
+  img.src = item.src;
+  img.hidden = false;
+  document.getElementById("art-empty").hidden = true;
+  paintArtCaption(item);
+}
+
+function applyArtPool(list, force) {
+  artRaw = (list || []).slice();
+  const next = filterArtByBeliefs(artRaw, beliefs);
+  const id = String(currentChapter || 0) + "::" + beliefs + "::" + artListKey(next);
+  if (!force && id === artSourceKey) return;
+  artSourceKey = id;
+  art = shuffleArt(next);
+  artIndex = 0;
+  lastKey = id;
+  if (!art.length) {
+    stopSlideshow();
+    showFallbackArt();
+    setInterpretRim();
+    return;
+  }
+  if (!interpretFrozen) startSlideshow();
+  else showArt(artIndex);
+}
+
 function artListKey(list) {
   return (list || []).map(artFile).join("|");
 }
@@ -137,26 +257,39 @@ function startSlideshow() {
 
 function showArt(i) {
   if (!art.length) {
-    document.getElementById("art").hidden = true;
-    document.getElementById("art-empty").hidden = false;
-    document.getElementById("caption").hidden = true;
+    showFallbackArt();
     setInterpretRim();
     return;
   }
   artIndex = ((i % art.length) + art.length) % art.length;
   const item = art[artIndex];
   const img = document.getElementById("art");
-  img.src = item.src;
-  img.hidden = false;
-  document.getElementById("art-empty").hidden = true;
-  const title = item.title || "";
-  const place = item.place || "";
-  let artist = (item.artist || "").trim();
-  if (!artist || artist.toLowerCase() === "unknown") artist = "unknown";
-  document.getElementById("cap-title").textContent = title;
-  document.getElementById("cap-place").textContent = place;
-  document.getElementById("cap-artist").textContent = artist;
-  document.getElementById("caption").hidden = !(title || place || artist);
+  const nextSrc = item.src;
+  const paint = () => {
+    img.src = nextSrc;
+    img.hidden = false;
+    document.getElementById("art-empty").hidden = true;
+    paintArtCaption(item);
+    setInterpretRim();
+    if (interpretOpen) fillInterpret(item);
+  };
+  if (!nextSrc) {
+    showFallbackArt();
+    setInterpretRim();
+    return;
+  }
+  if (img.getAttribute("src") === nextSrc && img.complete && img.naturalWidth) {
+    paint();
+    return;
+  }
+  const probe = new Image();
+  probe.onload = paint;
+  probe.onerror = () => {
+    if (!img.getAttribute("src")) showFallbackArt();
+    setInterpretRim();
+    if (interpretOpen) fillInterpret(item);
+  };
+  probe.src = nextSrc;
   setInterpretRim();
   if (interpretOpen) fillInterpret(item);
 }
@@ -413,6 +546,7 @@ async function loadPrefs() {
   hearGreek = true;
   showText = true;
   voiceAccent = "british";
+  beliefs = "evangelical";
   voiceVolume = 1;
   try {
     const v = localStorage.getItem(PREF_KEY);
@@ -429,6 +563,9 @@ async function loadPrefs() {
     if (a === "american" || a === "british") voiceAccent = a;
   } catch (e) {}
   try {
+    beliefs = normalizeBeliefs(localStorage.getItem(BELIEF_KEY));
+  } catch (e) {}
+  try {
     const raw = localStorage.getItem(VOL_KEY);
     if (raw != null && raw !== "") {
       const n = Number(raw);
@@ -440,24 +577,27 @@ async function loadPrefs() {
     if (res.ok) {
       const data = await res.json();
       if (data && typeof data.hearGreek === "boolean") hearGreek = data.hearGreek;
+      if (data && data.beliefs != null) beliefs = normalizeBeliefs(data.beliefs);
     }
   } catch (e) {}
   applyVoiceVolume();
   paintGreek();
   paintText();
   paintVoice();
+  paintBeliefs();
 }
 
 async function savePrefs() {
   try { localStorage.setItem(PREF_KEY, hearGreek ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(TEXT_KEY, showText ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(VOICE_KEY, voiceAccent); } catch (e) {}
+  try { localStorage.setItem(BELIEF_KEY, beliefs); } catch (e) {}
   try { localStorage.setItem(VOL_KEY, String(voiceVolume)); } catch (e) {}
   try {
     await fetch("/api/prefs", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ hearGreek: hearGreek }),
+      body: JSON.stringify({ hearGreek: hearGreek, beliefs: beliefs }),
     });
   } catch (e) {}
 }
@@ -475,6 +615,29 @@ function paintText() {
 function paintVoice() {
   const btn = document.getElementById("ur-voice");
   if (btn) btn.textContent = "Voice: " + (voiceAccent === "american" ? "American" : "British");
+}
+
+function paintBeliefs() {
+  const btn = document.getElementById("ur-beliefs");
+  if (btn) btn.textContent = "Beliefs: " + beliefs;
+}
+
+async function loadTraditionMap() {
+  const pack = packBase();
+  const urls = [
+    (pack || "") + "/data/art/pictures.json",
+    (pack || "") + "/data/pictures.json",
+    (pack || "") + "/data/art/status.json"
+  ];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) continue;
+      const data = await res.json();
+      mergeTraditionMap(data);
+      return;
+    } catch (e) {}
+  }
 }
 
 function bookLabel(id) {
@@ -708,16 +871,7 @@ async function load(playAfter) {
     hymn.pause();
     hymn.removeAttribute("src");
   }
-  const next = data.art || [];
-  const id = String(currentChapter || 0) + "::" + artListKey(next);
-  if (id !== artSourceKey) {
-    artSourceKey = id;
-    art = shuffleArt(next);
-    artIndex = 0;
-    lastKey = id;
-    if (!interpretFrozen) startSlideshow();
-    else showArt(artIndex);
-  }
+  applyArtPool(data.art || []);
   setInterpretRim();
   if (playAfter && data.audio) setPlaying(true);
 }
@@ -737,6 +891,7 @@ function openUrMenu() {
   paintText();
   paintVoice();
   paintGreek();
+  paintBeliefs();
 }
 
 function showUrPanel(html) {
@@ -752,6 +907,15 @@ function showVersion() {
     '<button type="button" class="ur-live">KJV</button>' +
     '<button type="button" class="ur-dead" disabled>NIV</button>'
   );
+}
+
+function showBeliefs() {
+  const rows = ['<p class="ur-head">Beliefs</p>'];
+  BELIEF_OPTIONS.forEach((opt) => {
+    const cls = opt === beliefs ? "ur-live" : "";
+    rows.push('<button type="button" class="' + cls + '" data-belief="' + opt + '">' + opt + "</button>");
+  });
+  showUrPanel(rows.join(""));
 }
 
 function showVolume() {
@@ -883,6 +1047,8 @@ async function pickChapter(n, bookId) {
   const pack = packBase();
   nowPick = (pack || "") + "/data/kjv/" + book + "/" + n + "/now-live.json";
   closeUr();
+  showFallbackArt();
+  artSourceKey = "";
   await load(true);
 }
 
@@ -936,6 +1102,7 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
     savePrefs();
     load(playing);
   }
+  if (kind === "beliefs") showBeliefs();
   if (kind === "volume") showVolume();
   if (kind === "book") {
     const catalog = await loadCatalog();
@@ -950,6 +1117,15 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
   if (!btn || btn.disabled || btn.classList.contains("ur-dead") || btn.classList.contains("ur-wait")) return;
   if (btn.getAttribute("data-back") === "books") {
     showBooks(window._bookCatalog || { books: [] });
+    return;
+  }
+  const belief = btn.getAttribute("data-belief");
+  if (belief) {
+    beliefs = normalizeBeliefs(belief);
+    paintBeliefs();
+    savePrefs();
+    applyArtPool(artRaw, true);
+    closeUr();
     return;
   }
   const bookId = btn.getAttribute("data-book");
@@ -995,8 +1171,10 @@ function getQueryParam(name) {
 }
 
 (async function boot() {
+  showFallbackArt();
   await loadPrefs();
   await loadLiveTable();
+  await loadTraditionMap();
   restoreCompleted();
   
   const bookParam = getQueryParam("book");
@@ -1017,4 +1195,5 @@ function getQueryParam(name) {
   setInterval(load, 15000);
   setInterval(loadIndex, 15000);
   setInterval(loadLiveTable, 15000);
+  setInterval(loadTraditionMap, 60000);
 })();
