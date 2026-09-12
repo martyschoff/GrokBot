@@ -1,0 +1,32 @@
+{
+  "owner": "martin",
+  "source": "Yahoo Finance",
+  "fetched_at": "2026-08-21T16:00:00-04:00",
+  "ratings": [
+    {
+      "ticker": "IAU",
+      "rating": "Buy",
+      "url": "https://finance.yahoo.com/quote/IAU/analysis/"
+    },
+    {
+      "ticker": "AAPL",
+      "rating": "Strong Buy",
+      "url": "https://finance.yahoo.com/quote/AAPL/analysis/"
+    },
+    {
+      "ticker": "ET",
+      "rating": "",
+      "url": "https://finance.yahoo.com/quote/ET/analysis/"
+    },
+    {
+      "ticker": "JEPI",
+      "rating": null,
+      "url": "https://finance.yahoo.com/quote/JEPI/analysis/"
+    },
+    {
+      "ticker": "MSFT",
+      "rating": "Buy",
+      "url": "https://finance.yahoo.com/quote/MSFT/analysis/"
+    }
+  ]
+}
