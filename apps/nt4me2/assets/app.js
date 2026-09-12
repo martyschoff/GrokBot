@@ -648,20 +648,39 @@ async function load(playAfter) {
     if (voiceAccent === "american" || !hearGreek) {
       data.audio = preferredUrl;
       hint.textContent = "";
-      // Try to fetch to see if american audio exists
+      // Probe american audio existence with Audio element (avoids CORS issues)
       if (voiceAccent === "american") {
-        try {
-          const res = await fetch(preferredUrl, { method: "HEAD", cache: "no-store" });
-          if (!res.ok) {
+        const probe = new Audio();
+        let probeResolved = false;
+        const onLoadedData = () => {
+          if (!probeResolved) {
+            probeResolved = true;
+            cleanup();
+          }
+        };
+        const onError = () => {
+          if (!probeResolved) {
+            probeResolved = true;
             // American audio not available, fall back to british equivalent
             let fallbackSuffix = "";
             if (!hearGreek) fallbackSuffix = "-nogrk";
             data.audio = mediaUrl("/data/audio/" + stem + currentChapter + fallbackSuffix + ".mp3");
             hint.textContent = "American audio not on pack yet — playing British.";
+            // Update voice element with fallback
+            if (voice.getAttribute("src") !== data.audio) voice.src = data.audio;
+            cleanup();
           }
-        } catch (e) {
-          // Network error; try to use the URL anyway
-        }
+        };
+        const cleanup = () => {
+          probe.removeEventListener("loadeddata", onLoadedData);
+          probe.removeEventListener("canplay", onLoadedData);
+          probe.removeEventListener("error", onError);
+          probe.src = "";
+        };
+        probe.addEventListener("loadeddata", onLoadedData);
+        probe.addEventListener("canplay", onLoadedData);
+        probe.addEventListener("error", onError);
+        probe.src = preferredUrl;
       }
     } else if (!data.audio || data.waiting_audio) {
       data.audio = preferredUrl;
