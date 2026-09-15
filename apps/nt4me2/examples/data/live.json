@@ -1,0 +1,6 @@
+{
+  "books": {
+    "romans": [1],
+    "1corinthians": { "chapters": [13] }
+  }
+}

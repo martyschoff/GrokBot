@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="Open-access example art">
+  <rect width="1600" height="900" fill="#1a1510"/>
+  <rect x="80" y="80" width="1440" height="740" fill="#3d2a14" stroke="#e3b35a" stroke-width="4"/>
+  <text x="800" y="430" fill="#f4f0e6" font-size="64" font-family="Georgia, serif" text-anchor="middle">Open-access example</text>
+  <text x="800" y="510" fill="#e3b35a" font-size="28" font-family="Georgia, serif" text-anchor="middle">nt4me2 fixture</text>
+</svg>

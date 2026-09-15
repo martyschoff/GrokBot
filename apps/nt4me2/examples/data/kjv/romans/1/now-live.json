@@ -1,0 +1,19 @@
+{
+  "title": "Romans 1",
+  "book": "romans",
+  "chapter": 1,
+  "audio": "",
+  "hymn": "",
+  "waiting_audio": true,
+  "waiting_art": false,
+  "waiting_hymn": true,
+  "art": [
+    {
+      "src": "/data/art/example-open-access.svg",
+      "file": "example-open-access.svg",
+      "title": "Open-access example",
+      "place": "fixtures",
+      "artist": "unknown"
+    }
+  ]
+}
