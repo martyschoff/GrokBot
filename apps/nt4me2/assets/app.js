@@ -1,3 +1,23 @@
+// Daily chapter player. Serve apps/nt4me2 as the web root (see README.md).
+//
+// Data pack (all cache: no-store), prefixed by window.PACK_BASE when set:
+//   /data/live.json
+//   /data/now-live.json          default chapter (skipped after an explicit pick)
+//   /data/kjv/<book>/<n>/now-live.json
+//   /data/books.json             optional; else NT_FALLBACK
+//   /data/help.txt               optional
+//   /data/art/interpretations.json
+//   /data/art/<card>
+//   /data/audio/<stem><n>.mp3 and <stem><n>-nogrk.mp3
+//
+// Optional host APIs when PACK_BASE is empty:
+//   GET  /api/now     same JSON as now-live.json
+//   GET  /api/prefs   { hearGreek }
+//   POST /api/prefs   { hearGreek }  (volume stays in localStorage)
+//
+// Audio stems in this tree: romans → romans-, 1corinthians → 1cor-.
+// localStorage: daily-chapter-hear-greek, daily-chapter-voice-volume, daily-chapter-completed.
+
 const HYMN_ENABLED = false;
 const HYMN_GAIN = 0.15;
 const ART_MS = 12500;
@@ -23,6 +43,7 @@ let currentChapter = 0;
 let viewingBook = "";
 let liveTable = {};
 
+/** Accept { books: { id: [n] | { chapters: [n] } } } or a bare id → chapters map. */
 function normalizeLiveTable(data) {
   const out = {};
   if (!data || typeof data !== "object") return out;
@@ -385,6 +406,7 @@ function packBase() {
   return (window.PACK_BASE || "").replace(/\/$/, "");
 }
 
+/** Keep http(s) URLs; prefix root-relative paths with PACK_BASE when set. */
 function mediaUrl(path) {
   if (!path) return "";
   if (/^https?:\/\//i.test(path)) return path;
@@ -477,6 +499,8 @@ function synthesizeNow() {
   return data;
 }
 
+/** Default chapter: PACK_BASE/data/now-live.json, else /api/now then /data/now-live.json.
+ *  Explicit pick: only /data/kjv/<book>/<n>/now-live.json, then synthesizeNow(). */
 async function fetchNow() {
   const pack = packBase();
   if (nowPick) {

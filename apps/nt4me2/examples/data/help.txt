@@ -1,0 +1,25 @@
+Daily Chapter Help
+
+MENU (gold control, top right):
+
+Version — KJV is live. NIV is listed and disabled.
+
+Greek — Toggle Greek words in the spoken chapter. Off plays the -nogrk.mp3 file when that chapter is live.
+
+Volume — Spoken volume only (0–100). Stored in this browser.
+
+book/chapter start — Jump to a live book and chapter. Green rows are live. Soft red chapter numbers are not released yet. The last finished chapter is restored on the next visit if it is still live.
+
+Help — This text, loaded from /data/help.txt.
+
+DOCK:
+
+Play/Pause — Start or pause the chapter. Artwork advances every 12.5 seconds while playing.
+
+Repeat — Restart the current audio from the beginning.
+
+Back / Next — Previous or next live chapter in the same book.
+
+ART INTERPRETATION:
+
+Bottom right. Green when an approved card exists for the current picture. Soft red when none is ready.
