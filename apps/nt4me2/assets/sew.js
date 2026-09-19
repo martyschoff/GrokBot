@@ -16,22 +16,49 @@
     "wesley"
   ];
 
+  const EXEGETE_FILE = {
+    "matthew-henry": "henry",
+    "albert-barnes": "barnes",
+    "henry-alford": "alford",
+    "spurgeon": "spurgeon",
+    "wesley": "wesley"
+  };
+
   function optsOf(options) {
     if (!options || typeof options === "string") {
       return {
         voiceAccent: options === "american" ? "american" : "british",
-        bibleVersion: "berean"
+        bibleVersion: "berean",
+        hearGreek: false
       };
     }
     return {
       voiceAccent: options.voiceAccent === "american" ? "american" : "british",
-      bibleVersion: options.bibleVersion === "kjv" ? "kjv" : "berean"
+      bibleVersion: options.bibleVersion === "kjv" ? "kjv" : "berean",
+      hearGreek: !!options.hearGreek
     };
+  }
+
+  function versionCode(bibleVersion) {
+    return bibleVersion === "kjv" ? "kjv" : "bsb";
+  }
+
+  function greekCode(hearGreek) {
+    return hearGreek ? "greekon" : "greekoff";
+  }
+
+  function readingFileStem(opt) {
+    return versionCode(opt.bibleVersion) + "-main-" + greekCode(opt.hearGreek) + "-" + opt.voiceAccent;
+  }
+
+  function exegeteFileId(key) {
+    if (!key || key.indexOf("exegete-") !== 0) return "";
+    const id = key.slice("exegete-".length);
+    return EXEGETE_FILE[id] || id;
   }
 
   function wantedKeys(settings) {
     const keys = ["reading"];
-    if (settings && settings.hearGreek) keys.push("greek");
     if (settings && settings.otRef) keys.push("otref");
     if (settings && settings.teaching) keys.push("teaching");
     if (settings && settings.westminster) keys.push("westminster");
@@ -47,18 +74,24 @@
   function aliasesFor(key) {
     const spec = SEW_KEYS.find((s) => s.id === key);
     if (spec) return spec.aliases.slice();
+    if (key.indexOf("exegete-") === 0) {
+      const short = exegeteFileId(key);
+      const aliases = [key];
+      if (short && aliases.indexOf("exegete-" + short) < 0) aliases.push("exegete-" + short);
+      return aliases;
+    }
     return [key];
   }
 
   function pickUrl(map, key, options) {
     if (!map || typeof map !== "object") return "";
     const opt = optsOf(options);
-    const aliases = aliasesFor(key);
     if (key === "reading") {
-      const compound = map["reading-" + opt.bibleVersion + "-" + opt.voiceAccent]
-        || map[opt.bibleVersion + "-" + opt.voiceAccent];
+      const stem = readingFileStem(opt);
+      const compound = map["reading-" + stem] || map[stem];
       if (compound) return String(compound);
     }
+    const aliases = aliasesFor(key);
     if (opt.voiceAccent === "american") {
       for (let i = 0; i < aliases.length; i++) {
         const a = aliases[i];
@@ -90,32 +123,30 @@
     if (!stem || !chapter || !key) return [];
     const opt = optsOf(options);
     const base = "/data/audio/" + stem + chapter;
-    const version = opt.bibleVersion;
-    const accent = opt.voiceAccent;
     const urls = [];
     const push = (u) => {
       if (u && urls.indexOf(u) < 0) urls.push(u);
     };
     if (key === "reading") {
-      push(base + "-" + version + "-" + accent + ".mp3");
-      if (accent === "american") {
-        push(base + "-american.mp3");
-        push(base + "-american-nogrk.mp3");
-      } else {
-        push(base + ".mp3");
-        push(base + "-nogrk.mp3");
-      }
+      push(base + "-" + readingFileStem(opt) + ".mp3");
       return urls;
     }
+    if (key === "greek") return urls;
     if (key === "otref") {
       push(base + "-ot-ref.mp3");
       push(base + "-otref.mp3");
-      push(base + "-" + version + "-" + accent + "-otref.mp3");
+      return urls;
+    }
+    if (key === "rccatechism") {
+      push(base + "-ccc.mp3");
+      return urls;
+    }
+    if (key.indexOf("exegete-") === 0) {
+      const short = exegeteFileId(key);
+      if (short) push(base + "-exegete-" + short + ".mp3");
       return urls;
     }
     push(base + "-" + key + ".mp3");
-    push(base + "-" + version + "-" + accent + "-" + key + ".mp3");
-    if (accent === "american") push(base + "-american-" + key + ".mp3");
     return urls;
   }
 

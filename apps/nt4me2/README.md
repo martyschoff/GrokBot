@@ -22,23 +22,25 @@ Exegete voices (on/off): Matthew Henry, Albert Barnes, Henry Alford, Spurgeon, W
 
 Artwork does not rotate.
 
-Chapter audio is sewn from the selected Bible × Voice main read, then Greek (if on), OT Ref (if on and present), Teaching, Westminster, RC Catechism, then any on exegete-* fragments. Missing pieces, including OT Ref, are silence — no stub.
+Chapter audio is sewn from one Kokoro main (Bible × Greek-on/off × Voice), then OT Ref (if on and present), Teaching, Westminster, RC Catechism, then any on exegete-* fragments. Greek is baked into the main — not a separate sew fragment. Missing pieces, including OT Ref, are silence — no stub.
 
-### Main-read paths (berean/kjv × american/british)
+### Main-read paths (kjv|bsb × greekon|greekoff × british|american)
 
-`/data/audio/galatians-{1|2}-{berean|kjv}-{british|american}.mp3`
+`/data/audio/galatians-{1|2}-{kjv|bsb}-main-{greekon|greekoff}-{british|american}.mp3`
 
-Examples: `galatians-1-berean-british.mp3`, `galatians-2-kjv-american.mp3`.
+`bibleVersion` berean → `bsb`, kjv → `kjv`. `hearGreek` on → `greekon`, else `greekoff`.
 
-### Fragment paths
+Examples: `galatians-1-bsb-main-greekon-british.mp3`, `galatians-2-kjv-main-greekoff-american.mp3`.
+
+### Shared fragment paths
 
 `/data/audio/galatians-{1|2}-teaching.mp3`  
 `/data/audio/galatians-{1|2}-westminster.mp3`  
-`/data/audio/galatians-{1|2}-rccatechism.mp3`  
-`/data/audio/galatians-{1|2}-exegete-{matthew-henry|albert-barnes|henry-alford|spurgeon|wesley}.mp3`  
+`/data/audio/galatians-{1|2}-ccc.mp3` (rccatechism)  
+`/data/audio/galatians-{1|2}-exegete-{henry|barnes|alford|spurgeon|wesley}.mp3`  
 `/data/audio/galatians-{1|2}-ot-ref.mp3` — omit if empty (silence).
 
-Greek (optional): `galatians-{1|2}-greek.mp3`.
+Exegete settings ids map to file stems: matthew-henry → henry, albert-barnes → barnes, henry-alford → alford.
 
 ## How Kimberly wires real audio
 
@@ -50,16 +52,12 @@ Merge into S3 `data/live.json` (do not drop other books):
   "fragments": {
     "galatians": {
       "1": {
-        "reading-berean-british": "/data/audio/galatians-1-berean-british.mp3",
-        "reading-berean-american": "/data/audio/galatians-1-berean-american.mp3",
-        "reading-kjv-british": "/data/audio/galatians-1-kjv-british.mp3",
-        "reading-kjv-american": "/data/audio/galatians-1-kjv-american.mp3"
+        "reading-bsb-main-greekon-british": "/data/audio/galatians-1-bsb-main-greekon-british.mp3",
+        "reading-kjv-main-greekoff-american": "/data/audio/galatians-1-kjv-main-greekoff-american.mp3"
       },
       "2": {
-        "reading-berean-british": "/data/audio/galatians-2-berean-british.mp3",
-        "reading-berean-american": "/data/audio/galatians-2-berean-american.mp3",
-        "reading-kjv-british": "/data/audio/galatians-2-kjv-british.mp3",
-        "reading-kjv-american": "/data/audio/galatians-2-kjv-american.mp3"
+        "reading-bsb-main-greekon-british": "/data/audio/galatians-2-bsb-main-greekon-british.mp3",
+        "reading-kjv-main-greekoff-american": "/data/audio/galatians-2-kjv-main-greekoff-american.mp3"
       }
     }
   }

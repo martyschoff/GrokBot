@@ -96,7 +96,7 @@ function mergeFragmentTable(raw) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260919d"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919e"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -111,7 +111,7 @@ async function loadLiveTable() {
 
 async function loadFragmentOverlay() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/fragments.json?v=20260919d"];
+  const urls = [(pack || "") + "/data/fragments.json?v=20260919e"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -468,7 +468,7 @@ async function openHelp() {
   const pack = packBase();
   let text = "";
   try {
-    const res = await fetch((pack || "") + "/data/help.txt?v=20260919d", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/help.txt?v=20260919e", { cache: "no-store" });
     if (res.ok) text = await res.text();
   } catch (e) {}
   const p = document.createElement("p");
@@ -1089,7 +1089,7 @@ function sewSettings() {
 }
 
 function sewOptions() {
-  return { voiceAccent: voiceAccent, bibleVersion: bibleVersion };
+  return { voiceAccent: voiceAccent, bibleVersion: bibleVersion, hearGreek: hearGreek };
 }
 
 function decorateFragmentMap(map) {
@@ -1159,16 +1159,12 @@ async function buildSewQueue(data) {
   const stem = audioStem(savedBook);
   const ch = Number(currentChapter) || 0;
   const map = collectFragmentMap(data);
-  const compound = "reading-" + bibleVersion + "-" + voiceAccent;
-  if (map[compound]) map.reading = map[compound];
+  const picked = api.pickUrl ? api.pickUrl(map, "reading", sewOptions()) : "";
+  if (picked) map.reading = picked;
   if (!map.reading) {
     const readingUrl = await firstPlayable(readingCandidates(stem, ch));
     if (readingUrl) map.reading = readingUrl;
     else if (data && data.audio && !data.waiting_audio) map.reading = mediaUrl(data.audio);
-  } else if (voiceAccent === "american" && !map[compound] && map["reading-american"]) {
-    const am = await probeAudio(map["reading-american"]);
-    if (am) map.reading = am;
-    else americanFallbackHint = "American audio not on pack yet — playing British.";
   }
   const wanted = api.wantedKeys ? api.wantedKeys(sewSettings()) : ["reading"];
   const extraKeys = wanted.filter((k) => k !== "reading");
@@ -1414,7 +1410,7 @@ const NT_FALLBACK = {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260919d"] : ["/data/books.json?v=20260919d"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919e"] : ["/data/books.json?v=20260919e"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
