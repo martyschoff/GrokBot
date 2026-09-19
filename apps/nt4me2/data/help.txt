@@ -25,7 +25,7 @@ Help — Display this guide.
 
 DOCK BUTTONS (at the bottom):
 
-Play/Pause — Begin or pause the narration. Artwork stays on one picture (no rotation). Chapter audio is sewn from the Berean or KJV reading (British or American), then any Settings fragments that are on and present (Teaching, Westminster, RC Catechism), then the one selected exegete if its file exists. No separate closer clip is appended. Clips follow one another with no interstitial tone.
+Play/Pause — Begin or pause the narration. Artwork stays on one picture (no rotation). Chapter audio is sewn from the Berean or KJV reading (British or American), then any Settings fragments that are on and present (Teaching, Westminster, RC Catechism), then the one selected exegete if its file exists. The dock hint always lists those pieces (`Sew: reading · …`) and appends skipped keys. No separate closer clip is appended. Clips follow one another with no interstitial tone.
 
 Repeat — Restart the sewn chapter from the first piece.
 

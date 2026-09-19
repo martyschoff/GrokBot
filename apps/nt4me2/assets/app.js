@@ -96,7 +96,7 @@ function mergeFragmentTable(raw) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260919g"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919h"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -124,7 +124,7 @@ function applyCatalogLiveFallback(catalog) {
 
 async function loadFragmentOverlay() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/fragments.json?v=20260919g"];
+  const urls = [(pack || "") + "/data/fragments.json?v=20260919h"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -481,7 +481,7 @@ async function openHelp() {
   const pack = packBase();
   let text = "";
   try {
-    const res = await fetch((pack || "") + "/data/help.txt?v=20260919g", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/help.txt?v=20260919h", { cache: "no-store" });
     if (res.ok) text = await res.text();
   } catch (e) {}
   const p = document.createElement("p");
@@ -1105,8 +1105,28 @@ async function firstPlayable(urls) {
   return "";
 }
 
+function emptySewBuild() {
+  const settings = sewSettings();
+  const api = sewApi();
+  const wanted = api.wantedKeys ? api.wantedKeys(settings) : ["reading"];
+  return { items: [], wanted: wanted, skipped: wanted.slice(), settings: settings };
+}
+
+function storeSewDebug(built) {
+  const settings = (built && built.settings) || sewSettings();
+  const exegete = (settings.exegete || []).slice(0, 1);
+  window._lastSewDebug = {
+    items: ((built && built.items) || []).slice(),
+    wanted: ((built && built.wanted) || []).slice(),
+    skipped: ((built && built.skipped) || []).slice(),
+    settings: settings,
+    exegete: exegete
+  };
+}
+
 async function buildSewQueue(data) {
   const api = sewApi();
+  const settings = sewSettings();
   const stem = audioStem(savedBook);
   const ch = Number(currentChapter) || 0;
   const map = collectFragmentMap(data);
@@ -1117,7 +1137,7 @@ async function buildSewQueue(data) {
     if (readingUrl) map.reading = readingUrl;
     else if (data && data.audio && !data.waiting_audio) map.reading = mediaUrl(data.audio);
   }
-  const wanted = api.wantedKeys ? api.wantedKeys(sewSettings()) : ["reading"];
+  const wanted = api.wantedKeys ? api.wantedKeys(settings) : ["reading"];
   const extraKeys = wanted.filter((k) => k !== "reading");
   for (let i = 0; i < extraKeys.length; i++) {
     const key = extraKeys[i];
@@ -1127,26 +1147,39 @@ async function buildSewQueue(data) {
     if (found) map[key] = found;
   }
   const planned = api.sewPlan
-    ? api.sewPlan(map, sewSettings(), sewOptions())
+    ? api.sewPlan(map, settings, sewOptions())
     : { items: map.reading ? [{ key: "reading", url: map.reading }] : [], skipped: [] };
   const items = [];
+  const skipped = (planned.skipped || []).slice();
   for (let i = 0; i < planned.items.length; i++) {
     const row = planned.items[i];
-    if (api.isCodaFragment && api.isCodaFragment(row.key, row.url)) continue;
+    if (api.isCodaFragment && api.isCodaFragment(row.key, row.url)) {
+      skipped.push(row.key);
+      continue;
+    }
     const ok = await probeAudio(row.url);
     if (ok) items.push({ key: row.key, url: ok });
+    else skipped.push(row.key);
   }
-  return api.chapterQueueItems ? api.chapterQueueItems(items, sewSettings()) : items;
+  const queued = api.chapterQueueItems ? api.chapterQueueItems(items, settings) : items;
+  const queuedKeys = {};
+  queued.forEach((row) => { queuedKeys[row.key] = true; });
+  wanted.forEach((key) => {
+    if (!queuedKeys[key] && skipped.indexOf(key) < 0) skipped.push(key);
+  });
+  return { items: queued, wanted: wanted.slice(), skipped: skipped, settings: settings };
 }
 
 function sewKeyOf(items) {
   return (items || []).map((i) => i.key + ":" + i.url).join("|");
 }
 
-function applySewQueue(items, playAfter) {
+function applySewQueue(built, playAfter) {
   const voice = document.getElementById("voice");
   const hint = document.getElementById("hint");
-  playQueue = items || [];
+  const items = Array.isArray(built) ? built : ((built && built.items) || []);
+  const skipped = Array.isArray(built) ? [] : ((built && built.skipped) || []);
+  playQueue = items;
   lastSewKey = sewKeyOf(playQueue);
   queueIndex = 0;
   if (!playQueue.length) {
@@ -1159,8 +1192,11 @@ function applySewQueue(items, playAfter) {
   const first = playQueue[0].url;
   if (voice.getAttribute("src") !== first) voice.src = first;
   applyVoiceVolume();
-  const names = playQueue.map((i) => i.key).join(" · ");
-  hint.textContent = americanFallbackHint || (playQueue.length > 1 ? ("Sew: " + names) : "");
+  const api = sewApi();
+  const text = api.sewHintText
+    ? api.sewHintText(playQueue, skipped)
+    : ("Sew: " + playQueue.map((i) => i.key).join(" · ") + (skipped.length ? (" · skipped " + skipped.join(" · ")) : ""));
+  hint.textContent = americanFallbackHint || text;
   if (playAfter) setPlaying(true);
 }
 
@@ -1174,14 +1210,16 @@ async function load(playAfter) {
   if (ch) currentChapter = ch;
   await loadVerses(savedBook, currentChapter);
   americanFallbackHint = "";
-  const items = (audioStem(savedBook) && isLiveChapter(savedBook, currentChapter))
+  const built = (audioStem(savedBook) && isLiveChapter(savedBook, currentChapter))
     ? await buildSewQueue(data)
-    : [];
+    : emptySewBuild();
+  const items = built.items || [];
+  storeSewDebug(built);
   const nextKey = sewKeyOf(items);
   if (nextKey && nextKey === lastSewKey && document.getElementById("voice").getAttribute("src")) {
     if (playAfter && items.length) setPlaying(true);
   } else {
-    applySewQueue(items, playAfter);
+    applySewQueue(built, playAfter);
   }
   if (HYMN_ENABLED && data.hymn) {
     if (hymn.getAttribute("src") !== data.hymn) {
@@ -1362,7 +1400,7 @@ const NT_FALLBACK = {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260919g"] : ["/data/books.json?v=20260919g"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919h"] : ["/data/books.json?v=20260919h"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -1654,6 +1692,7 @@ window.ntSewState = function () {
     bibleVersion: bibleVersion,
     settings: sewSettings(),
     queue: playQueue.slice(),
-    index: queueIndex
+    index: queueIndex,
+    debug: window._lastSewDebug || null
   };
 };

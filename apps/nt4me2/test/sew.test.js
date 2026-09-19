@@ -2,6 +2,19 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const sew = require("../assets/sew.js");
 
+test("sewHintText always lists Sew keys and appends skipped", () => {
+  assert.equal(sew.sewHintText([{ key: "reading" }]), "Sew: reading");
+  assert.equal(
+    sew.sewHintText([{ key: "reading" }, { key: "exegete-matthew-henry" }]),
+    "Sew: reading · exegete-matthew-henry"
+  );
+  assert.equal(
+    sew.sewHintText([{ key: "reading" }], ["otref", "teaching"]),
+    "Sew: reading · skipped otref · teaching"
+  );
+  assert.equal(sew.sewHintText([], ["otref"]), "Sew: skipped otref");
+});
+
 test("wantedKeys is reading, optional teaching/westminster/rccatechism, then exegete[0] only", () => {
   assert.deepEqual(sew.wantedKeys({}), ["reading"]);
   assert.deepEqual(

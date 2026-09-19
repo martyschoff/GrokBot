@@ -94,6 +94,17 @@
     });
   }
 
+  function sewHintText(items, skipped) {
+    const names = (items || []).map((row) => row && row.key).filter(Boolean);
+    let text = "Sew: " + names.join(" · ");
+    const miss = (skipped || []).filter(Boolean);
+    if (miss.length) {
+      if (names.length) text += " · ";
+      text += "skipped " + miss.join(" · ");
+    }
+    return text;
+  }
+
   function wantedKeys(settings) {
     const keys = ["reading"];
     if (settings && settings.otRef) keys.push("otref");
@@ -249,6 +260,7 @@
     isCodaFragment: isCodaFragment,
     dropCoda: dropCoda,
     chapterQueueItems: chapterQueueItems,
+    sewHintText: sewHintText,
     wantedKeys: wantedKeys,
     aliasesFor: aliasesFor,
     pickUrl: pickUrl,
