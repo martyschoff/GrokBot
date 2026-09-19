@@ -1781,6 +1781,8 @@ window.ntArtState = function () {
     rotate: ART_ROTATE,
     files: art.map(artFile),
     raw: artRaw.map(artFile),
+    timer: !!artTimer,
+    index: artIndex,
     fallbackOnly: !art.length
   };
 };
