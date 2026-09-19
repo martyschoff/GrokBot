@@ -96,7 +96,7 @@ function mergeFragmentTable(raw) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260919c"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919d"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -111,7 +111,7 @@ async function loadLiveTable() {
 
 async function loadFragmentOverlay() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/fragments.json?v=20260919c"];
+  const urls = [(pack || "") + "/data/fragments.json?v=20260919d"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -309,11 +309,12 @@ function stopSlideshow() {
 }
 
 function holdStillArt() {
+  startSlideshow();
+}
+
+function startSlideshow() {
   stopSlideshow();
   showArt(artIndex);
-  if (ART_ROTATE && !interpretFrozen) {
-    artTimer = setInterval(() => showArt(artIndex + 1), 12500);
-  }
 }
 
 function showArt(i) {
@@ -467,7 +468,7 @@ async function openHelp() {
   const pack = packBase();
   let text = "";
   try {
-    const res = await fetch((pack || "") + "/data/help.txt?v=20260919c", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/help.txt?v=20260919d", { cache: "no-store" });
     if (res.ok) text = await res.text();
   } catch (e) {}
   const p = document.createElement("p");
@@ -1413,7 +1414,7 @@ const NT_FALLBACK = {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260919c"] : ["/data/books.json?v=20260919c"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919d"] : ["/data/books.json?v=20260919d"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
