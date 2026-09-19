@@ -1,32 +1,34 @@
-Daily Chapter Help
+Bible Vision Help
 
 MENU (gold bar at top):
 
 Text — Toggle Bible verses on or off. When on, the verses from the current chapter display as scrollable text over the artwork.
 
-Voice — Switch between British and American English narration. When unavailable, the app falls back to the available accent. (American narration is added to chapters as they go live.)
+Settings — Voice, Bible, Greek, Belief, and the sew toggles live here:
+  • Voice — Switch between British and American English narration. When unavailable, the app falls back to the available accent.
+  • Bible — Currently KJV only.
+  • Greek — Toggle Greek words on or off in the chapter audio stream.
+  • Belief — Choose which theological tradition filters the artwork (evangelical hides Roman Catholic tagged art; roman catholic, orthodox, and none show the full pool).
+  • OT Ref — On/off. When on, an Old Testament reference fragment is sewn into the chapter audio if that fragment exists.
+  • Teaching — On/off. When on, a teaching fragment is sewn in if it exists.
+  • Westminster — On/off. When on, a Westminster Confession fragment is sewn in if it exists.
+  • RC Catechism — On/off. When on, a Catechism of the Catholic Church fragment is sewn in if it exists.
 
-Bible version — Currently KJV only.
+Green labels mean a setting is on. Missing audio for a turned-on section is skipped — the player stays silent for that section and does not invent a stub clip.
 
-Greek — Toggle Greek words on or off in the audio narration. When off, the audio skips Greek etymologies and liturgical terms, using English translations instead.
-
-Beliefs — Choose which theological tradition filters the artwork:
-  • evangelical — Hides artwork tagged as Roman Catholic (rc). Use this to focus on art aligned with evangelical tradition.
-  • roman catholic — Shows all artwork, including Roman Catholic selections.
-  • orthodox — Shows all artwork, including Orthodox selections.
-  • none — Shows all artwork without tradition filtering.
+Exegete — Open free online commentary voices (Matthew Henry, Albert Barnes, Henry Alford) beside the closed commentary set. Closed commentaries stay locked.
 
 Volume — Adjust the voice narration volume with a slider.
 
-book/chapter start — Jump to a different New Testament book and chapter. Live chapters are selectable; chapters not yet released appear dimmed. The app remembers your last selection and resumes there next time.
+Book & Chapter — Jump to a different New Testament book and chapter. Live chapters are selectable; chapters not yet released appear dimmed. The app remembers your last selection and resumes there next time.
 
 Help — Display this guide.
 
 DOCK BUTTONS (at the bottom):
 
-Play/Pause — Begin or pause the narration. When playing, the artwork cycles automatically through related pieces every 12.5 seconds.
+Play/Pause — Begin or pause the narration. When playing, the artwork cycles automatically through related pieces every 12.5 seconds. Chapter audio is sewn from the reading plus any Settings fragments that are on and present.
 
-Repeat — Restart the current chapter from the beginning.
+Repeat — Restart the sewn chapter from the first piece.
 
 Back — Go to the previous chapter in the current book. Only available for live chapters.
 
@@ -40,15 +42,15 @@ Located near the bottom-right of the artwork, the Art Interpretation button open
 
 PARCHMENT HOME:
 
-The home page displays all New Testament books organized in columns. Green text or buttons indicate books and chapters that are live and ready to read. Secondary or future content appears muted.
+The home page (Bible Vision) displays New Testament books organized in columns. Green text or buttons indicate books and chapters that are live and ready to read. Secondary or future content appears muted.
 
 ARTWORK AND CAPTIONS:
 
-While a chapter plays, artwork rotates automatically. The artwork title, artist, and place of origin appear below the image (for example, "Raphael, The Disputation of the Holy Sacrament, Apostolic Palace, Vatican"). Roman Catholic traditions are never labeled with (rc) in the caption display.
+While a chapter plays, artwork rotates automatically. The artwork title, artist, and place of origin appear below the image. Roman Catholic traditions are never labeled with (rc) in the caption display.
 
 UNDERSTANDING COLOR CODES:
 
 Gold menu — The top menu bar highlights the current section or active control.
-Green (text, buttons, cards) — Live content: a chapter, book, or interpretation card that is ready to use.
-Soft red (Art Interpretation button) — No interpretation card available for the current artwork yet.
-Muted or gray (text, buttons) — Secondary or future content, not yet available for use.
+Green (text, buttons, cards) — Live content, or a Settings toggle that is on.
+Soft red (Art Interpretation button, closed Exegete row) — Not available.
+Muted or gray (text, buttons) — Secondary content, or a Settings toggle that is off.

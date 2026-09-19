@@ -9,7 +9,7 @@ const NT_FALLBACK = {
     {id:"romans",label:"Romans",live:true,chapters:16},
     {id:"1corinthians",label:"1 Corinthians",live:true,chapters:16},
     {id:"2corinthians",label:"2 Corinthians",live:false,chapters:0},
-    {id:"galatians",label:"Galatians",live:false,chapters:0},
+    {id:"galatians",label:"Galatians",live:true,chapters:6},
     {id:"ephesians",label:"Ephesians",live:false,chapters:0},
     {id:"philippians",label:"Philippians",live:false,chapters:0},
     {id:"colossians",label:"Colossians",live:false,chapters:0},
@@ -32,6 +32,7 @@ const NT_FALLBACK = {
 };
 
 let liveTable = {};
+let fragmentTable = {};
 
 function normalizeLiveTable(data) {
   const out = {};
@@ -50,21 +51,47 @@ function normalizeLiveTable(data) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260912hj"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919a"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) continue;
       const data = await res.json();
       liveTable = normalizeLiveTable(data);
+      if (data && data.fragments) mergeHomeFragments(data.fragments);
       return;
     } catch (e) {}
   }
 }
 
+async function loadFragmentOverlay() {
+  const pack = packBase();
+  try {
+    const res = await fetch((pack || "") + "/data/fragments.json?v=20260919a", { cache: "no-store" });
+    if (!res.ok) return;
+    const data = await res.json();
+    mergeHomeFragments((data && data.fragments) || data);
+  } catch (e) {}
+}
+
+function mergeHomeFragments(raw) {
+  if (!raw || typeof raw !== "object") return;
+  Object.keys(raw).forEach((book) => {
+    const chs = raw[book];
+    if (!chs || typeof chs !== "object") return;
+    fragmentTable[book] = Object.assign({}, fragmentTable[book] || {}, chs);
+  });
+}
+
 function liveChapters(book) {
   const row = liveTable[book];
-  return Array.isArray(row) ? row.slice() : [];
+  const fromLive = Array.isArray(row) ? row.slice() : [];
+  const frag = fragmentTable[book] || {};
+  Object.keys(frag).forEach((ch) => {
+    const n = Number(ch);
+    if (n >= 1 && fromLive.indexOf(n) < 0) fromLive.push(n);
+  });
+  return fromLive.sort((a, b) => a - b);
 }
 
 function isLiveBook(book) {
@@ -77,7 +104,7 @@ function packBase() {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260912hj"] : ["/data/books.json?v=20260912hj"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919a"] : ["/data/books.json?v=20260919a"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -92,6 +119,7 @@ async function loadCatalog() {
 
 async function renderBooks() {
   await loadLiveTable();
+  await loadFragmentOverlay();
   const catalog = await loadCatalog();
   const nav = document.getElementById("books-nav");
   

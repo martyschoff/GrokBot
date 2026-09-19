@@ -25,6 +25,10 @@ const VOICE_KEY = "daily-chapter-voice-accent";
 const BELIEF_KEY = "daily-chapter-beliefs";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
+const OTREF_KEY = "daily-chapter-ot-ref";
+const TEACH_KEY = "daily-chapter-teaching";
+const WCF_KEY = "daily-chapter-westminster";
+const RCC_KEY = "daily-chapter-rc-catechism";
 const TRADITION_BY_FILE = {
   // Locked rc seed (file basename). Live MartinStatus2 pictures.json tags the
   // first three; Leonardo Annunciation is in the NT pool as this display file.
@@ -40,6 +44,16 @@ let savedBook = "romans";
 let currentChapter = 0;
 let viewingBook = "";
 let liveTable = {};
+let fragmentTable = {};
+let hearOtRef = false;
+let hearTeaching = false;
+let hearWestminster = false;
+let hearRcCatechism = false;
+let playQueue = [];
+let queueIndex = 0;
+let lastSewKey = "";
+let americanFallbackHint = "";
+let exegeteOpen = false;
 
 function normalizeLiveTable(data) {
   const out = {};
@@ -56,15 +70,44 @@ function normalizeLiveTable(data) {
   return out;
 }
 
+function sewApi() {
+  return (typeof window !== "undefined" && window.NT_SEW) || {};
+}
+
+function mergeFragmentTable(raw) {
+  const api = sewApi();
+  const incoming = api.normalizeFragmentBook ? api.normalizeFragmentBook(raw) : {};
+  Object.keys(incoming).forEach((book) => {
+    fragmentTable[book] = Object.assign({}, fragmentTable[book] || {}, incoming[book]);
+  });
+}
+
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260912hj"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919a"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) continue;
       const data = await res.json();
       liveTable = normalizeLiveTable(data);
+      if (data && data.fragments) mergeFragmentTable(data.fragments);
+      return;
+    } catch (e) {}
+  }
+}
+
+async function loadFragmentOverlay() {
+  const pack = packBase();
+  const urls = [(pack || "") + "/data/fragments.json?v=20260919a"];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data && typeof data === "object") {
+        mergeFragmentTable(data.fragments || data);
+      }
       return;
     } catch (e) {}
   }
@@ -72,7 +115,13 @@ async function loadLiveTable() {
 
 function liveChapters(book) {
   const row = liveTable[book];
-  return Array.isArray(row) ? row.slice() : [];
+  const fromLive = Array.isArray(row) ? row.slice() : [];
+  const frag = fragmentTable[book] || {};
+  Object.keys(frag).forEach((ch) => {
+    const n = Number(ch);
+    if (n >= 1 && fromLive.indexOf(n) < 0) fromLive.push(n);
+  });
+  return fromLive.sort((a, b) => a - b);
 }
 
 function isLiveBook(book) {
@@ -90,6 +139,7 @@ function audioStem(book) {
   if (book === "john") return "john-";
   if (book === "romans") return "romans-";
   if (book === "1corinthians") return "1cor-";
+  if (book === "galatians") return "galatians-";
   if (book === "hebrews") return "hebrews-";
   return "";
 }
@@ -370,6 +420,7 @@ async function openInterpret() {
   interpretFrozen = true;
   stopSlideshow();
   setPlaying(false);
+  if (exegeteOpen) hideExegete();
   await loadCard(item);
   fillInterpret(item);
   const bubble = document.getElementById("interpret-bubble");
@@ -398,6 +449,7 @@ function toggleInterpret() {
 async function openHelp() {
   closeUr();
   if (interpretOpen) hideInterpret();
+  if (exegeteOpen) hideExegete();
   const box = document.getElementById("help-scroll");
   box.textContent = "";
   const pack = packBase();
@@ -422,6 +474,63 @@ function toggleHelp() {
   const bubble = document.getElementById("help-bubble");
   if (!bubble.hidden) hideHelp();
   else openHelp();
+}
+
+function hideExegete() {
+  const bubble = document.getElementById("exegete-bubble");
+  if (bubble) bubble.hidden = true;
+  exegeteOpen = false;
+}
+
+async function openExegeteVoice(id) {
+  closeUr();
+  if (interpretOpen) hideInterpret();
+  hideHelp();
+  setPlaying(false);
+  const box = document.getElementById("exegete-scroll");
+  if (!box) return;
+  box.textContent = "";
+  const pack = packBase();
+  const paths = [
+    (pack || "") + "/data/kjv/" + (savedBook || "") + "/" + (currentChapter || "") + "/exegete/" + id + ".json",
+    (pack || "") + "/data/exegete/" + (savedBook || "") + "/" + (currentChapter || "") + "/" + id + ".json"
+  ];
+  let card = null;
+  for (let i = 0; i < paths.length; i++) {
+    try {
+      const res = await fetch(paths[i], { cache: "no-store" });
+      if (!res.ok) continue;
+      const data = await res.json();
+      if (data && typeof data === "object") {
+        card = data;
+        break;
+      }
+    } catch (e) {}
+  }
+  if (!card) {
+    const p = document.createElement("p");
+    p.className = "interpret-empty";
+    p.textContent = "No commentary is available for this chapter yet.";
+    box.appendChild(p);
+  } else {
+    const head = document.createElement("p");
+    head.className = "interpret-sources";
+    head.textContent = (card.title || id) + (card.chapter ? (" — " + card.chapter) : "");
+    box.appendChild(head);
+    const body = document.createElement("p");
+    body.className = "interpret-body";
+    body.style.whiteSpace = "pre-wrap";
+    body.textContent = String(card.body || "").trim() || "Waiting on the commentary.";
+    box.appendChild(body);
+    if (card.source) {
+      const src = document.createElement("p");
+      src.className = "interpret-cites";
+      src.textContent = card.source;
+      box.appendChild(src);
+    }
+  }
+  document.getElementById("exegete-bubble").hidden = false;
+  exegeteOpen = true;
 }
 
 function applyVoiceVolume() {
@@ -510,12 +619,31 @@ function setPlaying(on) {
 function repeatFromStart() {
   const voice = document.getElementById("voice");
   const hymn = document.getElementById("hymn");
-  if (!voice.src) return;
+  if (!playQueue.length && !voice.src) return;
+  queueIndex = 0;
+  if (playQueue.length) {
+    const first = playQueue[0].url;
+    if (voice.getAttribute("src") !== first) voice.src = first;
+  }
   try { voice.currentTime = 0; } catch (e) {}
   try { if (hymn.src) hymn.currentTime = 0; } catch (e) {}
   if (interpretOpen) hideInterpret();
+  if (exegeteOpen) hideExegete();
   interpretFrozen = false;
   setPlaying(true);
+}
+
+function advanceSew() {
+  const voice = document.getElementById("voice");
+  queueIndex += 1;
+  if (queueIndex < playQueue.length) {
+    voice.src = playQueue[queueIndex].url;
+    applyVoiceVolume();
+    voice.play().catch(() => {});
+    return;
+  }
+  setPlaying(false);
+  if (currentChapter >= 1) writeCompleted(savedBook || "romans", currentChapter);
 }
 
 async function loadIndex() {
@@ -546,6 +674,10 @@ async function loadPrefs() {
   showText = true;
   voiceAccent = "british";
   beliefs = "evangelical";
+  hearOtRef = false;
+  hearTeaching = false;
+  hearWestminster = false;
+  hearRcCatechism = false;
   voiceVolume = 1;
   try {
     const v = localStorage.getItem(PREF_KEY);
@@ -564,6 +696,10 @@ async function loadPrefs() {
   try {
     beliefs = normalizeBeliefs(localStorage.getItem(BELIEF_KEY));
   } catch (e) {}
+  try { hearOtRef = localStorage.getItem(OTREF_KEY) === "1"; } catch (e) {}
+  try { hearTeaching = localStorage.getItem(TEACH_KEY) === "1"; } catch (e) {}
+  try { hearWestminster = localStorage.getItem(WCF_KEY) === "1"; } catch (e) {}
+  try { hearRcCatechism = localStorage.getItem(RCC_KEY) === "1"; } catch (e) {}
   try {
     const raw = localStorage.getItem(VOL_KEY);
     if (raw != null && raw !== "") {
@@ -584,6 +720,7 @@ async function loadPrefs() {
   paintText();
   paintVoice();
   paintBeliefs();
+  paintSewToggles();
 }
 
 async function savePrefs() {
@@ -591,6 +728,10 @@ async function savePrefs() {
   try { localStorage.setItem(TEXT_KEY, showText ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(VOICE_KEY, voiceAccent); } catch (e) {}
   try { localStorage.setItem(BELIEF_KEY, beliefs); } catch (e) {}
+  try { localStorage.setItem(OTREF_KEY, hearOtRef ? "1" : "0"); } catch (e) {}
+  try { localStorage.setItem(TEACH_KEY, hearTeaching ? "1" : "0"); } catch (e) {}
+  try { localStorage.setItem(WCF_KEY, hearWestminster ? "1" : "0"); } catch (e) {}
+  try { localStorage.setItem(RCC_KEY, hearRcCatechism ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(VOL_KEY, String(voiceVolume)); } catch (e) {}
   try {
     await fetch("/api/prefs", {
@@ -601,9 +742,16 @@ async function savePrefs() {
   } catch (e) {}
 }
 
+function paintToggle(sel, on, onLabel, offLabel) {
+  document.querySelectorAll(sel).forEach((btn) => {
+    btn.textContent = on ? onLabel : offLabel;
+    btn.classList.toggle("ur-live", !!on);
+    btn.classList.toggle("ur-off", !on);
+  });
+}
+
 function paintGreek() {
-  const btn = document.getElementById("ur-greek");
-  if (btn) btn.textContent = hearGreek ? "Greek: on" : "Greek: off";
+  paintToggle("[data-ur=greek], [data-set=greek]", hearGreek, "Greek: on", "Greek: off");
 }
 
 function paintText() {
@@ -612,13 +760,22 @@ function paintText() {
 }
 
 function paintVoice() {
-  const btn = document.getElementById("ur-voice");
-  if (btn) btn.textContent = "Voice: " + (voiceAccent === "american" ? "American" : "British");
+  document.querySelectorAll("[data-ur=voice], [data-set=voice]").forEach((btn) => {
+    btn.textContent = "Voice: " + (voiceAccent === "american" ? "American" : "British");
+  });
 }
 
 function paintBeliefs() {
-  const btn = document.getElementById("ur-beliefs");
-  if (btn) btn.textContent = "Beliefs: " + beliefs;
+  document.querySelectorAll("[data-ur=beliefs], [data-set=belief]").forEach((btn) => {
+    btn.textContent = "Belief: " + beliefs;
+  });
+}
+
+function paintSewToggles() {
+  paintToggle("[data-set=otref]", hearOtRef, "OT Ref: on", "OT Ref: off");
+  paintToggle("[data-set=teaching]", hearTeaching, "Teaching: on", "Teaching: off");
+  paintToggle("[data-set=westminster]", hearWestminster, "Westminster: on", "Westminster: off");
+  paintToggle("[data-set=rccatechism]", hearRcCatechism, "RC Catechism: on", "RC Catechism: off");
 }
 
 async function loadTraditionMap() {
@@ -643,7 +800,10 @@ async function loadTraditionMap() {
 function bookLabel(id) {
   if (id === "romans") return "Romans";
   if (id === "1corinthians") return "1 Corinthians";
-  return id || "";
+  if (id === "galatians") return "Galatians";
+  if (id === "hebrews") return "Hebrews";
+  if (id === "matthew") return "Matthew";
+  return bookNameForAPI(id || "");
 }
 
 function bookNameForDisplay(id) {
@@ -791,76 +951,162 @@ async function loadVerses(book, chapter) {
   showVerseOverlay();
 }
 
+function sewSettings() {
+  return {
+    hearGreek: hearGreek,
+    otRef: hearOtRef,
+    teaching: hearTeaching,
+    westminster: hearWestminster,
+    rcCatechism: hearRcCatechism
+  };
+}
+
+function decorateFragmentMap(map) {
+  const out = {};
+  if (!map || typeof map !== "object") return out;
+  Object.keys(map).forEach((k) => {
+    if (map[k]) out[k] = mediaUrl(String(map[k]));
+  });
+  return out;
+}
+
+function collectFragmentMap(data) {
+  const api = sewApi();
+  const fromTable = api.chapterFragments
+    ? api.chapterFragments(fragmentTable, savedBook, currentChapter)
+    : {};
+  const fromNow = (data && data.fragments && typeof data.fragments === "object") ? data.fragments : {};
+  const merged = api.mergeFragmentMaps
+    ? api.mergeFragmentMaps(fromTable, fromNow)
+    : Object.assign({}, fromTable, fromNow);
+  return decorateFragmentMap(merged);
+}
+
+function readingCandidates(stem, chapter, hasGreekFrag) {
+  if (!stem || !chapter) return [];
+  const useNogrk = !hearGreek || hasGreekFrag;
+  const urls = [];
+  if (voiceAccent === "american") {
+    urls.push(mediaUrl("/data/audio/" + stem + chapter + (useNogrk ? "-american-nogrk.mp3" : "-american.mp3")));
+  }
+  urls.push(mediaUrl("/data/audio/" + stem + chapter + (useNogrk ? "-nogrk.mp3" : ".mp3")));
+  return urls;
+}
+
+function probeAudio(url) {
+  return new Promise((resolve) => {
+    if (!url) {
+      resolve("");
+      return;
+    }
+    const probe = new Audio();
+    let done = false;
+    const finish = (ok) => {
+      if (done) return;
+      done = true;
+      probe.removeEventListener("loadeddata", onOk);
+      probe.removeEventListener("canplay", onOk);
+      probe.removeEventListener("error", onErr);
+      try { probe.removeAttribute("src"); probe.load(); } catch (e) {}
+      resolve(ok ? url : "");
+    };
+    const onOk = () => finish(true);
+    const onErr = () => finish(false);
+    probe.addEventListener("loadeddata", onOk);
+    probe.addEventListener("canplay", onOk);
+    probe.addEventListener("error", onErr);
+    probe.src = url;
+    setTimeout(() => finish(false), 1200);
+  });
+}
+
+async function firstPlayable(urls) {
+  for (let i = 0; i < (urls || []).length; i++) {
+    const ok = await probeAudio(urls[i]);
+    if (ok) return ok;
+  }
+  return "";
+}
+
+async function buildSewQueue(data) {
+  const api = sewApi();
+  const stem = audioStem(savedBook);
+  const ch = Number(currentChapter) || 0;
+  const map = collectFragmentMap(data);
+  const hasGreekFrag = !!(map.greek || map["greek-american"]);
+  if (!map.reading) {
+    const readingUrl = await firstPlayable(readingCandidates(stem, ch, hasGreekFrag));
+    if (readingUrl) map.reading = readingUrl;
+    else if (data && data.audio && !data.waiting_audio) map.reading = mediaUrl(data.audio);
+  } else if (voiceAccent === "american" && map["reading-american"]) {
+    const am = await probeAudio(map["reading-american"]);
+    if (am) map.reading = am;
+    else americanFallbackHint = "American audio not on pack yet — playing British.";
+  }
+  const wanted = api.wantedKeys ? api.wantedKeys(sewSettings()) : ["reading"];
+  const extraKeys = wanted.filter((k) => k !== "reading");
+  for (let i = 0; i < extraKeys.length; i++) {
+    const key = extraKeys[i];
+    if (map[key] || map[key + "-american"]) continue;
+    const conv = api.conventionUrls ? api.conventionUrls(stem, ch, key, voiceAccent) : [];
+    const found = await firstPlayable(conv.map(mediaUrl));
+    if (found) map[key] = found;
+  }
+  const planned = api.sewPlan
+    ? api.sewPlan(map, sewSettings(), { voiceAccent: voiceAccent })
+    : { items: map.reading ? [{ key: "reading", url: map.reading }] : [], skipped: [] };
+  const items = [];
+  for (let i = 0; i < planned.items.length; i++) {
+    const row = planned.items[i];
+    const ok = await probeAudio(row.url);
+    if (ok) items.push({ key: row.key, url: ok });
+  }
+  return items;
+}
+
+function sewKeyOf(items) {
+  return (items || []).map((i) => i.key + ":" + i.url).join("|");
+}
+
+function applySewQueue(items, playAfter) {
+  const voice = document.getElementById("voice");
+  const hint = document.getElementById("hint");
+  playQueue = items || [];
+  lastSewKey = sewKeyOf(playQueue);
+  queueIndex = 0;
+  if (!playQueue.length) {
+    voice.removeAttribute("src");
+    try { voice.load(); } catch (e) {}
+    hint.textContent = "Waiting on the audio.";
+    if (playing) setPlaying(false);
+    return;
+  }
+  const first = playQueue[0].url;
+  if (voice.getAttribute("src") !== first) voice.src = first;
+  applyVoiceVolume();
+  const names = playQueue.map((i) => i.key).join(" · ");
+  hint.textContent = americanFallbackHint || (playQueue.length > 1 ? ("Sew: " + names) : "");
+  if (playAfter) setPlaying(true);
+}
+
 async function load(playAfter) {
   const data = await fetchNow();
   document.getElementById("title").textContent = data.title || "Daily reading";
-  const voice = document.getElementById("voice");
   const hymn = document.getElementById("hymn");
   const hint = document.getElementById("hint");
   if (data && data.book) savedBook = String(data.book);
   const ch = chapterFromData(data);
   if (ch) currentChapter = ch;
   await loadVerses(savedBook, currentChapter);
-  const stem = audioStem(savedBook);
-  if (stem && isLiveChapter(savedBook, currentChapter)) {
-    let suffix = "";
-    if (voiceAccent === "american") suffix = "-american";
-    if (!hearGreek) suffix += "-nogrk";
-    let preferredUrl = mediaUrl("/data/audio/" + stem + currentChapter + suffix + ".mp3");
-    
-    // Always rebuild live audio URL from voiceAccent + greek-off; don't let now-live.audio lock british
-    if (voiceAccent === "american" || !hearGreek) {
-      data.audio = preferredUrl;
-      hint.textContent = "";
-      // Probe american audio existence with Audio element (avoids CORS issues)
-      if (voiceAccent === "american") {
-        const probe = new Audio();
-        let probeResolved = false;
-        const onLoadedData = () => {
-          if (!probeResolved) {
-            probeResolved = true;
-            cleanup();
-          }
-        };
-        const onError = () => {
-          if (!probeResolved) {
-            probeResolved = true;
-            // American audio not available, fall back to british equivalent
-            let fallbackSuffix = "";
-            if (!hearGreek) fallbackSuffix = "-nogrk";
-            data.audio = mediaUrl("/data/audio/" + stem + currentChapter + fallbackSuffix + ".mp3");
-            hint.textContent = "American audio not on pack yet — playing British.";
-            // Update voice element with fallback
-            if (voice.getAttribute("src") !== data.audio) voice.src = data.audio;
-            cleanup();
-          }
-        };
-        const cleanup = () => {
-          probe.removeEventListener("loadeddata", onLoadedData);
-          probe.removeEventListener("canplay", onLoadedData);
-          probe.removeEventListener("error", onError);
-          probe.src = "";
-        };
-        probe.addEventListener("loadeddata", onLoadedData);
-        probe.addEventListener("canplay", onLoadedData);
-        probe.addEventListener("error", onError);
-        probe.src = preferredUrl;
-      }
-    } else if (!data.audio || data.waiting_audio) {
-      data.audio = preferredUrl;
-    }
-  }
-  if (data.audio) {
-    if (voice.getAttribute("src") !== data.audio) voice.src = data.audio;
-    applyVoiceVolume();
-    if (!hint.textContent) {
-      hint.textContent = HYMN_ENABLED
-        ? (data.waiting_hymn ? "Voice ready. Waiting on a public-domain hymn." : "Hymn stays very quiet under the voice.")
-        : "";
-    }
+  americanFallbackHint = "";
+  const items = (audioStem(savedBook) && isLiveChapter(savedBook, currentChapter))
+    ? await buildSewQueue(data)
+    : [];
+  const nextKey = sewKeyOf(items);
+  if (nextKey && nextKey === lastSewKey && document.getElementById("voice").getAttribute("src")) {
+    if (playAfter && items.length) setPlaying(true);
   } else {
-    voice.removeAttribute("src");
-    hint.textContent = "Waiting on the audio.";
+    applySewQueue(items, playAfter);
   }
   if (HYMN_ENABLED && data.hymn) {
     if (hymn.getAttribute("src") !== data.hymn) {
@@ -873,7 +1119,9 @@ async function load(playAfter) {
   }
   applyArtPool(data.art || []);
   setInterpretRim();
-  if (playAfter && data.audio) setPlaying(true);
+  if (!hint.textContent && HYMN_ENABLED) {
+    hint.textContent = data.waiting_hymn ? "Voice ready. Waiting on a public-domain hymn." : "Hymn stays very quiet under the voice.";
+  }
 }
 
 function closeUr() {
@@ -889,9 +1137,6 @@ function openUrMenu() {
   menu.hidden = !open;
   document.getElementById("ur-btn").setAttribute("aria-expanded", open ? "true" : "false");
   paintText();
-  paintVoice();
-  paintGreek();
-  paintBeliefs();
 }
 
 function showUrPanel(html) {
@@ -902,20 +1147,53 @@ function showUrPanel(html) {
   document.getElementById("ur-btn").setAttribute("aria-expanded", "true");
 }
 
+function showSettings() {
+  showUrPanel(
+    '<p class="ur-head">Settings</p>' +
+    '<button type="button" data-set="voice"></button>' +
+    '<button type="button" data-set="bible">Bible</button>' +
+    '<button type="button" data-set="greek"></button>' +
+    '<button type="button" data-set="belief"></button>' +
+    '<button type="button" data-set="otref"></button>' +
+    '<button type="button" data-set="teaching"></button>' +
+    '<button type="button" data-set="westminster"></button>' +
+    '<button type="button" data-set="rccatechism"></button>'
+  );
+  paintVoice();
+  paintGreek();
+  paintBeliefs();
+  paintSewToggles();
+}
+
 function showVersion() {
   showUrPanel(
+    '<button type="button" class="ur-back" data-back="settings">Settings</button>' +
+    '<p class="ur-head">Bible</p>' +
     '<button type="button" class="ur-live">KJV</button>' +
     '<button type="button" class="ur-dead" disabled>NIV</button>'
   );
 }
 
 function showBeliefs() {
-  const rows = ['<p class="ur-head">Beliefs</p>'];
+  const rows = [
+    '<button type="button" class="ur-back" data-back="settings">Settings</button>',
+    '<p class="ur-head">Belief</p>'
+  ];
   BELIEF_OPTIONS.forEach((opt) => {
     const cls = opt === beliefs ? "ur-live" : "";
     rows.push('<button type="button" class="' + cls + '" data-belief="' + opt + '">' + opt + "</button>");
   });
   showUrPanel(rows.join(""));
+}
+
+function showExegete() {
+  showUrPanel(
+    '<p class="ur-head">Exegete</p>' +
+    '<button type="button" class="ur-dead" disabled>Closed commentaries</button>' +
+    '<button type="button" class="ur-live" data-exegete="matthew-henry">Matthew Henry</button>' +
+    '<button type="button" class="ur-live" data-exegete="albert-barnes">Albert Barnes</button>' +
+    '<button type="button" class="ur-live" data-exegete="henry-alford">Henry Alford</button>'
+  );
 }
 
 function showVolume() {
@@ -977,7 +1255,7 @@ const NT_FALLBACK = {
     {id:"romans",label:"Romans",live:true,chapters:16},
     {id:"1corinthians",label:"1 Corinthians",live:true,chapters:16},
     {id:"2corinthians",label:"2 Corinthians",live:false,chapters:0},
-    {id:"galatians",label:"Galatians",live:false,chapters:0},
+    {id:"galatians",label:"Galatians",live:true,chapters:6},
     {id:"ephesians",label:"Ephesians",live:false,chapters:0},
     {id:"philippians",label:"Philippians",live:false,chapters:0},
     {id:"colossians",label:"Colossians",live:false,chapters:0},
@@ -1001,7 +1279,7 @@ const NT_FALLBACK = {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260912hj"] : ["/data/books.json?v=20260912hj"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919a"] : ["/data/books.json?v=20260919a"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -1026,6 +1304,11 @@ function chapterFromData(data) {
   m = title.match(/romans\s+(\d+)/i);
   if (m) {
     savedBook = "romans";
+    return Number(m[1]);
+  }
+  m = title.match(/galatians\s+(\d+)/i);
+  if (m) {
+    savedBook = "galatians";
     return Number(m[1]);
   }
   const p = String(nowPick || "").match(/kjv\/([^/]+)\/(\d+)\//);
@@ -1089,20 +1372,8 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
     if (showText) showVerseOverlay();
     else hideVerseOverlay();
   }
-  if (kind === "voice") {
-    voiceAccent = voiceAccent === "british" ? "american" : "british";
-    paintVoice();
-    savePrefs();
-    load(playing);
-  }
-  if (kind === "version") showVersion();
-  if (kind === "greek") {
-    hearGreek = !hearGreek;
-    paintGreek();
-    savePrefs();
-    load(playing);
-  }
-  if (kind === "beliefs") showBeliefs();
+  if (kind === "settings") showSettings();
+  if (kind === "exegete") showExegete();
   if (kind === "volume") showVolume();
   if (kind === "book") {
     const catalog = await loadCatalog();
@@ -1119,13 +1390,73 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
     showBooks(window._bookCatalog || { books: [] });
     return;
   }
+  if (btn.getAttribute("data-back") === "settings") {
+    showSettings();
+    return;
+  }
+  const set = btn.getAttribute("data-set");
+  if (set === "voice") {
+    voiceAccent = voiceAccent === "british" ? "american" : "british";
+    paintVoice();
+    savePrefs();
+    load(playing);
+    return;
+  }
+  if (set === "bible") {
+    showVersion();
+    return;
+  }
+  if (set === "greek") {
+    hearGreek = !hearGreek;
+    paintGreek();
+    savePrefs();
+    load(playing);
+    return;
+  }
+  if (set === "belief") {
+    showBeliefs();
+    return;
+  }
+  if (set === "otref") {
+    hearOtRef = !hearOtRef;
+    paintSewToggles();
+    savePrefs();
+    load(playing);
+    return;
+  }
+  if (set === "teaching") {
+    hearTeaching = !hearTeaching;
+    paintSewToggles();
+    savePrefs();
+    load(playing);
+    return;
+  }
+  if (set === "westminster") {
+    hearWestminster = !hearWestminster;
+    paintSewToggles();
+    savePrefs();
+    load(playing);
+    return;
+  }
+  if (set === "rccatechism") {
+    hearRcCatechism = !hearRcCatechism;
+    paintSewToggles();
+    savePrefs();
+    load(playing);
+    return;
+  }
+  const exegete = btn.getAttribute("data-exegete");
+  if (exegete) {
+    openExegeteVoice(exegete);
+    return;
+  }
   const belief = btn.getAttribute("data-belief");
   if (belief) {
     beliefs = normalizeBeliefs(belief);
     paintBeliefs();
     savePrefs();
     applyArtPool(artRaw, true);
-    closeUr();
+    showSettings();
     return;
   }
   const bookId = btn.getAttribute("data-book");
@@ -1146,6 +1477,9 @@ document.addEventListener("click", (e) => {
   if (!e.target.closest("#help-bubble") && !document.getElementById("help-bubble").hidden) {
     if (!e.target.closest("[data-ur=help]")) hideHelp();
   }
+  if (!e.target.closest("#exegete-bubble") && exegeteOpen) {
+    if (!e.target.closest("[data-ur=exegete]")) hideExegete();
+  }
 });
 
 document.getElementById("play").addEventListener("click", () => {
@@ -1161,8 +1495,7 @@ document.getElementById("interpretation").addEventListener("click", (e) => {
   toggleInterpret();
 });
 document.getElementById("voice").addEventListener("ended", function () {
-  setPlaying(false);
-  if (currentChapter >= 1) writeCompleted(savedBook || "romans", currentChapter);
+  advanceSew();
 });
 
 function getQueryParam(name) {
@@ -1174,6 +1507,7 @@ function getQueryParam(name) {
   showFallbackArt();
   await loadPrefs();
   await loadLiveTable();
+  await loadFragmentOverlay();
   await loadTraditionMap();
   restoreCompleted();
   
@@ -1196,6 +1530,7 @@ function getQueryParam(name) {
   setInterval(load, 15000);
   setInterval(loadIndex, 15000);
   setInterval(loadLiveTable, 15000);
+  setInterval(loadFragmentOverlay, 15000);
   setInterval(loadTraditionMap, 60000);
 })();
 
@@ -1204,5 +1539,16 @@ window.ntArtState = function () {
     beliefs: beliefs,
     files: art.map(artFile),
     raw: artRaw.map(artFile)
+  };
+};
+
+window.ntSewState = function () {
+  return {
+    book: savedBook,
+    chapter: currentChapter,
+    voiceAccent: voiceAccent,
+    settings: sewSettings(),
+    queue: playQueue.slice(),
+    index: queueIndex
   };
 };

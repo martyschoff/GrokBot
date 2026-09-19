@@ -317,6 +317,9 @@ h1 {
   cursor: default;
   pointer-events: none;
 }
+.ur-off {
+  color: var(--muted);
+}
 .ur-back { color: var(--gold); }
 
 .ur-head {
