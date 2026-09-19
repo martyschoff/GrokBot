@@ -42,6 +42,8 @@ Fixture fragments shipped for Galatians 1:
 
 Galatians 2 is live-capable with the same sew slots. Shipped hooks are British / American reading paths only; teaching, westminster, rccatechism/ccc, and OT Ref stay silent until Kimberly mounts files.
 
+Local `data/live.json` marks `galatians: [1, 2]`. When merging that into S3, keep every other live book.
+
 Sew order: reading → greek → otref → teaching → westminster → rccatechism.
 
 Translations are content hooks: `berean` (default) and `kjv`, under `/data/{version}/{book}/{chapter}/`. Exegete fixture cards live at `data/kjv/galatians/{1,2}/exegete/`.
