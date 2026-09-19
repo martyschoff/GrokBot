@@ -59,9 +59,22 @@ async function loadLiveTable() {
       const data = await res.json();
       liveTable = normalizeLiveTable(data);
       if (data && data.fragments) mergeHomeFragments(data.fragments);
+      applyCatalogLiveFallback(NT_FALLBACK);
       return;
     } catch (e) {}
   }
+  applyCatalogLiveFallback(NT_FALLBACK);
+}
+
+function applyCatalogLiveFallback(catalog) {
+  (catalog && catalog.books ? catalog.books : []).forEach((b) => {
+    if (!b || !b.live || liveTable[b.id]) return;
+    const n = Number(b.chapters || 0);
+    if (n < 1) return;
+    const chs = [];
+    for (let i = 1; i <= n; i++) chs.push(i);
+    liveTable[b.id] = chs;
+  });
 }
 
 async function loadFragmentOverlay() {

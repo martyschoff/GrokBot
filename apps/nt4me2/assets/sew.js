@@ -88,7 +88,9 @@
     const opt = optsOf(options);
     if (key === "reading") {
       const stem = readingFileStem(opt);
-      const compound = map["reading-" + stem] || map[stem];
+      const compound = map["reading-" + stem] || map[stem]
+        || map["reading-" + opt.bibleVersion + "-" + opt.voiceAccent]
+        || map[opt.bibleVersion + "-" + opt.voiceAccent];
       if (compound) return String(compound);
     }
     const aliases = aliasesFor(key);
@@ -129,9 +131,20 @@
     };
     if (key === "reading") {
       push(base + "-" + readingFileStem(opt) + ".mp3");
+      push(base + "-" + opt.bibleVersion + "-" + opt.voiceAccent + ".mp3");
+      if (opt.voiceAccent === "american") {
+        push(base + "-american.mp3");
+        push(base + "-american-nogrk.mp3");
+      } else {
+        push(base + ".mp3");
+        push(base + "-nogrk.mp3");
+      }
       return urls;
     }
-    if (key === "greek") return urls;
+    if (key === "greek") {
+      push(base + "-greek.mp3");
+      return urls;
+    }
     if (key === "otref") {
       push(base + "-ot-ref.mp3");
       push(base + "-otref.mp3");
@@ -139,11 +152,13 @@
     }
     if (key === "rccatechism") {
       push(base + "-ccc.mp3");
+      push(base + "-rccatechism.mp3");
       return urls;
     }
     if (key.indexOf("exegete-") === 0) {
       const short = exegeteFileId(key);
       if (short) push(base + "-exegete-" + short + ".mp3");
+      push(base + "-" + key + ".mp3");
       return urls;
     }
     push(base + "-" + key + ".mp3");

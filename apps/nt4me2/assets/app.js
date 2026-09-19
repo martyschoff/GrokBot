@@ -104,9 +104,22 @@ async function loadLiveTable() {
       const data = await res.json();
       liveTable = normalizeLiveTable(data);
       if (data && data.fragments) mergeFragmentTable(data.fragments);
+      applyCatalogLiveFallback(NT_FALLBACK);
       return;
     } catch (e) {}
   }
+  applyCatalogLiveFallback(NT_FALLBACK);
+}
+
+function applyCatalogLiveFallback(catalog) {
+  (catalog && catalog.books ? catalog.books : []).forEach((b) => {
+    if (!b || !b.live || liveTable[b.id]) return;
+    const n = Number(b.chapters || 0);
+    if (n < 1) return;
+    const chs = [];
+    for (let i = 1; i <= n; i++) chs.push(i);
+    liveTable[b.id] = chs;
+  });
 }
 
 async function loadFragmentOverlay() {
@@ -998,27 +1011,12 @@ async function fetchBereanText(book, chapter) {
 
 async function fetchKJVText(book, chapter) {
   const bookName = bookNameForAPI(book);
-  const ver = normalizeBible(version);
-  if (ver === "kjv") {
-    const reference = encodeURIComponent(bookName + " " + chapter);
-    try {
-      const res = await fetch("https://bible-api.com/" + reference + "?translation=kjv", { cache: "force-cache" });
-      if (!res.ok) return null;
-      const data = await res.json();
-      if (data && Array.isArray(data.verses)) return data.verses;
-    } catch (e) {}
-    return null;
-  }
+  const reference = encodeURIComponent(bookName + " " + chapter);
   try {
-    const res = await fetch("https://bible.helloao.org/api/BSB/" + encodeURIComponent(bookName) + "/" + chapter + ".json", { cache: "force-cache" });
+    const res = await fetch("https://bible-api.com/" + reference + "?translation=kjv", { cache: "force-cache" });
     if (!res.ok) return null;
     const data = await res.json();
-    const rows = data && data.chapter && Array.isArray(data.chapter.content) ? data.chapter.content : [];
-    const verses = rows.filter((row) => row && row.type === "verse").map((row) => ({
-      verse: row.number || row.verse || "",
-      text: flattenHelloaoContent(row.content).replace(/\s+/g, " ").trim()
-    })).filter((v) => v.text);
-    return verses.length ? verses : null;
+    if (data && Array.isArray(data.verses)) return data.verses;
   } catch (e) {}
   return null;
 }

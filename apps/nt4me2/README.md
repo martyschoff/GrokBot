@@ -32,6 +32,8 @@ Chapter audio is sewn from one Kokoro main (Bible × Greek-on/off × Voice), the
 
 Examples: `galatians-1-bsb-main-greekon-british.mp3`, `galatians-2-kjv-main-greekoff-american.mp3`.
 
+If a Kokoro main is missing, the player also probes `galatians-{n}-{berean|kjv}-{british|american}.mp3`. RC Catechism also probes `-rccatechism.mp3`; long exegete ids (`exegete-matthew-henry`) still resolve.
+
 ### Shared fragment paths
 
 `/data/audio/galatians-{1|2}-teaching.mp3`  
