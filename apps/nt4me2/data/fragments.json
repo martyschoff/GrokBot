@@ -1,15 +1,34 @@
 {
   "galatians": {
     "1": {
-      "reading": "/data/audio/galatians-1.mp3",
-      "reading-american": "/data/audio/galatians-1-american.mp3",
+      "reading-berean-british": "/data/audio/galatians-1-berean-british.mp3",
+      "reading-berean-american": "/data/audio/galatians-1-berean-american.mp3",
+      "reading-kjv-british": "/data/audio/galatians-1-kjv-british.mp3",
+      "reading-kjv-american": "/data/audio/galatians-1-kjv-american.mp3",
       "greek": "/data/audio/galatians-1-greek.mp3",
-      "otref": "/data/audio/galatians-1-otref.mp3",
-      "teaching": "/data/audio/galatians-1-teaching.mp3"
+      "teaching": "/data/audio/galatians-1-teaching.mp3",
+      "westminster": "/data/audio/galatians-1-westminster.mp3",
+      "rccatechism": "/data/audio/galatians-1-rccatechism.mp3",
+      "exegete-matthew-henry": "/data/audio/galatians-1-exegete-matthew-henry.mp3",
+      "exegete-albert-barnes": "/data/audio/galatians-1-exegete-albert-barnes.mp3",
+      "exegete-henry-alford": "/data/audio/galatians-1-exegete-henry-alford.mp3",
+      "exegete-spurgeon": "/data/audio/galatians-1-exegete-spurgeon.mp3",
+      "exegete-wesley": "/data/audio/galatians-1-exegete-wesley.mp3"
     },
     "2": {
-      "reading": "/data/audio/galatians-2.mp3",
-      "reading-american": "/data/audio/galatians-2-american.mp3"
+      "reading-berean-british": "/data/audio/galatians-2-berean-british.mp3",
+      "reading-berean-american": "/data/audio/galatians-2-berean-american.mp3",
+      "reading-kjv-british": "/data/audio/galatians-2-kjv-british.mp3",
+      "reading-kjv-american": "/data/audio/galatians-2-kjv-american.mp3",
+      "greek": "/data/audio/galatians-2-greek.mp3",
+      "teaching": "/data/audio/galatians-2-teaching.mp3",
+      "westminster": "/data/audio/galatians-2-westminster.mp3",
+      "rccatechism": "/data/audio/galatians-2-rccatechism.mp3",
+      "exegete-matthew-henry": "/data/audio/galatians-2-exegete-matthew-henry.mp3",
+      "exegete-albert-barnes": "/data/audio/galatians-2-exegete-albert-barnes.mp3",
+      "exegete-henry-alford": "/data/audio/galatians-2-exegete-henry-alford.mp3",
+      "exegete-spurgeon": "/data/audio/galatians-2-exegete-spurgeon.mp3",
+      "exegete-wesley": "/data/audio/galatians-2-exegete-wesley.mp3"
     }
   }
 }

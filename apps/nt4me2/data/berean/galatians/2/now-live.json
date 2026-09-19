@@ -2,14 +2,9 @@
   "title": "Galatians 2",
   "book": "galatians",
   "chapter": 2,
-  "audio": "/data/audio/galatians-2.mp3",
-  "hymn": "",
+  "audio": "/data/audio/galatians-2-berean-british.mp3",
   "waiting_audio": false,
   "waiting_hymn": true,
   "waiting_art": true,
-  "art": [],
-  "fragments": {
-    "reading": "/data/audio/galatians-2.mp3",
-    "reading-american": "/data/audio/galatians-2-american.mp3"
-  }
+  "art": []
 }

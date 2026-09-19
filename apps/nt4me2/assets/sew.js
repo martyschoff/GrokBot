@@ -8,6 +8,27 @@
     { id: "rccatechism", aliases: ["rccatechism", "rc-catechism", "rc_catechism", "ccc", "rcc"] }
   ];
 
+  const EXEGETE_IDS = [
+    "matthew-henry",
+    "albert-barnes",
+    "henry-alford",
+    "spurgeon",
+    "wesley"
+  ];
+
+  function optsOf(options) {
+    if (!options || typeof options === "string") {
+      return {
+        voiceAccent: options === "american" ? "american" : "british",
+        bibleVersion: "berean"
+      };
+    }
+    return {
+      voiceAccent: options.voiceAccent === "american" ? "american" : "british",
+      bibleVersion: options.bibleVersion === "kjv" ? "kjv" : "berean"
+    };
+  }
+
   function wantedKeys(settings) {
     const keys = ["reading"];
     if (settings && settings.hearGreek) keys.push("greek");
@@ -15,18 +36,30 @@
     if (settings && settings.teaching) keys.push("teaching");
     if (settings && settings.westminster) keys.push("westminster");
     if (settings && settings.rcCatechism) keys.push("rccatechism");
+    const voices = (settings && settings.exegete) || [];
+    for (let i = 0; i < voices.length; i++) {
+      const id = String(voices[i] || "").trim();
+      if (id) keys.push("exegete-" + id);
+    }
     return keys;
   }
 
   function aliasesFor(key) {
     const spec = SEW_KEYS.find((s) => s.id === key);
-    return spec ? spec.aliases.slice() : [key];
+    if (spec) return spec.aliases.slice();
+    return [key];
   }
 
-  function pickUrl(map, key, voiceAccent) {
+  function pickUrl(map, key, options) {
     if (!map || typeof map !== "object") return "";
+    const opt = optsOf(options);
     const aliases = aliasesFor(key);
-    if (voiceAccent === "american") {
+    if (key === "reading") {
+      const compound = map["reading-" + opt.bibleVersion + "-" + opt.voiceAccent]
+        || map[opt.bibleVersion + "-" + opt.voiceAccent];
+      if (compound) return String(compound);
+    }
+    if (opt.voiceAccent === "american") {
       for (let i = 0; i < aliases.length; i++) {
         const a = aliases[i];
         const u = map[a + "-american"] || map[a + "_american"];
@@ -41,34 +74,48 @@
   }
 
   function sewPlan(availableMap, settings, options) {
-    const accent = options && options.voiceAccent;
     const wanted = wantedKeys(settings);
     const items = [];
     const skipped = [];
     for (let i = 0; i < wanted.length; i++) {
       const key = wanted[i];
-      const url = pickUrl(availableMap, key, accent);
+      const url = pickUrl(availableMap, key, options);
       if (url) items.push({ key: key, url: url });
       else skipped.push(key);
     }
     return { items: items, skipped: skipped };
   }
 
-  function conventionUrls(stem, chapter, key, voiceAccent) {
+  function conventionUrls(stem, chapter, key, options) {
     if (!stem || !chapter || !key) return [];
+    const opt = optsOf(options);
     const base = "/data/audio/" + stem + chapter;
+    const version = opt.bibleVersion;
+    const accent = opt.voiceAccent;
     const urls = [];
+    const push = (u) => {
+      if (u && urls.indexOf(u) < 0) urls.push(u);
+    };
     if (key === "reading") {
-      if (voiceAccent === "american") {
-        urls.push(base + "-american.mp3");
-        urls.push(base + "-american-nogrk.mp3");
+      push(base + "-" + version + "-" + accent + ".mp3");
+      if (accent === "american") {
+        push(base + "-american.mp3");
+        push(base + "-american-nogrk.mp3");
+      } else {
+        push(base + ".mp3");
+        push(base + "-nogrk.mp3");
       }
-      urls.push(base + ".mp3");
-      urls.push(base + "-nogrk.mp3");
       return urls;
     }
-    if (voiceAccent === "american") urls.push(base + "-american-" + key + ".mp3");
-    urls.push(base + "-" + key + ".mp3");
+    if (key === "otref") {
+      push(base + "-ot-ref.mp3");
+      push(base + "-otref.mp3");
+      push(base + "-" + version + "-" + accent + "-otref.mp3");
+      return urls;
+    }
+    push(base + "-" + key + ".mp3");
+    push(base + "-" + version + "-" + accent + "-" + key + ".mp3");
+    if (accent === "american") push(base + "-american-" + key + ".mp3");
     return urls;
   }
 
@@ -109,6 +156,7 @@
 
   const api = {
     SEW_KEYS: SEW_KEYS,
+    EXEGETE_IDS: EXEGETE_IDS,
     wantedKeys: wantedKeys,
     aliasesFor: aliasesFor,
     pickUrl: pickUrl,

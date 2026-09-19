@@ -1,5 +1,6 @@
 const HYMN_ENABLED = false;
 const HYMN_GAIN = 0.15;
+const ART_ROTATE = false;
 let art = [];
 let artRaw = [];
 let artIndex = 0;
@@ -16,13 +17,22 @@ let nowPick = "";
 let hearGreek = true;
 let showText = true;
 let voiceAccent = "british";
-const BELIEF_OPTIONS = ["evangelical", "roman catholic", "orthodox", "none"];
-const BIBLE_OPTIONS = ["berean", "kjv"];
-let beliefs = "evangelical";
 let bibleVersion = "berean";
+const BIBLE_OPTIONS = ["berean", "kjv"];
+const BELIEF_OPTIONS = ["evangelical", "roman catholic", "orthodox", "none"];
+const EXEGETE_VOICES = [
+  { id: "matthew-henry", label: "Matthew Henry" },
+  { id: "albert-barnes", label: "Albert Barnes" },
+  { id: "henry-alford", label: "Henry Alford" },
+  { id: "spurgeon", label: "Spurgeon" },
+  { id: "wesley", label: "Wesley" }
+];
+let beliefs = "evangelical";
+let exegeteOn = {};
 const PREF_KEY = "daily-chapter-hear-greek";
 const TEXT_KEY = "daily-chapter-show-text";
 const VOICE_KEY = "daily-chapter-voice-accent";
+const BIBLE_KEY = "daily-chapter-bible-version";
 const BELIEF_KEY = "daily-chapter-beliefs";
 const BIBLE_KEY = "daily-chapter-bible-version";
 const VOL_KEY = "daily-chapter-voice-volume";
@@ -31,6 +41,7 @@ const OTREF_KEY = "daily-chapter-ot-ref";
 const TEACH_KEY = "daily-chapter-teaching";
 const WCF_KEY = "daily-chapter-westminster";
 const RCC_KEY = "daily-chapter-rc-catechism";
+const EXEGETE_KEY = "daily-chapter-exegete";
 const TRADITION_BY_FILE = {
   // Locked rc seed (file basename). Live MartinStatus2 pictures.json tags the
   // first three; Leonardo Annunciation is in the NT pool as this display file.
@@ -159,22 +170,8 @@ function normalizeBeliefs(v) {
   return BELIEF_OPTIONS.indexOf(s) >= 0 ? s : "evangelical";
 }
 
-function normalizeBible(v) {
-  const s = String(v || "").trim().toLowerCase();
-  if (s === "bsb" || s === "berean standard" || s === "berean standard bible") return "berean";
-  return BIBLE_OPTIONS.indexOf(s) >= 0 ? s : "berean";
-}
-
-function bibleDir() {
-  return bibleVersion === "kjv" ? "kjv" : "berean";
-}
-
-function bibleLabel(v) {
-  return normalizeBible(v) === "kjv" ? "KJV" : "Berean";
-}
-
-function nowLivePath(book, chapter) {
-  return (packBase() || "") + "/data/" + bibleDir() + "/" + book + "/" + chapter + "/now-live.json";
+function chapterNowPath(book, n) {
+  return (packBase() || "") + "/data/" + bibleVersion + "/" + book + "/" + n + "/now-live.json";
 }
 
 function mergeTraditionMap(data) {
@@ -260,7 +257,7 @@ function applyArtPool(list, force) {
   const id = String(currentChapter || 0) + "::" + beliefs + "::" + artListKey(next);
   if (!force && id === artSourceKey) return;
   artSourceKey = id;
-  art = next.slice();
+  art = ART_ROTATE ? shuffleArt(next) : (next || []).slice();
   artIndex = 0;
   lastKey = id;
   if (!art.length) {
@@ -315,10 +312,9 @@ function stopSlideshow() {
 function holdStillArt() {
   stopSlideshow();
   showArt(artIndex);
-}
-
-function startSlideshow() {
-  holdStillArt();
+  if (ART_ROTATE && !interpretFrozen) {
+    artTimer = setInterval(() => showArt(artIndex + 1), 12500);
+  }
 }
 
 function showArt(i) {
@@ -509,7 +505,7 @@ async function openExegeteVoice(id) {
   box.textContent = "";
   const pack = packBase();
   const paths = [
-    (pack || "") + "/data/" + bibleDir() + "/" + (savedBook || "") + "/" + (currentChapter || "") + "/exegete/" + id + ".json",
+    (pack || "") + "/data/" + bibleVersion + "/" + (savedBook || "") + "/" + (currentChapter || "") + "/exegete/" + id + ".json",
     (pack || "") + "/data/kjv/" + (savedBook || "") + "/" + (currentChapter || "") + "/exegete/" + id + ".json",
     (pack || "") + "/data/exegete/" + (savedBook || "") + "/" + (currentChapter || "") + "/" + id + ".json"
   ];
@@ -594,7 +590,7 @@ function restoreCompleted() {
   if (!isLiveChapter(done.book, done.chapter)) return;
   savedBook = done.book;
   currentChapter = done.chapter;
-  nowPick = nowLivePath(done.book, done.chapter);
+  nowPick = chapterNowPath(done.book, done.chapter);
 }
 
 function showVerseOverlay() {
@@ -691,8 +687,9 @@ async function loadPrefs() {
   hearGreek = true;
   showText = true;
   voiceAccent = "british";
-  beliefs = "evangelical";
   bibleVersion = "berean";
+  beliefs = "evangelical";
+  exegeteOn = {};
   hearOtRef = false;
   hearTeaching = false;
   hearWestminster = false;
@@ -713,10 +710,13 @@ async function loadPrefs() {
     if (a === "american" || a === "british") voiceAccent = a;
   } catch (e) {}
   try {
+    bibleVersion = normalizeBible(localStorage.getItem(BIBLE_KEY));
+  } catch (e) {}
+  try {
     beliefs = normalizeBeliefs(localStorage.getItem(BELIEF_KEY));
   } catch (e) {}
   try {
-    bibleVersion = normalizeBible(localStorage.getItem(BIBLE_KEY));
+    exegeteOn = normalizeExegete(JSON.parse(localStorage.getItem(EXEGETE_KEY) || "{}"));
   } catch (e) {}
   try { hearOtRef = localStorage.getItem(OTREF_KEY) === "1"; } catch (e) {}
   try { hearTeaching = localStorage.getItem(TEACH_KEY) === "1"; } catch (e) {}
@@ -741,6 +741,7 @@ async function loadPrefs() {
   paintGreek();
   paintText();
   paintVoice();
+  paintBible();
   paintBeliefs();
   paintBible();
   paintSewToggles();
@@ -750,8 +751,9 @@ async function savePrefs() {
   try { localStorage.setItem(PREF_KEY, hearGreek ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(TEXT_KEY, showText ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(VOICE_KEY, voiceAccent); } catch (e) {}
-  try { localStorage.setItem(BELIEF_KEY, beliefs); } catch (e) {}
   try { localStorage.setItem(BIBLE_KEY, bibleVersion); } catch (e) {}
+  try { localStorage.setItem(BELIEF_KEY, beliefs); } catch (e) {}
+  try { localStorage.setItem(EXEGETE_KEY, JSON.stringify(exegeteOn)); } catch (e) {}
   try { localStorage.setItem(OTREF_KEY, hearOtRef ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(TEACH_KEY, hearTeaching ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(WCF_KEY, hearWestminster ? "1" : "0"); } catch (e) {}
@@ -795,9 +797,36 @@ function paintBeliefs() {
   });
 }
 
+function normalizeBible(v) {
+  const s = String(v || "").trim().toLowerCase();
+  return BIBLE_OPTIONS.indexOf(s) >= 0 ? s : "berean";
+}
+
+function bibleLabel(id) {
+  return id === "kjv" ? "KJV" : "Berean";
+}
+
 function paintBible() {
   document.querySelectorAll("[data-set=bible]").forEach((btn) => {
     btn.textContent = "Bible: " + bibleLabel(bibleVersion);
+  });
+}
+
+function normalizeExegete(raw) {
+  const out = {};
+  EXEGETE_VOICES.forEach((v) => {
+    out[v.id] = !!(raw && raw[v.id]);
+  });
+  return out;
+}
+
+function exegeteIdsOn() {
+  return EXEGETE_VOICES.filter((v) => exegeteOn[v.id]).map((v) => v.id);
+}
+
+function paintExegete() {
+  EXEGETE_VOICES.forEach((v) => {
+    paintToggle("[data-exegete=\"" + v.id + "\"]", !!exegeteOn[v.id], v.label + ": on", v.label + ": off");
   });
 }
 
@@ -870,7 +899,7 @@ function synthesizeNow() {
     waiting_hymn: true
   };
   if (stem && ch && isLiveChapter(book, ch)) {
-    data.audio = mediaUrl("/data/audio/" + stem + ch + ".mp3");
+    data.audio = mediaUrl("/data/audio/" + stem + ch + "-" + bibleVersion + "-" + voiceAccent + ".mp3");
   }
   return data;
 }
@@ -951,20 +980,19 @@ function renderVersesToScroller(verses) {
   });
 }
 
-function flattenHelloaoContent(content) {
-  if (typeof content === "string") return content;
-  if (!Array.isArray(content)) return "";
-  return content.map((part) => {
-    if (typeof part === "string") return part;
-    if (part && typeof part === "object") {
-      if (typeof part.text === "string") return part.text;
-      if (Array.isArray(part.content)) return flattenHelloaoContent(part.content);
-    }
-    return "";
-  }).join("");
+async function fetchBereanText(book, chapter) {
+  const bookName = bookNameForAPI(book);
+  const reference = encodeURIComponent(bookName + " " + chapter);
+  try {
+    const res = await fetch("https://bible-api.com/" + reference, { cache: "force-cache" });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data && Array.isArray(data.verses)) return data.verses;
+  } catch (e) {}
+  return null;
 }
 
-async function fetchRemoteVerses(book, chapter, version) {
+async function fetchKJVText(book, chapter) {
   const bookName = bookNameForAPI(book);
   const ver = normalizeBible(version);
   if (ver === "kjv") {
@@ -1015,12 +1043,29 @@ async function loadVerses(book, chapter) {
   var scroller = document.getElementById("verse-text-scroller");
   if (scroller) scroller.innerHTML = "";
   if (!book || !chapter) return;
-  var versesData = await loadLocalVerses(book, chapter, bibleVersion);
-  if (!versesData && bibleVersion !== "kjv") {
-    versesData = await loadLocalVerses(book, chapter, "kjv");
+  var versesData = null;
+  try {
+    var pack = packBase();
+    var path = (pack || "") + "/data/" + bibleVersion + "/" + book + "/" + chapter + "/verses.json";
+    var res = await fetch(path, { cache: "no-store" });
+    if (res.ok) {
+      var data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        if (data[0].text) {
+          versesData = data;
+        } else if (data[0].lines) {
+          versesData = data.map(function (v) {
+            return { verse: v.verse || "", text: (v.lines || []).join(" ") || "" };
+          });
+        }
+      }
+    }
+  } catch (e) {}
+  if (!versesData && bibleVersion === "kjv") {
+    versesData = await fetchKJVText(book, chapter);
   }
-  if (!versesData) {
-    versesData = await fetchRemoteVerses(book, chapter, bibleVersion);
+  if (!versesData && bibleVersion === "berean") {
+    versesData = await fetchBereanText(book, chapter);
   }
   if (versesData && versesData.length > 0) {
     renderVersesToScroller(versesData);
@@ -1034,8 +1079,13 @@ function sewSettings() {
     otRef: hearOtRef,
     teaching: hearTeaching,
     westminster: hearWestminster,
-    rcCatechism: hearRcCatechism
+    rcCatechism: hearRcCatechism,
+    exegete: exegeteIdsOn()
   };
+}
+
+function sewOptions() {
+  return { voiceAccent: voiceAccent, bibleVersion: bibleVersion };
 }
 
 function decorateFragmentMap(map) {
@@ -1059,15 +1109,10 @@ function collectFragmentMap(data) {
   return decorateFragmentMap(merged);
 }
 
-function readingCandidates(stem, chapter, hasGreekFrag) {
-  if (!stem || !chapter) return [];
-  const useNogrk = !hearGreek || hasGreekFrag;
-  const urls = [];
-  if (voiceAccent === "american") {
-    urls.push(mediaUrl("/data/audio/" + stem + chapter + (useNogrk ? "-american-nogrk.mp3" : "-american.mp3")));
-  }
-  urls.push(mediaUrl("/data/audio/" + stem + chapter + (useNogrk ? "-nogrk.mp3" : ".mp3")));
-  return urls;
+function readingCandidates(stem, chapter) {
+  const api = sewApi();
+  const conv = api.conventionUrls ? api.conventionUrls(stem, chapter, "reading", sewOptions()) : [];
+  return conv.map(mediaUrl);
 }
 
 function probeAudio(url) {
@@ -1110,12 +1155,13 @@ async function buildSewQueue(data) {
   const stem = audioStem(savedBook);
   const ch = Number(currentChapter) || 0;
   const map = collectFragmentMap(data);
-  const hasGreekFrag = !!(map.greek || map["greek-american"]);
+  const compound = "reading-" + bibleVersion + "-" + voiceAccent;
+  if (map[compound]) map.reading = map[compound];
   if (!map.reading) {
-    const readingUrl = await firstPlayable(readingCandidates(stem, ch, hasGreekFrag));
+    const readingUrl = await firstPlayable(readingCandidates(stem, ch));
     if (readingUrl) map.reading = readingUrl;
     else if (data && data.audio && !data.waiting_audio) map.reading = mediaUrl(data.audio);
-  } else if (voiceAccent === "american" && map["reading-american"]) {
+  } else if (voiceAccent === "american" && !map[compound] && map["reading-american"]) {
     const am = await probeAudio(map["reading-american"]);
     if (am) map.reading = am;
     else americanFallbackHint = "American audio not on pack yet — playing British.";
@@ -1125,12 +1171,12 @@ async function buildSewQueue(data) {
   for (let i = 0; i < extraKeys.length; i++) {
     const key = extraKeys[i];
     if (map[key] || map[key + "-american"]) continue;
-    const conv = api.conventionUrls ? api.conventionUrls(stem, ch, key, voiceAccent) : [];
+    const conv = api.conventionUrls ? api.conventionUrls(stem, ch, key, sewOptions()) : [];
     const found = await firstPlayable(conv.map(mediaUrl));
     if (found) map[key] = found;
   }
   const planned = api.sewPlan
-    ? api.sewPlan(map, sewSettings(), { voiceAccent: voiceAccent })
+    ? api.sewPlan(map, sewSettings(), sewOptions())
     : { items: map.reading ? [{ key: "reading", url: map.reading }] : [], skipped: [] };
   const items = [];
   for (let i = 0; i < planned.items.length; i++) {
@@ -1231,6 +1277,7 @@ function showSettings() {
     '<button type="button" data-set="bible"></button>' +
     '<button type="button" data-set="greek"></button>' +
     '<button type="button" data-set="belief"></button>' +
+    '<button type="button" data-set="exegete">Exegete</button>' +
     '<button type="button" data-set="otref"></button>' +
     '<button type="button" data-set="teaching"></button>' +
     '<button type="button" data-set="westminster"></button>' +
@@ -1269,16 +1316,16 @@ function showBeliefs() {
 }
 
 function showExegete() {
-  showUrPanel(
-    '<button type="button" class="ur-back" data-back="settings">Settings</button>' +
-    '<p class="ur-head">Exegete</p>' +
-    '<button type="button" class="ur-dead" disabled>Closed commentaries</button>' +
-    '<button type="button" class="ur-live" data-exegete="matthew-henry">Matthew Henry</button>' +
-    '<button type="button" class="ur-live" data-exegete="albert-barnes">Albert Barnes</button>' +
-    '<button type="button" class="ur-live" data-exegete="henry-alford">Henry Alford</button>' +
-    '<button type="button" class="ur-live" data-exegete="charles-spurgeon">Charles Spurgeon</button>' +
-    '<button type="button" class="ur-live" data-exegete="john-wesley">John Wesley</button>'
-  );
+  const rows = [
+    '<button type="button" class="ur-back" data-back="settings">Settings</button>',
+    '<p class="ur-head">Exegete</p>',
+    '<button type="button" class="ur-dead" disabled>Closed commentaries</button>'
+  ];
+  EXEGETE_VOICES.forEach((v) => {
+    rows.push('<button type="button" data-exegete="' + v.id + '"></button>');
+  });
+  showUrPanel(rows.join(""));
+  paintExegete();
 }
 
 function showVolume() {
@@ -1413,7 +1460,7 @@ async function pickChapter(n, bookId) {
   currentChapter = n;
   savedBook = book;
   const pack = packBase();
-  nowPick = nowLivePath(book, n);
+  nowPick = chapterNowPath(book, n);
   closeUr();
   showFallbackArt();
   artSourceKey = "";
@@ -1533,9 +1580,26 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
     load(playing);
     return;
   }
+  const bible = btn.getAttribute("data-bible");
+  if (bible) {
+    bibleVersion = normalizeBible(bible);
+    paintBible();
+    savePrefs();
+    nowPick = chapterNowPath(savedBook, currentChapter);
+    lastSewKey = "";
+    load(playing);
+    showSettings();
+    return;
+  }
   const exegete = btn.getAttribute("data-exegete");
   if (exegete) {
-    openExegeteVoice(exegete);
+    exegeteOn[exegete] = !exegeteOn[exegete];
+    paintExegete();
+    savePrefs();
+    lastSewKey = "";
+    load(playing);
+    if (exegeteOn[exegete]) openExegeteVoice(exegete);
+    else hideExegete();
     return;
   }
   const bible = btn.getAttribute("data-bible");
@@ -1619,7 +1683,7 @@ function getQueryParam(name) {
     const ch = Number(chapterParam);
     if (ch >= 1 && isLiveChapter(savedBook, ch)) {
       currentChapter = ch;
-      nowPick = nowLivePath(savedBook, ch);
+      nowPick = chapterNowPath(savedBook, ch);
     }
   }
   
