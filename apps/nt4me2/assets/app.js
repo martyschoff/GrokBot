@@ -34,7 +34,6 @@ const TEXT_KEY = "daily-chapter-show-text";
 const VOICE_KEY = "daily-chapter-voice-accent";
 const BIBLE_KEY = "daily-chapter-bible-version";
 const BELIEF_KEY = "daily-chapter-beliefs";
-const BIBLE_KEY = "daily-chapter-bible-version";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
 const OTREF_KEY = "daily-chapter-ot-ref";
@@ -97,7 +96,7 @@ function mergeFragmentTable(raw) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260919b"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919c"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -112,7 +111,7 @@ async function loadLiveTable() {
 
 async function loadFragmentOverlay() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/fragments.json?v=20260919b"];
+  const urls = [(pack || "") + "/data/fragments.json?v=20260919c"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -468,7 +467,7 @@ async function openHelp() {
   const pack = packBase();
   let text = "";
   try {
-    const res = await fetch((pack || "") + "/data/help.txt?v=20260919b", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/help.txt?v=20260919c", { cache: "no-store" });
     if (res.ok) text = await res.text();
   } catch (e) {}
   const p = document.createElement("p");
@@ -915,6 +914,10 @@ async function fetchNowLive(url) {
   return null;
 }
 
+function bibleDir() {
+  return bibleVersion === "kjv" ? "kjv" : "berean";
+}
+
 function otherBibleDir() {
   return bibleDir() === "kjv" ? "berean" : "kjv";
 }
@@ -1281,8 +1284,7 @@ function showSettings() {
     '<button type="button" data-set="otref"></button>' +
     '<button type="button" data-set="teaching"></button>' +
     '<button type="button" data-set="westminster"></button>' +
-    '<button type="button" data-set="rccatechism"></button>' +
-    '<button type="button" data-set="exegete">Exegete</button>'
+    '<button type="button" data-set="rccatechism"></button>'
   );
   paintVoice();
   paintBible();
@@ -1411,7 +1413,7 @@ const NT_FALLBACK = {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260919b"] : ["/data/books.json?v=20260919b"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919c"] : ["/data/books.json?v=20260919c"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -1600,16 +1602,6 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
     load(playing);
     if (exegeteOn[exegete]) openExegeteVoice(exegete);
     else hideExegete();
-    return;
-  }
-  const bible = btn.getAttribute("data-bible");
-  if (bible) {
-    bibleVersion = normalizeBible(bible);
-    paintBible();
-    savePrefs();
-    if (savedBook && currentChapter) nowPick = nowLivePath(savedBook, currentChapter);
-    showSettings();
-    load(playing);
     return;
   }
   const belief = btn.getAttribute("data-belief");

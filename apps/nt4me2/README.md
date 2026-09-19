@@ -67,3 +67,5 @@ Merge into S3 `data/live.json` (do not drop other books):
 ```
 
 Convention paths above work if JSON keys are omitted. If a section has no real content (especially OT Ref), omit the file and the key. Do not upload a stub clip.
+
+Local `data/live.json` marks `galatians: [1, 2]`. When merging that into S3, keep every other live book.
