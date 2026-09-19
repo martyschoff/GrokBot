@@ -1,0 +1,40 @@
+{
+  "galatians": {
+    "1": {
+      "reading-bsb-main-greekon-british": "/data/audio/galatians-1-bsb-main-greekon-british.mp3",
+      "reading-bsb-main-greekon-american": "/data/audio/galatians-1-bsb-main-greekon-american.mp3",
+      "reading-bsb-main-greekoff-british": "/data/audio/galatians-1-bsb-main-greekoff-british.mp3",
+      "reading-bsb-main-greekoff-american": "/data/audio/galatians-1-bsb-main-greekoff-american.mp3",
+      "reading-kjv-main-greekon-british": "/data/audio/galatians-1-kjv-main-greekon-british.mp3",
+      "reading-kjv-main-greekon-american": "/data/audio/galatians-1-kjv-main-greekon-american.mp3",
+      "reading-kjv-main-greekoff-british": "/data/audio/galatians-1-kjv-main-greekoff-british.mp3",
+      "reading-kjv-main-greekoff-american": "/data/audio/galatians-1-kjv-main-greekoff-american.mp3",
+      "teaching": "/data/audio/galatians-1-teaching.mp3",
+      "westminster": "/data/audio/galatians-1-westminster.mp3",
+      "rccatechism": "/data/audio/galatians-1-ccc.mp3",
+      "exegete-matthew-henry": "/data/audio/galatians-1-exegete-henry.m4a",
+      "exegete-albert-barnes": "/data/audio/galatians-1-exegete-barnes.mp3",
+      "exegete-henry-alford": "/data/audio/galatians-1-exegete-alford.mp3",
+      "exegete-spurgeon": "/data/audio/galatians-1-exegete-spurgeon.mp3",
+      "exegete-wesley": "/data/audio/galatians-1-exegete-wesley.mp3"
+    },
+    "2": {
+      "reading-bsb-main-greekon-british": "/data/audio/galatians-2-bsb-main-greekon-british.mp3",
+      "reading-bsb-main-greekon-american": "/data/audio/galatians-2-bsb-main-greekon-american.mp3",
+      "reading-bsb-main-greekoff-british": "/data/audio/galatians-2-bsb-main-greekoff-british.mp3",
+      "reading-bsb-main-greekoff-american": "/data/audio/galatians-2-bsb-main-greekoff-american.mp3",
+      "reading-kjv-main-greekon-british": "/data/audio/galatians-2-kjv-main-greekon-british.mp3",
+      "reading-kjv-main-greekon-american": "/data/audio/galatians-2-kjv-main-greekon-american.mp3",
+      "reading-kjv-main-greekoff-british": "/data/audio/galatians-2-kjv-main-greekoff-british.mp3",
+      "reading-kjv-main-greekoff-american": "/data/audio/galatians-2-kjv-main-greekoff-american.mp3",
+      "teaching": "/data/audio/galatians-2-teaching.mp3",
+      "westminster": "/data/audio/galatians-2-westminster.mp3",
+      "rccatechism": "/data/audio/galatians-2-ccc.mp3",
+      "exegete-matthew-henry": "/data/audio/galatians-2-exegete-henry.m4a",
+      "exegete-albert-barnes": "/data/audio/galatians-2-exegete-barnes.mp3",
+      "exegete-henry-alford": "/data/audio/galatians-2-exegete-alford.mp3",
+      "exegete-spurgeon": "/data/audio/galatians-2-exegete-spurgeon.mp3",
+      "exegete-wesley": "/data/audio/galatians-2-exegete-wesley.mp3"
+    }
+  }
+}
