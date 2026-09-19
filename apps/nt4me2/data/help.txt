@@ -32,9 +32,9 @@ Back — Go to the previous chapter in the current book. Only available for live
 
 Next — Go to the next chapter in the current book. Only available for live chapters.
 
-ART INTERPRETATION BUTTON:
+ACADEMIC ART INTERPRETATION BUTTON:
 
-Located near the bottom-right of the artwork, the Art Interpretation button opens a card with scholarly commentary and citations when available. The button color indicates availability:
+Located near the bottom-right of the artwork, the Academic art interpretation button opens a card with scholarly commentary and citations when available. The button color indicates availability:
   • Green (live button) — An interpretation card is ready for this artwork.
   • Soft red (no card) — No interpretation is available yet.
 
@@ -44,11 +44,11 @@ The home page (living words) displays New Testament books organized in columns. 
 
 ARTWORK AND CAPTIONS:
 
-Artwork cycles through the chapter art pool. If the chapter has no art of its own, the player uses the religious album from pictures.json (files under data/pictures/religious/). Descent is shown only when that pool is empty. The title, artist, and place of origin appear below the image. Roman Catholic traditions are never labeled with (rc) in the caption display.
+Artwork cycles through the religious album from pictures.json (files under data/pictures/religious/). The list is shuffled once and walked in order; it is reshuffled only after the last picture, or when the filtered file set changes. Descent is shown only when that pool is empty. The title, artist, and place of origin appear below the image. Roman Catholic traditions are never labeled with (rc) in the caption display.
 
 UNDERSTANDING COLOR CODES:
 
 Gold menu — The top menu bar highlights the current section or active control.
 Green (text, buttons, cards) — Live content, or a Settings toggle that is on.
-Soft red (Art Interpretation button) — Not available.
+Soft red (Academic art interpretation button) — Not available.
 Muted or gray (text, buttons) — Secondary content, or a Settings toggle that is off.
