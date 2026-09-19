@@ -104,11 +104,51 @@
     return out;
   }
 
+  function sortedFileKey(list) {
+    return (list || []).map(fileName).filter(Boolean).sort().join("|");
+  }
+
+  function poolIdentity(list) {
+    return sortedFileKey(list);
+  }
+
+  function shuffleList(list) {
+    const a = (list || []).slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = a[i];
+      a[i] = a[j];
+      a[j] = t;
+    }
+    return a;
+  }
+
+  function reshuffleDeck(list, previousFile) {
+    const next = shuffleList(list);
+    if (next.length > 1 && fileName(next[0]) === previousFile) {
+      const j = 1 + Math.floor(Math.random() * (next.length - 1));
+      const t = next[0];
+      next[0] = next[j];
+      next[j] = t;
+    }
+    return next;
+  }
+
+  function shouldRebuildPool(prevIdentity, list) {
+    const id = poolIdentity(list);
+    return { identity: id, rebuild: prevIdentity == null || id !== prevIdentity };
+  }
+
   const api = {
     preferredAlbumName: preferredAlbumName,
     picturesFromCatalog: picturesFromCatalog,
     albumArtFromPictures: albumArtFromPictures,
-    fileName: fileName
+    fileName: fileName,
+    sortedFileKey: sortedFileKey,
+    poolIdentity: poolIdentity,
+    shuffleList: shuffleList,
+    reshuffleDeck: reshuffleDeck,
+    shouldRebuildPool: shouldRebuildPool
   };
   root.NT_ART_ALBUM = api;
   if (typeof module !== "undefined" && module.exports) module.exports = api;

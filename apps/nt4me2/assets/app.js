@@ -7,7 +7,7 @@ let artIndex = 0;
 let artTimer = null;
 let playing = false;
 let lastKey = "";
-let artSourceKey = "";
+let artSourceKey = null;
 let interpretOpen = false;
 let interpretFrozen = false;
 let interpretScroll = 0;
@@ -263,15 +263,19 @@ function showFallbackArt() {
   paintArtCaption(item);
 }
 
-function applyArtPool(list, force) {
-  artRaw = (list || []).slice();
+function applyArtPool(list) {
+  const incoming = (list || []).slice();
+  if (incoming.length) artRaw = incoming;
   const next = filterArtByBeliefs(artRaw, beliefs);
-  const id = String(currentChapter || 0) + "::" + beliefs + "::" + artListKey(next);
-  if (!force && id === artSourceKey) return;
-  artSourceKey = id;
+  const api = artAlbumApi();
+  const decision = api.shouldRebuildPool
+    ? api.shouldRebuildPool(artSourceKey, next)
+    : { identity: artListKey(next), rebuild: artSourceKey == null || artListKey(next) !== artSourceKey };
+  if (!decision.rebuild) return;
+  artSourceKey = decision.identity;
   art = ART_ROTATE ? shuffleArt(next) : (next || []).slice();
   artIndex = 0;
-  lastKey = id;
+  lastKey = decision.identity;
   if (!art.length) {
     stopSlideshow();
     showFallbackArt();
@@ -282,10 +286,14 @@ function applyArtPool(list, force) {
 }
 
 function artListKey(list) {
-  return (list || []).map(artFile).join("|");
+  const api = artAlbumApi();
+  if (api.poolIdentity) return api.poolIdentity(list);
+  return (list || []).map(artFile).filter(Boolean).sort().join("|");
 }
 
 function shuffleArt(list) {
+  const api = artAlbumApi();
+  if (api.shuffleList) return api.shuffleList(list);
   const a = (list || []).slice();
   for (let i = a.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -312,6 +320,7 @@ function setInterpretRim() {
   btn.classList.toggle("interpret-yes", yes);
   btn.classList.toggle("interpret-no", !yes);
   btn.setAttribute("aria-pressed", interpretOpen ? "true" : "false");
+  btn.setAttribute("aria-label", "Academic art interpretation");
 }
 
 function stopSlideshow() {
@@ -339,7 +348,14 @@ function showArt(i) {
     setInterpretRim();
     return;
   }
-  artIndex = ((i % art.length) + art.length) % art.length;
+  if (ART_ROTATE && art.length > 1 && (i >= art.length || i < 0)) {
+    const api = artAlbumApi();
+    const prev = artFile(art[artIndex]);
+    art = api.reshuffleDeck ? api.reshuffleDeck(art, prev) : shuffleArt(art);
+    artIndex = 0;
+  } else {
+    artIndex = ((i % art.length) + art.length) % art.length;
+  }
   const item = art[artIndex];
   const img = document.getElementById("art");
   const nextSrc = item.src;
@@ -484,7 +500,7 @@ async function openHelp() {
   const pack = packBase();
   let text = "";
   try {
-    const res = await fetch((pack || "") + "/data/help.txt?v=20260919k", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/help.txt?v=20260919n", { cache: "no-store" });
     if (res.ok) text = await res.text();
   } catch (e) {}
   const p = document.createElement("p");
@@ -855,8 +871,8 @@ function usableNowArt(list) {
 async function loadAlbumArtPool() {
   const pack = packBase();
   const urls = [
-    (pack || "") + "/data/pictures.json?v=20260919k",
-    (pack || "") + "/data/art/pictures.json?v=20260919k"
+    (pack || "") + "/data/pictures.json?v=20260919n",
+    (pack || "") + "/data/art/pictures.json?v=20260919n"
   ];
   const api = artAlbumApi();
   for (const url of urls) {
@@ -875,9 +891,11 @@ async function loadAlbumArtPool() {
 }
 
 async function resolveArtPool(data) {
+  const album = await loadAlbumArtPool();
+  if (album.length) return album;
   const live = usableNowArt(data && data.art);
   if (live.length) return live;
-  return loadAlbumArtPool();
+  return artRaw.length ? artRaw.slice() : [];
 }
 
 function decorateNow(data) {
@@ -1563,8 +1581,6 @@ async function pickChapter(n, bookId) {
   const pack = packBase();
   nowPick = chapterNowPath(book, n);
   closeUr();
-  showFallbackArt();
-  artSourceKey = "";
   await load(true);
 }
 
@@ -1701,7 +1717,7 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
     beliefs = normalizeBeliefs(belief);
     paintBeliefs();
     savePrefs();
-    applyArtPool(artRaw, true);
+    applyArtPool(artRaw);
     showSettings();
     return;
   }
@@ -1788,6 +1804,7 @@ window.ntArtState = function () {
     raw: artRaw.map(artFile),
     timer: !!artTimer,
     index: artIndex,
+    sourceKey: artSourceKey,
     fallbackOnly: !art.length
   };
 };
