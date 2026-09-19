@@ -1175,6 +1175,10 @@ function probeAudio(url) {
         finish(true);
         return;
       }
+      if (res.status === 404) {
+        finish(false);
+        return;
+      }
       probeWithAudio();
     }).catch(() => {
       probeWithAudio();
@@ -1187,6 +1191,7 @@ function safariSafeAudioCandidates(url) {
   const out = [];
   if (/\.mp3(\?|$)/i.test(u)) out.push(u.replace(/\.mp3(\?|$)/i, ".m4a$1"));
   if (u) out.push(u);
+  if (/\.m4a(\?|$)/i.test(u)) out.push(u.replace(/\.m4a(\?|$)/i, ".mp3$1"));
   return out;
 }
 
