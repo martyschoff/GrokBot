@@ -44,7 +44,7 @@ The home page (living words) displays New Testament books organized in columns. 
 
 ARTWORK AND CAPTIONS:
 
-Artwork cycles through the chapter art pool. The title, artist, and place of origin appear below the image. Roman Catholic traditions are never labeled with (rc) in the caption display.
+Artwork cycles through the chapter art pool. If the chapter has no art of its own, the player uses the religious album from pictures.json (files under data/pictures/religious/). Descent is shown only when that pool is empty. The title, artist, and place of origin appear below the image. Roman Catholic traditions are never labeled with (rc) in the caption display.
 
 UNDERSTANDING COLOR CODES:
 

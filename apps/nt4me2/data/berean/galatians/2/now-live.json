@@ -6,5 +6,8 @@
   "waiting_audio": false,
   "waiting_hymn": true,
   "waiting_art": true,
-  "art": []
+  "art": [],
+  "fragments": {
+    "exegete-matthew-henry": "/data/audio/galatians-2-exegete-henry.m4a"
+  }
 }

@@ -96,7 +96,7 @@ function mergeFragmentTable(raw) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260919j"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919k"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -124,7 +124,7 @@ function applyCatalogLiveFallback(catalog) {
 
 async function loadFragmentOverlay() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/fragments.json?v=20260919j"];
+  const urls = [(pack || "") + "/data/fragments.json?v=20260919k"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -484,7 +484,7 @@ async function openHelp() {
   const pack = packBase();
   let text = "";
   try {
-    const res = await fetch((pack || "") + "/data/help.txt?v=20260919j", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/help.txt?v=20260919k", { cache: "no-store" });
     if (res.ok) text = await res.text();
   } catch (e) {}
   const p = document.createElement("p");
@@ -844,6 +844,42 @@ function bookNameForDisplay(id) {
   return bookLabel(id);
 }
 
+function artAlbumApi() {
+  return (typeof window !== "undefined" && window.NT_ART_ALBUM) || {};
+}
+
+function usableNowArt(list) {
+  return (list || []).filter((item) => item && (item.src || item.file));
+}
+
+async function loadAlbumArtPool() {
+  const pack = packBase();
+  const urls = [
+    (pack || "") + "/data/pictures.json?v=20260919k",
+    (pack || "") + "/data/art/pictures.json?v=20260919k"
+  ];
+  const api = artAlbumApi();
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) continue;
+      const catalog = await res.json();
+      mergeTraditionMap(catalog);
+      const pool = api.albumArtFromPictures
+        ? api.albumArtFromPictures(catalog, { mediaUrl: mediaUrl })
+        : [];
+      if (pool.length) return pool;
+    } catch (e) {}
+  }
+  return [];
+}
+
+async function resolveArtPool(data) {
+  const live = usableNowArt(data && data.art);
+  if (live.length) return live;
+  return loadAlbumArtPool();
+}
+
 function decorateNow(data) {
   if (!data || typeof data !== "object") return {};
   if (data.audio) data.audio = mediaUrl(data.audio);
@@ -1099,25 +1135,59 @@ function probeAudio(url) {
       resolve("");
       return;
     }
-    const probe = new Audio();
     let done = false;
     const finish = (ok) => {
       if (done) return;
       done = true;
-      probe.removeEventListener("loadeddata", onOk);
-      probe.removeEventListener("canplay", onOk);
-      probe.removeEventListener("error", onErr);
-      try { probe.removeAttribute("src"); probe.load(); } catch (e) {}
       resolve(ok ? url : "");
     };
-    const onOk = () => finish(true);
-    const onErr = () => finish(false);
-    probe.addEventListener("loadeddata", onOk);
-    probe.addEventListener("canplay", onOk);
-    probe.addEventListener("error", onErr);
-    probe.src = url;
-    setTimeout(() => finish(false), 1200);
+    const probeWithAudio = () => {
+      const probe = new Audio();
+      const onOk = () => {
+        cleanup();
+        finish(true);
+      };
+      const onErr = () => {
+        cleanup();
+        finish(false);
+      };
+      const cleanup = () => {
+        probe.removeEventListener("loadeddata", onOk);
+        probe.removeEventListener("canplay", onOk);
+        probe.removeEventListener("error", onErr);
+        try { probe.removeAttribute("src"); probe.load(); } catch (e) {}
+      };
+      probe.addEventListener("loadeddata", onOk);
+      probe.addEventListener("canplay", onOk);
+      probe.addEventListener("error", onErr);
+      probe.src = url;
+      setTimeout(() => {
+        cleanup();
+        finish(false);
+      }, 4000);
+    };
+    fetch(url, {
+      method: "GET",
+      headers: { Range: "bytes=0-1" },
+      cache: "no-store"
+    }).then((res) => {
+      if (res.status === 200 || res.status === 206) {
+        finish(true);
+        return;
+      }
+      probeWithAudio();
+    }).catch(() => {
+      probeWithAudio();
+    });
   });
+}
+
+function safariSafeAudioCandidates(url) {
+  const u = mediaUrl(String(url || ""));
+  const out = [];
+  if (/\.mp3(\?|$)/i.test(u)) out.push(u.replace(/\.mp3(\?|$)/i, ".m4a$1"));
+  if (u) out.push(u);
+  return out;
 }
 
 async function firstPlayable(urls) {
@@ -1169,7 +1239,14 @@ async function buildSewQueue(data) {
   const extraKeys = api.probeKeys ? api.probeKeys(settings) : wanted.filter((k) => k !== "reading");
   for (let i = 0; i < extraKeys.length; i++) {
     const key = extraKeys[i];
-    if (map[key] || map[key + "-american"]) continue;
+    const existing = map[key] || map[key + "-american"];
+    if (existing) {
+      const ok = await firstPlayable(safariSafeAudioCandidates(existing));
+      if (ok) {
+        map[key] = ok;
+        continue;
+      }
+    }
     const conv = api.conventionUrls ? api.conventionUrls(stem, ch, key, sewOptions()) : [];
     const found = await firstPlayable(conv.map(mediaUrl));
     if (found) map[key] = found;
@@ -1185,7 +1262,7 @@ async function buildSewQueue(data) {
       skipped.push(row.key);
       continue;
     }
-    const ok = await probeAudio(row.url);
+    const ok = await firstPlayable(safariSafeAudioCandidates(row.url));
     if (ok) items.push({ key: row.key, url: ok });
     else skipped.push(row.key);
   }
@@ -1260,7 +1337,7 @@ async function load(playAfter) {
     hymn.pause();
     hymn.removeAttribute("src");
   }
-  applyArtPool(data.art || []);
+  applyArtPool(await resolveArtPool(data));
   setInterpretRim();
   if (!hint.textContent && HYMN_ENABLED) {
     hint.textContent = data.waiting_hymn ? "Voice ready. Waiting on a public-domain hymn." : "Hymn stays very quiet under the voice.";
@@ -1430,7 +1507,7 @@ const NT_FALLBACK = {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260919j"] : ["/data/books.json?v=20260919j"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919k"] : ["/data/books.json?v=20260919k"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -1701,8 +1778,10 @@ function getQueryParam(name) {
 window.ntArtState = function () {
   return {
     beliefs: beliefs,
+    rotate: ART_ROTATE,
     files: art.map(artFile),
-    raw: artRaw.map(artFile)
+    raw: artRaw.map(artFile),
+    fallbackOnly: !art.length
   };
 };
 

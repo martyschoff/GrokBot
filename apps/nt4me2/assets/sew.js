@@ -274,7 +274,11 @@
     }
     if (key.indexOf("exegete-") === 0) {
       const short = exegeteFileId(key);
-      if (short) push(base + "-exegete-" + short + ".mp3");
+      if (short) {
+        push(base + "-exegete-" + short + ".m4a");
+        push(base + "-exegete-" + short + ".mp3");
+      }
+      push(base + "-" + key + ".m4a");
       push(base + "-" + key + ".mp3");
       return urls;
     }

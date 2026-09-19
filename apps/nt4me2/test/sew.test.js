@@ -236,19 +236,20 @@ test("conventionUrls emit Kokoro main / shared / mapped exegete names", () => {
   assert.ok(sew.conventionUrls("galatians-", 1, "greek", { hearGreek: true }).indexOf("/data/audio/galatians-1-greek.mp3") >= 0);
   assert.ok(sew.conventionUrls("galatians-", 1, "otref", { voiceAccent: "british", bibleVersion: "berean" }).indexOf("/data/audio/galatians-1-ot-ref.mp3") >= 0);
   const henry = sew.conventionUrls("galatians-", 1, "exegete-matthew-henry", { voiceAccent: "british", bibleVersion: "berean" });
-  assert.equal(henry[0], "/data/audio/galatians-1-exegete-henry.mp3");
+  assert.equal(henry[0], "/data/audio/galatians-1-exegete-henry.m4a");
+  assert.ok(henry.indexOf("/data/audio/galatians-1-exegete-henry.mp3") >= 0);
   assert.ok(henry.indexOf("/data/audio/galatians-1-exegete-matthew-henry.mp3") >= 0);
   assert.equal(
     sew.conventionUrls("galatians-", 1, "exegete-albert-barnes", { voiceAccent: "british", bibleVersion: "berean" })[0],
-    "/data/audio/galatians-1-exegete-barnes.mp3"
+    "/data/audio/galatians-1-exegete-barnes.m4a"
   );
   assert.equal(
     sew.conventionUrls("galatians-", 1, "exegete-henry-alford", { voiceAccent: "british", bibleVersion: "berean" })[0],
-    "/data/audio/galatians-1-exegete-alford.mp3"
+    "/data/audio/galatians-1-exegete-alford.m4a"
   );
   assert.equal(
     sew.conventionUrls("galatians-", 1, "exegete-spurgeon", { voiceAccent: "british", bibleVersion: "berean" })[0],
-    "/data/audio/galatians-1-exegete-spurgeon.mp3"
+    "/data/audio/galatians-1-exegete-spurgeon.m4a"
   );
   assert.deepEqual(
     sew.conventionUrls("galatians-", 2, "teaching", { voiceAccent: "british", bibleVersion: "berean" }),
