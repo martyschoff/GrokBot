@@ -1,6 +1,6 @@
 const HYMN_ENABLED = false;
 const HYMN_GAIN = 0.15;
-const ART_ROTATE = false;
+const ART_ROTATE = true;
 let art = [];
 let artRaw = [];
 let artIndex = 0;
@@ -28,7 +28,9 @@ const EXEGETE_VOICES = [
   { id: "wesley", label: "Wesley" }
 ];
 let beliefs = "evangelical";
-let exegeteOn = {};
+let exegeteChoice = "none";
+let lockedRandomExegete = "";
+let lockedRandomKey = "";
 const PREF_KEY = "daily-chapter-hear-greek";
 const TEXT_KEY = "daily-chapter-show-text";
 const VOICE_KEY = "daily-chapter-voice-accent";
@@ -94,7 +96,7 @@ function mergeFragmentTable(raw) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260919i"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919j"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -122,7 +124,7 @@ function applyCatalogLiveFallback(catalog) {
 
 async function loadFragmentOverlay() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/fragments.json?v=20260919i"];
+  const urls = [(pack || "") + "/data/fragments.json?v=20260919j"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -326,6 +328,9 @@ function holdStillArt() {
 function startSlideshow() {
   stopSlideshow();
   showArt(artIndex);
+  if (ART_ROTATE && !interpretFrozen) {
+    artTimer = setInterval(() => showArt(artIndex + 1), 12500);
+  }
 }
 
 function showArt(i) {
@@ -479,7 +484,7 @@ async function openHelp() {
   const pack = packBase();
   let text = "";
   try {
-    const res = await fetch((pack || "") + "/data/help.txt?v=20260919i", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/help.txt?v=20260919j", { cache: "no-store" });
     if (res.ok) text = await res.text();
   } catch (e) {}
   const p = document.createElement("p");
@@ -649,7 +654,9 @@ async function loadPrefs() {
   voiceAccent = "british";
   bibleVersion = "berean";
   beliefs = "evangelical";
-  exegeteOn = {};
+  exegeteChoice = "none";
+  lockedRandomExegete = "";
+  lockedRandomKey = "";
   hearOtRef = false;
   hearWestminster = false;
   hearRcCatechism = false;
@@ -675,7 +682,7 @@ async function loadPrefs() {
     beliefs = normalizeBeliefs(localStorage.getItem(BELIEF_KEY));
   } catch (e) {}
   try {
-    exegeteOn = normalizeExegete(JSON.parse(localStorage.getItem(EXEGETE_KEY) || "{}"));
+    exegeteChoice = normalizeExegeteChoice(localStorage.getItem(EXEGETE_KEY));
   } catch (e) {}
   try { hearOtRef = localStorage.getItem(OTREF_KEY) === "1"; } catch (e) {}
   try { hearWestminster = localStorage.getItem(WCF_KEY) === "1"; } catch (e) {}
@@ -711,7 +718,7 @@ async function savePrefs() {
   try { localStorage.setItem(VOICE_KEY, voiceAccent); } catch (e) {}
   try { localStorage.setItem(BIBLE_KEY, bibleVersion); } catch (e) {}
   try { localStorage.setItem(BELIEF_KEY, beliefs); } catch (e) {}
-  try { localStorage.setItem(EXEGETE_KEY, JSON.stringify(exegeteOn)); } catch (e) {}
+  try { localStorage.setItem(EXEGETE_KEY, exegeteChoice); } catch (e) {}
   try { localStorage.setItem(OTREF_KEY, hearOtRef ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(WCF_KEY, hearWestminster ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(RCC_KEY, hearRcCatechism ? "1" : "0"); } catch (e) {}
@@ -769,21 +776,33 @@ function paintBible() {
   });
 }
 
-function normalizeExegete(raw) {
-  const out = {};
-  EXEGETE_VOICES.forEach((v) => {
-    out[v.id] = !!(raw && raw[v.id]);
-  });
-  return out;
-}
-
-function exegeteIdsOn() {
-  return EXEGETE_VOICES.filter((v) => exegeteOn[v.id]).map((v) => v.id);
+function normalizeExegeteChoice(raw) {
+  if (raw == null || raw === "") return "none";
+  if (typeof raw === "string") {
+    const s = raw.trim().toLowerCase();
+    if (s === "none" || s === "random") return s;
+    if (EXEGETE_VOICES.some((v) => v.id === s)) return s;
+    try {
+      return normalizeExegeteChoice(JSON.parse(raw));
+    } catch (e) {
+      return "none";
+    }
+  }
+  if (Array.isArray(raw)) return normalizeExegeteChoice(raw[0]);
+  if (typeof raw === "object") {
+    if (raw.random) return "random";
+    if (raw.none) return "none";
+    const hit = EXEGETE_VOICES.find((v) => raw[v.id]);
+    return hit ? hit.id : "none";
+  }
+  return "none";
 }
 
 function paintExegete() {
+  paintToggle("[data-exegete=\"none\"]", exegeteChoice === "none", "None", "None");
+  paintToggle("[data-exegete=\"random\"]", exegeteChoice === "random", "Random", "Random");
   EXEGETE_VOICES.forEach((v) => {
-    paintToggle("[data-exegete=\"" + v.id + "\"]", !!exegeteOn[v.id], v.label + ": on", v.label + ": off");
+    paintToggle("[data-exegete=\"" + v.id + "\"]", exegeteChoice === v.id, v.label, v.label);
   });
 }
 
@@ -1024,12 +1043,23 @@ function sewSettings() {
     otRef: hearOtRef,
     westminster: hearWestminster,
     rcCatechism: hearRcCatechism,
-    exegete: exegeteIdsOn().slice(0, 1)
+    exegete: exegeteChoice === "none" ? [] : [exegeteChoice]
   };
 }
 
 function sewOptions() {
-  return { voiceAccent: voiceAccent, bibleVersion: bibleVersion, hearGreek: hearGreek };
+  const opt = { voiceAccent: voiceAccent, bibleVersion: bibleVersion, hearGreek: hearGreek };
+  if (exegeteChoice === "random") {
+    opt.pickRandom = (ids) => {
+      const key = String(savedBook || "") + ":" + String(currentChapter || 0);
+      if (lockedRandomKey !== key || (ids || []).indexOf(lockedRandomExegete) < 0) {
+        lockedRandomExegete = (ids && ids.length) ? ids[Math.floor(Math.random() * ids.length)] : "";
+        lockedRandomKey = key;
+      }
+      return lockedRandomExegete;
+    };
+  }
+  return opt;
 }
 
 function decorateFragmentMap(map) {
@@ -1108,12 +1138,17 @@ function emptySewBuild() {
 function storeSewDebug(built) {
   const settings = (built && built.settings) || sewSettings();
   const exegete = (settings.exegete || []).slice(0, 1);
+  const api = sewApi();
+  const items = ((built && built.items) || []).slice();
+  const skipped = ((built && built.skipped) || []).slice();
   window._lastSewDebug = {
-    items: ((built && built.items) || []).slice(),
+    items: items,
     wanted: ((built && built.wanted) || []).slice(),
-    skipped: ((built && built.skipped) || []).slice(),
+    skipped: skipped,
     settings: settings,
-    exegete: exegete
+    exegete: exegete,
+    mode: api.exegeteMode ? api.exegeteMode(settings) : exegeteChoice,
+    hint: api.sewHintText ? api.sewHintText(items, skipped) : ""
   };
 }
 
@@ -1131,7 +1166,7 @@ async function buildSewQueue(data) {
     else if (data && data.audio && !data.waiting_audio) map.reading = mediaUrl(data.audio);
   }
   const wanted = api.wantedKeys ? api.wantedKeys(settings) : ["reading"];
-  const extraKeys = wanted.filter((k) => k !== "reading");
+  const extraKeys = api.probeKeys ? api.probeKeys(settings) : wanted.filter((k) => k !== "reading");
   for (let i = 0; i < extraKeys.length; i++) {
     const key = extraKeys[i];
     if (map[key] || map[key + "-american"]) continue;
@@ -1157,10 +1192,15 @@ async function buildSewQueue(data) {
   const queued = api.chapterQueueItems ? api.chapterQueueItems(items, settings) : items;
   const queuedKeys = {};
   queued.forEach((row) => { queuedKeys[row.key] = true; });
-  wanted.forEach((key) => {
+  const resolvedWanted = wanted.map((key) => {
+    if (key !== "exegete-random") return key;
+    const hit = queued.find((row) => String(row.key || "").indexOf("exegete-") === 0);
+    return hit ? hit.key : key;
+  });
+  resolvedWanted.forEach((key) => {
     if (!queuedKeys[key] && skipped.indexOf(key) < 0) skipped.push(key);
   });
-  return { items: queued, wanted: wanted.slice(), skipped: skipped, settings: settings };
+  return { items: queued, wanted: resolvedWanted, skipped: skipped, settings: settings };
 }
 
 function sewKeyOf(items) {
@@ -1171,13 +1211,13 @@ function applySewQueue(built, playAfter) {
   const voice = document.getElementById("voice");
   const hint = document.getElementById("hint");
   const items = Array.isArray(built) ? built : ((built && built.items) || []);
-  const skipped = Array.isArray(built) ? [] : ((built && built.skipped) || []);
   playQueue = items;
   lastSewKey = sewKeyOf(playQueue);
   queueIndex = 0;
   if (!playQueue.length) {
     voice.removeAttribute("src");
     try { voice.load(); } catch (e) {}
+    hint.hidden = false;
     hint.textContent = "Waiting on the audio.";
     if (playing) setPlaying(false);
     return;
@@ -1185,11 +1225,8 @@ function applySewQueue(built, playAfter) {
   const first = playQueue[0].url;
   if (voice.getAttribute("src") !== first) voice.src = first;
   applyVoiceVolume();
-  const api = sewApi();
-  const text = api.sewHintText
-    ? api.sewHintText(playQueue, skipped)
-    : ("Sew: " + playQueue.map((i) => i.key).filter((k) => k && k !== "teaching").join(" · ") + (skipped.filter((k) => k && k !== "teaching").length ? (" · skipped " + skipped.filter((k) => k && k !== "teaching").join(" · ")) : ""));
-  hint.textContent = americanFallbackHint || text;
+  hint.textContent = "";
+  hint.hidden = true;
   if (playAfter) setPlaying(true);
 }
 
@@ -1300,7 +1337,8 @@ function showExegete() {
   const rows = [
     '<button type="button" class="ur-back" data-back="settings">Settings</button>',
     '<p class="ur-head">Exegete</p>',
-    '<button type="button" class="ur-dead" disabled>Closed commentaries</button>'
+    '<button type="button" data-exegete="none"></button>',
+    '<button type="button" data-exegete="random"></button>'
   ];
   EXEGETE_VOICES.forEach((v) => {
     rows.push('<button type="button" data-exegete="' + v.id + '"></button>');
@@ -1392,7 +1430,7 @@ const NT_FALLBACK = {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260919i"] : ["/data/books.json?v=20260919i"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919j"] : ["/data/books.json?v=20260919j"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -1567,12 +1605,11 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
   }
   const exegete = btn.getAttribute("data-exegete");
   if (exegete) {
-    const next = !exegeteOn[exegete];
-    EXEGETE_VOICES.forEach((v) => { exegeteOn[v.id] = false; });
-    if (next) exegeteOn[exegete] = true;
+    exegeteChoice = normalizeExegeteChoice(exegete);
+    lockedRandomExegete = "";
+    lockedRandomKey = "";
     paintExegete();
     savePrefs();
-    hideExegete();
     lastSewKey = "";
     load(playing);
     return;

@@ -1,4 +1,4 @@
-Bible Vision Help
+living words Help
 
 MENU (gold bar at top):
 
@@ -13,18 +13,18 @@ Settings — Voice, Bible, Greek, Belief, Exegete, and the sew toggles live here
   • Bible — Berean (default) or KJV. Berean is listed first.
   • Greek — Toggle Greek words on or off in the chapter audio stream.
   • Belief — Choose which theological tradition filters the artwork (evangelical hides Roman Catholic tagged art; roman catholic, orthodox, and none show the full pool).
-  • Exegete — Free commentary voices: Matthew Henry, Albert Barnes, Henry Alford, Spurgeon, Wesley. One voice at a time. Closed commentaries stay locked. Picking a voice rebuilds the chapter sew with that commentary at the end (audio only). It does not open a text overlay or play a name clip by itself.
-  • OT Ref — On/off. When on, an Old Testament reference fragment is sewn in only if that file exists. Missing OT Ref stays silent — no stub.
+  • Exegete — Commentary after the main reading. Choose None (no commentary audio), Random (one voice that has playable audio for this chapter; silence if none do), or a named voice: Matthew Henry, Albert Barnes, Henry Alford, Spurgeon, Wesley. The selection is remembered. A named voice plays only if its file exists — otherwise that slot stays silent. Commentary is audio only: it does not open a text overlay or play a name clip by itself.
+  • OT Ref — On/off. When on, an Old Testament reference fragment is sewn in only if that file exists. Missing OT Ref stays silent — no stub and no tone.
   • Westminster — On/off. When on, a Westminster Confession fragment is sewn in if it exists.
   • RC Catechism — On/off. When on, a Catechism of the Catholic Church fragment is sewn in if it exists.
 
-Green labels mean a setting is on. Missing audio for a turned-on section is skipped — the player stays silent for that section and does not invent a stub clip.
+Green labels mean a setting is on. Missing audio for a turned-on section is skipped — the player stays silent for that section and does not invent a stub clip or tone.
 
 Help — Display this guide.
 
 DOCK BUTTONS (at the bottom):
 
-Play/Pause — Begin or pause the narration. Artwork stays on one picture (no rotation). Chapter audio is sewn from the Berean or KJV reading (British or American), then any Settings fragments that are on and present (OT Ref, Westminster, RC Catechism), then the one selected exegete if its file exists. The dock hint always lists those pieces (`Sew: reading · …`) and appends skipped keys. Teaching is not a Settings option and is never sewn. No separate closer clip is appended. Clips follow one another with no interstitial tone.
+Play/Pause — Begin or pause the narration. Artwork rotates through the art pool. Chapter audio is sewn from the Berean or KJV reading (British or American), then any Settings fragments that are on and present (OT Ref, Westminster, RC Catechism), then the exegete choice (None, Random, or one named voice) if that clip exists. Teaching is not a Settings option and is never sewn. No separate closer clip is appended. Clips follow one another with no interstitial tone.
 
 Repeat — Restart the sewn chapter from the first piece.
 
@@ -40,15 +40,15 @@ Located near the bottom-right of the artwork, the Art Interpretation button open
 
 PARCHMENT HOME:
 
-The home page (Bible Vision) displays New Testament books organized in columns. Green text or buttons indicate books and chapters that are live and ready to read. Secondary or future content appears muted.
+The home page (living words) displays New Testament books organized in columns. Green text or buttons indicate books and chapters that are live and ready to read. Secondary or future content appears muted.
 
 ARTWORK AND CAPTIONS:
 
-Artwork does not cycle. The title, artist, and place of origin appear below the image. Roman Catholic traditions are never labeled with (rc) in the caption display.
+Artwork cycles through the chapter art pool. The title, artist, and place of origin appear below the image. Roman Catholic traditions are never labeled with (rc) in the caption display.
 
 UNDERSTANDING COLOR CODES:
 
 Gold menu — The top menu bar highlights the current section or active control.
 Green (text, buttons, cards) — Live content, or a Settings toggle that is on.
-Soft red (Art Interpretation button, closed Exegete row) — Not available.
+Soft red (Art Interpretation button) — Not available.
 Muted or gray (text, buttons) — Secondary content, or a Settings toggle that is off.

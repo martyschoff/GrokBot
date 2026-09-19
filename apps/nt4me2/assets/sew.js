@@ -53,7 +53,18 @@
   function exegeteFileId(key) {
     if (!key || key.indexOf("exegete-") !== 0) return "";
     const id = key.slice("exegete-".length);
+    if (id === "none" || id === "random") return "";
     return EXEGETE_FILE[id] || id;
+  }
+
+  function exegeteMode(settings) {
+    const voices = settings && settings.exegete;
+    if (!Array.isArray(voices) || !voices.length) return "none";
+    const first = String(voices[0] || "").trim().toLowerCase();
+    if (!first || first === "none") return "none";
+    if (first === "random") return "random";
+    if (EXEGETE_IDS.indexOf(first) >= 0) return first;
+    return "none";
   }
 
   function isCodaFragment(key, url) {
@@ -75,22 +86,44 @@
   }
 
   function selectedExegeteId(settings) {
-    const voices = settings && settings.exegete;
-    if (!Array.isArray(voices) || !voices.length) return "";
-    return String(voices[0] || "").trim();
+    const mode = exegeteMode(settings);
+    return mode === "none" || mode === "random" ? "" : mode;
   }
 
   function selectedExegeteKey(settings) {
-    const id = selectedExegeteId(settings);
-    return id ? "exegete-" + id : "";
+    const mode = exegeteMode(settings);
+    if (mode === "none") return "";
+    if (mode === "random") return "exegete-random";
+    return "exegete-" + mode;
+  }
+
+  function playableExegeteIds(availableMap, options) {
+    return EXEGETE_IDS.filter((id) => !!pickUrl(availableMap, "exegete-" + id, options));
+  }
+
+  function resolveRandomExegeteId(availableMap, options) {
+    const ids = playableExegeteIds(availableMap, options);
+    if (!ids.length) return "";
+    if (options && typeof options.pickRandom === "function") {
+      const picked = String(options.pickRandom(ids.slice()) || "").trim();
+      if (ids.indexOf(picked) >= 0) return picked;
+    }
+    return ids[Math.floor(Math.random() * ids.length)];
   }
 
   function chapterQueueItems(items, settings) {
-    const selected = selectedExegeteKey(settings);
+    const mode = exegeteMode(settings);
+    let keptExegete = false;
     return dropCoda(items).filter((item) => {
       if (isTeachingKey(item && item.key)) return false;
       if (!isExegeteKey(item && item.key)) return true;
-      return !!selected && item.key === selected;
+      if (mode === "none") return false;
+      if (mode === "random") {
+        if (keptExegete) return false;
+        keptExegete = true;
+        return true;
+      }
+      return item.key === "exegete-" + mode;
     });
   }
 
@@ -117,6 +150,19 @@
     const selected = selectedExegeteKey(settings);
     if (selected) keys.push(selected);
     return keys.filter((key) => !isTeachingKey(key));
+  }
+
+  function probeKeys(settings) {
+    const keys = [];
+    wantedKeys(settings).forEach((key) => {
+      if (key === "reading") return;
+      if (key === "exegete-random") {
+        EXEGETE_IDS.forEach((id) => keys.push("exegete-" + id));
+        return;
+      }
+      keys.push(key);
+    });
+    return keys;
   }
 
   function aliasesFor(key) {
@@ -170,6 +216,16 @@
         skipped.push(key);
         continue;
       }
+      if (key === "exegete-random") {
+        const id = resolveRandomExegeteId(availableMap, options);
+        const url = id ? pickUrl(availableMap, "exegete-" + id, options) : "";
+        if (id && url && !isCodaFragment("exegete-" + id, url)) {
+          items.push({ key: "exegete-" + id, url: url });
+        } else {
+          skipped.push(key);
+        }
+        continue;
+      }
       if (isExegeteKey(key) && key !== selected) {
         skipped.push(key);
         continue;
@@ -183,6 +239,7 @@
 
   function conventionUrls(stem, chapter, key, options) {
     if (!stem || !chapter || !key || isTeachingKey(key)) return [];
+    if (key === "exegete-random" || key === "exegete-none") return [];
     const opt = optsOf(options);
     const base = "/data/audio/" + stem + chapter;
     const urls = [];
@@ -263,6 +320,9 @@
   const api = {
     SEW_KEYS: SEW_KEYS,
     EXEGETE_IDS: EXEGETE_IDS,
+    exegeteMode: exegeteMode,
+    playableExegeteIds: playableExegeteIds,
+    probeKeys: probeKeys,
     isCodaFragment: isCodaFragment,
     dropCoda: dropCoda,
     chapterQueueItems: chapterQueueItems,

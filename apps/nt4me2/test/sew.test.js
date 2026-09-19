@@ -36,7 +36,15 @@ test("wantedKeys is reading, optional westminster/rccatechism, then exegete[0] o
   );
   assert.deepEqual(sew.wantedKeys({ exegete: ["wesley", "spurgeon"] }), ["reading", "exegete-wesley"]);
   assert.equal(sew.wantedKeys({ exegete: [] }).some((k) => k.indexOf("exegete") === 0), false);
+  assert.deepEqual(sew.wantedKeys({ exegete: ["none"] }), ["reading"]);
+  assert.deepEqual(sew.wantedKeys({ exegete: ["random"] }), ["reading", "exegete-random"]);
   assert.equal(sew.wantedKeys({ teaching: true }).indexOf("teaching"), -1);
+  assert.deepEqual(
+    sew.probeKeys({ otRef: true, exegete: ["random"] }),
+    ["otref"].concat(sew.EXEGETE_IDS.map((id) => "exegete-" + id))
+  );
+  assert.equal(sew.exegeteMode({ exegete: ["random"] }), "random");
+  assert.equal(sew.exegeteMode({ exegete: [] }), "none");
 });
 
 test("sewPlan skips missing fragments and never substitutes an unselected exegete", () => {
@@ -102,6 +110,47 @@ test("chapter queue drops closer/coda and queues only the selected exegete", () 
   );
   assert.deepEqual(noneSelected.items.map((i) => i.key), ["reading"]);
 
+  const noneNamed = sew.sewPlan(
+    {
+      "reading-bsb-main-greekon-british": "/data/audio/galatians-1-bsb-main-greekon-british.mp3",
+      "exegete-wesley": "/data/audio/galatians-1-exegete-wesley.mp3"
+    },
+    { exegete: ["none"] },
+    { voiceAccent: "british", bibleVersion: "berean", hearGreek: true }
+  );
+  assert.deepEqual(noneNamed.items.map((i) => i.key), ["reading"]);
+
+  const randomPicked = sew.sewPlan(
+    {
+      "reading-bsb-main-greekon-british": "/data/audio/galatians-1-bsb-main-greekon-british.mp3",
+      "exegete-wesley": "/data/audio/galatians-1-exegete-wesley.mp3",
+      "exegete-spurgeon": "/data/audio/galatians-1-exegete-spurgeon.mp3"
+    },
+    { exegete: ["random"] },
+    {
+      voiceAccent: "british",
+      bibleVersion: "berean",
+      hearGreek: true,
+      pickRandom: (ids) => {
+        assert.deepEqual(ids, ["spurgeon", "wesley"]);
+        return "spurgeon";
+      }
+    }
+  );
+  assert.deepEqual(randomPicked.items.map((i) => i.key), ["reading", "exegete-spurgeon"]);
+  assert.equal(randomPicked.skipped.indexOf("exegete-random"), -1);
+
+  const randomSilent = sew.sewPlan(
+    {
+      "reading-bsb-main-greekon-british": "/data/audio/galatians-1-bsb-main-greekon-british.mp3"
+    },
+    { exegete: ["random"] },
+    { voiceAccent: "british", bibleVersion: "berean", hearGreek: true }
+  );
+  assert.deepEqual(randomSilent.items.map((i) => i.key), ["reading"]);
+  assert.ok(randomSilent.skipped.indexOf("exegete-random") >= 0);
+  assert.equal(randomSilent.items.some((i) => /stub|silence|empty|beep|tone/i.test(i.url || "")), false);
+
   assert.deepEqual(
     sew.chapterQueueItems([
       { key: "reading", url: "/data/audio/galatians-1-bsb-main-greekon-british.mp3" },
@@ -118,6 +167,14 @@ test("chapter queue drops closer/coda and queues only the selected exegete", () 
       { key: "exegete-wesley", url: "/data/audio/galatians-1-exegete-wesley.mp3" }
     ], { exegete: ["wesley"] }).map((i) => i.key),
     ["reading", "exegete-wesley"]
+  );
+  assert.deepEqual(
+    sew.chapterQueueItems([
+      { key: "reading", url: "/data/audio/galatians-1-bsb-main-greekon-british.mp3" },
+      { key: "exegete-spurgeon", url: "/data/audio/galatians-1-exegete-spurgeon.mp3" },
+      { key: "exegete-wesley", url: "/data/audio/galatians-1-exegete-wesley.mp3" }
+    ], { exegete: ["random"] }).map((i) => i.key),
+    ["reading", "exegete-spurgeon"]
   );
   assert.equal(sew.isCodaFragment("closer", "/data/audio/galatians-1-closer.mp3"), true);
   assert.equal(sew.isCodaFragment("reading", "/data/audio/galatians-1-bsb-main-greekon-british.mp3"), false);
@@ -195,6 +252,10 @@ test("conventionUrls emit Kokoro main / shared / mapped exegete names", () => {
   );
   assert.deepEqual(
     sew.conventionUrls("galatians-", 2, "teaching", { voiceAccent: "british", bibleVersion: "berean" }),
+    []
+  );
+  assert.deepEqual(
+    sew.conventionUrls("galatians-", 1, "exegete-random", { voiceAccent: "british", bibleVersion: "berean" }),
     []
   );
   const rcc = sew.conventionUrls("galatians-", 2, "rccatechism", { voiceAccent: "british", bibleVersion: "berean" });
