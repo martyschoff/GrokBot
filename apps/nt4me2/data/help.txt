@@ -13,7 +13,7 @@ Settings — Voice, Bible, Greek, Belief, Exegete, and the sew toggles live here
   • Bible — Berean (default) or KJV. Berean is listed first.
   • Greek — Toggle Greek words on or off in the chapter audio stream.
   • Belief — Choose which theological tradition filters the artwork (evangelical hides Roman Catholic tagged art; roman catholic, orthodox, and none show the full pool).
-  • Exegete — Free commentary voices: Matthew Henry, Albert Barnes, Henry Alford, Spurgeon, Wesley. Each is on/off. Closed commentaries stay locked. Picking a voice plays that commentary audio only — no text overlay on the art, and it is never sewn into the chapter queue.
+  • Exegete — Free commentary voices: Matthew Henry, Albert Barnes, Henry Alford, Spurgeon, Wesley. One voice at a time. Closed commentaries stay locked. Picking a voice rebuilds the chapter sew with that commentary at the end (audio only). It does not open a text overlay or play a name clip by itself.
   • OT Ref — On/off. When on, an Old Testament reference fragment is sewn in only if that file exists. Missing OT Ref stays silent — no stub.
   • Teaching — On/off. When on, a teaching fragment is sewn in if it exists.
   • Westminster — On/off. When on, a Westminster Confession fragment is sewn in if it exists.
@@ -25,7 +25,7 @@ Help — Display this guide.
 
 DOCK BUTTONS (at the bottom):
 
-Play/Pause — Begin or pause the narration. Artwork stays on one picture (no rotation). Chapter audio is sewn from the Berean or KJV reading (British or American) plus any Settings fragments that are on and present. No separate closer clip is appended. Exegete is not part of the sew.
+Play/Pause — Begin or pause the narration. Artwork stays on one picture (no rotation). Chapter audio is sewn from the Berean or KJV reading (British or American), then any Settings fragments that are on and present (Teaching, Westminster, RC Catechism), then the one selected exegete if its file exists. No separate closer clip is appended. Clips follow one another with no interstitial tone.
 
 Repeat — Restart the sewn chapter from the first piece.
 

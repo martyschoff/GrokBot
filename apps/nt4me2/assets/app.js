@@ -64,11 +64,8 @@ let hearRcCatechism = false;
 let playQueue = [];
 let queueIndex = 0;
 let lastSewKey = "";
-let lastNowData = null;
 let americanFallbackHint = "";
 let exegeteOpen = false;
-let exegeteSolo = false;
-let exegeteSoloId = "";
 
 function normalizeLiveTable(data) {
   const out = {};
@@ -99,7 +96,7 @@ function mergeFragmentTable(raw) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260919f"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919g"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -127,7 +124,7 @@ function applyCatalogLiveFallback(catalog) {
 
 async function loadFragmentOverlay() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/fragments.json?v=20260919f"];
+  const urls = [(pack || "") + "/data/fragments.json?v=20260919g"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -484,7 +481,7 @@ async function openHelp() {
   const pack = packBase();
   let text = "";
   try {
-    const res = await fetch((pack || "") + "/data/help.txt?v=20260919f", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/help.txt?v=20260919g", { cache: "no-store" });
     if (res.ok) text = await res.text();
   } catch (e) {}
   const p = document.createElement("p");
@@ -509,65 +506,6 @@ function hideExegete() {
   const bubble = document.getElementById("exegete-bubble");
   if (bubble) bubble.hidden = true;
   exegeteOpen = false;
-}
-
-function restoreChapterVoice(playAfter) {
-  exegeteSolo = false;
-  exegeteSoloId = "";
-  queueIndex = 0;
-  const voice = document.getElementById("voice");
-  const hint = document.getElementById("hint");
-  if (!voice) return;
-  if (playQueue.length) {
-    const first = playQueue[0].url;
-    if (voice.getAttribute("src") !== first) voice.src = first;
-    applyVoiceVolume();
-    const names = playQueue.map((i) => i.key).join(" · ");
-    if (hint) hint.textContent = americanFallbackHint || (playQueue.length > 1 ? ("Sew: " + names) : "");
-    if (playAfter) setPlaying(true);
-    else setPlaying(false);
-    return;
-  }
-  voice.removeAttribute("src");
-  try { voice.load(); } catch (e) {}
-  if (hint) hint.textContent = "Waiting on the audio.";
-  setPlaying(false);
-}
-
-async function resolveExegeteUrl(id) {
-  const api = sewApi();
-  const key = "exegete-" + id;
-  const map = collectFragmentMap(lastNowData);
-  const picked = api.pickUrl ? api.pickUrl(map, key, sewOptions()) : "";
-  if (picked) {
-    const ok = await probeAudio(picked);
-    if (ok) return ok;
-  }
-  const stem = audioStem(savedBook);
-  const ch = Number(currentChapter) || 0;
-  const conv = api.conventionUrls ? api.conventionUrls(stem, ch, key, sewOptions()) : [];
-  return firstPlayable(conv.map(mediaUrl));
-}
-
-async function openExegeteVoice(id) {
-  closeUr();
-  if (interpretOpen) hideInterpret();
-  hideHelp();
-  hideExegete();
-  const hint = document.getElementById("hint");
-  const url = await resolveExegeteUrl(id);
-  if (!url) {
-    if (hint) hint.textContent = "Waiting on the commentary.";
-    return;
-  }
-  const voice = document.getElementById("voice");
-  if (!voice) return;
-  exegeteSolo = true;
-  exegeteSoloId = id;
-  if (voice.getAttribute("src") !== url) voice.src = url;
-  applyVoiceVolume();
-  if (hint) hint.textContent = "";
-  setPlaying(true);
 }
 
 function applyVoiceVolume() {
@@ -666,18 +604,13 @@ function repeatFromStart() {
   try { if (hymn.src) hymn.currentTime = 0; } catch (e) {}
   if (interpretOpen) hideInterpret();
   if (exegeteOpen) hideExegete();
-  exegeteSolo = false;
-  exegeteSoloId = "";
   interpretFrozen = false;
   setPlaying(true);
 }
 
 function advanceSew() {
-  if (exegeteSolo) {
-    restoreChapterVoice(false);
-    return;
-  }
   const voice = document.getElementById("voice");
+  if (!voice) return;
   queueIndex += 1;
   if (queueIndex < playQueue.length) {
     voice.src = playQueue[queueIndex].url;
@@ -1098,7 +1031,7 @@ function sewSettings() {
     teaching: hearTeaching,
     westminster: hearWestminster,
     rcCatechism: hearRcCatechism,
-    exegete: []
+    exegete: exegeteIdsOn().slice(0, 1)
   };
 }
 
@@ -1200,11 +1133,10 @@ async function buildSewQueue(data) {
   for (let i = 0; i < planned.items.length; i++) {
     const row = planned.items[i];
     if (api.isCodaFragment && api.isCodaFragment(row.key, row.url)) continue;
-    if (String(row.key || "").indexOf("exegete-") === 0) continue;
     const ok = await probeAudio(row.url);
     if (ok) items.push({ key: row.key, url: ok });
   }
-  return api.chapterQueueItems ? api.chapterQueueItems(items) : items;
+  return api.chapterQueueItems ? api.chapterQueueItems(items, sewSettings()) : items;
 }
 
 function sewKeyOf(items) {
@@ -1214,8 +1146,6 @@ function sewKeyOf(items) {
 function applySewQueue(items, playAfter) {
   const voice = document.getElementById("voice");
   const hint = document.getElementById("hint");
-  exegeteSolo = false;
-  exegeteSoloId = "";
   playQueue = items || [];
   lastSewKey = sewKeyOf(playQueue);
   queueIndex = 0;
@@ -1236,7 +1166,6 @@ function applySewQueue(items, playAfter) {
 
 async function load(playAfter) {
   const data = await fetchNow();
-  lastNowData = data;
   document.getElementById("title").textContent = data.title || "Daily reading";
   const hymn = document.getElementById("hymn");
   const hint = document.getElementById("hint");
@@ -1249,9 +1178,7 @@ async function load(playAfter) {
     ? await buildSewQueue(data)
     : [];
   const nextKey = sewKeyOf(items);
-  if (exegeteSolo && nextKey === lastSewKey) {
-    lastSewKey = nextKey;
-  } else if (nextKey && nextKey === lastSewKey && document.getElementById("voice").getAttribute("src")) {
+  if (nextKey && nextKey === lastSewKey && document.getElementById("voice").getAttribute("src")) {
     if (playAfter && items.length) setPlaying(true);
   } else {
     applySewQueue(items, playAfter);
@@ -1435,7 +1362,7 @@ const NT_FALLBACK = {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260919f"] : ["/data/books.json?v=20260919f"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919g"] : ["/data/books.json?v=20260919g"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -1617,14 +1544,14 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
   }
   const exegete = btn.getAttribute("data-exegete");
   if (exegete) {
-    exegeteOn[exegete] = !exegeteOn[exegete];
+    const next = !exegeteOn[exegete];
+    EXEGETE_VOICES.forEach((v) => { exegeteOn[v.id] = false; });
+    if (next) exegeteOn[exegete] = true;
     paintExegete();
     savePrefs();
-    if (exegeteOn[exegete]) openExegeteVoice(exegete);
-    else {
-      hideExegete();
-      if (exegeteSolo && exegeteSoloId === exegete) restoreChapterVoice(false);
-    }
+    hideExegete();
+    lastSewKey = "";
+    load(playing);
     return;
   }
   const belief = btn.getAttribute("data-belief");
@@ -1727,8 +1654,6 @@ window.ntSewState = function () {
     bibleVersion: bibleVersion,
     settings: sewSettings(),
     queue: playQueue.slice(),
-    index: queueIndex,
-    exegeteSolo: exegeteSolo,
-    exegeteSoloId: exegeteSoloId
+    index: queueIndex
   };
 };

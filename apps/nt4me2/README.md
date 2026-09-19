@@ -22,7 +22,7 @@ Exegete voices (on/off): Matthew Henry, Albert Barnes, Henry Alford, Spurgeon, W
 
 Artwork does not rotate.
 
-Chapter audio is sewn from one Kokoro main (Bible × Greek-on/off × Voice), then OT Ref (if on and present), Teaching, Westminster, RC Catechism. Greek is baked into the main — not a separate sew fragment. Missing pieces, including OT Ref, are silence — no stub. The chapter queue never appends a closer/coda clip (Kokoro mains may still speak “That is the chapter.” in the main file). Exegete is never auto-queued after the main; it plays only when the listener picks a voice under Settings → Exegete, audio-only, with no text overlay on the art.
+Chapter audio is sewn from one Kokoro main (Bible × Greek-on/off × Voice), then OT Ref (if on and present), Teaching, Westminster, RC Catechism, then the one selected exegete (`settings.exegete[0]` only). Greek is baked into the main — not a separate sew fragment. Missing pieces, including OT Ref or a missing selected exegete file, are skipped — no stub and no substitute voice. The chapter queue never appends a closer/coda clip (Kokoro mains may still speak “That is the chapter.” in the main file). Picking an exegete in Settings rebuilds the chapter sew; it is audio-only (no text overlay) and does not side-play a name clip. `advanceSew` moves to the next queued file with no interstitial tone.
 
 ### Main-read paths (kjv|bsb × greekon|greekoff × british|american)
 

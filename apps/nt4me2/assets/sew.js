@@ -75,8 +75,23 @@
     return String(key || "").indexOf("exegete-") === 0;
   }
 
-  function chapterQueueItems(items) {
-    return dropCoda(items).filter((item) => !isExegeteKey(item && item.key));
+  function selectedExegeteId(settings) {
+    const voices = settings && settings.exegete;
+    if (!Array.isArray(voices) || !voices.length) return "";
+    return String(voices[0] || "").trim();
+  }
+
+  function selectedExegeteKey(settings) {
+    const id = selectedExegeteId(settings);
+    return id ? "exegete-" + id : "";
+  }
+
+  function chapterQueueItems(items, settings) {
+    const selected = selectedExegeteKey(settings);
+    return dropCoda(items).filter((item) => {
+      if (!isExegeteKey(item && item.key)) return true;
+      return !!selected && item.key === selected;
+    });
   }
 
   function wantedKeys(settings) {
@@ -85,6 +100,8 @@
     if (settings && settings.teaching) keys.push("teaching");
     if (settings && settings.westminster) keys.push("westminster");
     if (settings && settings.rcCatechism) keys.push("rccatechism");
+    const selected = selectedExegeteKey(settings);
+    if (selected) keys.push(selected);
     return keys;
   }
 
@@ -129,9 +146,14 @@
     const wanted = wantedKeys(settings);
     const items = [];
     const skipped = [];
+    const selected = selectedExegeteKey(settings);
     for (let i = 0; i < wanted.length; i++) {
       const key = wanted[i];
-      if (isCodaFragment(key) || isExegeteKey(key)) {
+      if (isCodaFragment(key)) {
+        skipped.push(key);
+        continue;
+      }
+      if (isExegeteKey(key) && key !== selected) {
         skipped.push(key);
         continue;
       }
@@ -139,7 +161,7 @@
       if (url && !isCodaFragment(key, url)) items.push({ key: key, url: url });
       else skipped.push(key);
     }
-    return { items: chapterQueueItems(items), skipped: skipped };
+    return { items: chapterQueueItems(items, settings), skipped: skipped };
   }
 
   function conventionUrls(stem, chapter, key, options) {
