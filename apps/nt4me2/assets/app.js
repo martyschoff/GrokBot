@@ -37,7 +37,6 @@ const BELIEF_KEY = "daily-chapter-beliefs";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
 const OTREF_KEY = "daily-chapter-ot-ref";
-const TEACH_KEY = "daily-chapter-teaching";
 const WCF_KEY = "daily-chapter-westminster";
 const RCC_KEY = "daily-chapter-rc-catechism";
 const EXEGETE_KEY = "daily-chapter-exegete";
@@ -58,7 +57,6 @@ let viewingBook = "";
 let liveTable = {};
 let fragmentTable = {};
 let hearOtRef = false;
-let hearTeaching = false;
 let hearWestminster = false;
 let hearRcCatechism = false;
 let playQueue = [];
@@ -96,7 +94,7 @@ function mergeFragmentTable(raw) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260919h"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919i"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -124,7 +122,7 @@ function applyCatalogLiveFallback(catalog) {
 
 async function loadFragmentOverlay() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/fragments.json?v=20260919h"];
+  const urls = [(pack || "") + "/data/fragments.json?v=20260919i"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -481,7 +479,7 @@ async function openHelp() {
   const pack = packBase();
   let text = "";
   try {
-    const res = await fetch((pack || "") + "/data/help.txt?v=20260919h", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/help.txt?v=20260919i", { cache: "no-store" });
     if (res.ok) text = await res.text();
   } catch (e) {}
   const p = document.createElement("p");
@@ -653,7 +651,6 @@ async function loadPrefs() {
   beliefs = "evangelical";
   exegeteOn = {};
   hearOtRef = false;
-  hearTeaching = false;
   hearWestminster = false;
   hearRcCatechism = false;
   voiceVolume = 1;
@@ -681,7 +678,6 @@ async function loadPrefs() {
     exegeteOn = normalizeExegete(JSON.parse(localStorage.getItem(EXEGETE_KEY) || "{}"));
   } catch (e) {}
   try { hearOtRef = localStorage.getItem(OTREF_KEY) === "1"; } catch (e) {}
-  try { hearTeaching = localStorage.getItem(TEACH_KEY) === "1"; } catch (e) {}
   try { hearWestminster = localStorage.getItem(WCF_KEY) === "1"; } catch (e) {}
   try { hearRcCatechism = localStorage.getItem(RCC_KEY) === "1"; } catch (e) {}
   try {
@@ -717,7 +713,6 @@ async function savePrefs() {
   try { localStorage.setItem(BELIEF_KEY, beliefs); } catch (e) {}
   try { localStorage.setItem(EXEGETE_KEY, JSON.stringify(exegeteOn)); } catch (e) {}
   try { localStorage.setItem(OTREF_KEY, hearOtRef ? "1" : "0"); } catch (e) {}
-  try { localStorage.setItem(TEACH_KEY, hearTeaching ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(WCF_KEY, hearWestminster ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(RCC_KEY, hearRcCatechism ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(VOL_KEY, String(voiceVolume)); } catch (e) {}
@@ -794,7 +789,6 @@ function paintExegete() {
 
 function paintSewToggles() {
   paintToggle("[data-set=otref]", hearOtRef, "OT Ref: on", "OT Ref: off");
-  paintToggle("[data-set=teaching]", hearTeaching, "Teaching: on", "Teaching: off");
   paintToggle("[data-set=westminster]", hearWestminster, "Westminster: on", "Westminster: off");
   paintToggle("[data-set=rccatechism]", hearRcCatechism, "RC Catechism: on", "RC Catechism: off");
 }
@@ -1028,7 +1022,6 @@ function sewSettings() {
   return {
     hearGreek: hearGreek,
     otRef: hearOtRef,
-    teaching: hearTeaching,
     westminster: hearWestminster,
     rcCatechism: hearRcCatechism,
     exegete: exegeteIdsOn().slice(0, 1)
@@ -1195,7 +1188,7 @@ function applySewQueue(built, playAfter) {
   const api = sewApi();
   const text = api.sewHintText
     ? api.sewHintText(playQueue, skipped)
-    : ("Sew: " + playQueue.map((i) => i.key).join(" · ") + (skipped.length ? (" · skipped " + skipped.join(" · ")) : ""));
+    : ("Sew: " + playQueue.map((i) => i.key).filter((k) => k && k !== "teaching").join(" · ") + (skipped.filter((k) => k && k !== "teaching").length ? (" · skipped " + skipped.filter((k) => k && k !== "teaching").join(" · ")) : ""));
   hint.textContent = americanFallbackHint || text;
   if (playAfter) setPlaying(true);
 }
@@ -1269,7 +1262,6 @@ function showSettings() {
     '<button type="button" data-set="belief"></button>' +
     '<button type="button" data-set="exegete">Exegete</button>' +
     '<button type="button" data-set="otref"></button>' +
-    '<button type="button" data-set="teaching"></button>' +
     '<button type="button" data-set="westminster"></button>' +
     '<button type="button" data-set="rccatechism"></button>'
   );
@@ -1400,7 +1392,7 @@ const NT_FALLBACK = {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260919h"] : ["/data/books.json?v=20260919h"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919i"] : ["/data/books.json?v=20260919i"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -1543,13 +1535,6 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
   }
   if (set === "otref") {
     hearOtRef = !hearOtRef;
-    paintSewToggles();
-    savePrefs();
-    load(playing);
-    return;
-  }
-  if (set === "teaching") {
-    hearTeaching = !hearTeaching;
     paintSewToggles();
     savePrefs();
     load(playing);

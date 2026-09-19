@@ -3,7 +3,6 @@
     { id: "reading", aliases: ["reading", "chapter", "audio"] },
     { id: "greek", aliases: ["greek"] },
     { id: "otref", aliases: ["otref", "ot_ref", "ot-ref", "ot"] },
-    { id: "teaching", aliases: ["teaching"] },
     { id: "westminster", aliases: ["westminster", "wcf"] },
     { id: "rccatechism", aliases: ["rccatechism", "rc-catechism", "rc_catechism", "ccc", "rcc"] }
   ];
@@ -89,15 +88,20 @@
   function chapterQueueItems(items, settings) {
     const selected = selectedExegeteKey(settings);
     return dropCoda(items).filter((item) => {
+      if (isTeachingKey(item && item.key)) return false;
       if (!isExegeteKey(item && item.key)) return true;
       return !!selected && item.key === selected;
     });
   }
 
+  function isTeachingKey(key) {
+    return String(key || "").toLowerCase() === "teaching";
+  }
+
   function sewHintText(items, skipped) {
-    const names = (items || []).map((row) => row && row.key).filter(Boolean);
+    const names = (items || []).map((row) => row && row.key).filter((key) => key && !isTeachingKey(key));
     let text = "Sew: " + names.join(" · ");
-    const miss = (skipped || []).filter(Boolean);
+    const miss = (skipped || []).filter((key) => key && !isTeachingKey(key));
     if (miss.length) {
       if (names.length) text += " · ";
       text += "skipped " + miss.join(" · ");
@@ -108,12 +112,11 @@
   function wantedKeys(settings) {
     const keys = ["reading"];
     if (settings && settings.otRef) keys.push("otref");
-    if (settings && settings.teaching) keys.push("teaching");
     if (settings && settings.westminster) keys.push("westminster");
     if (settings && settings.rcCatechism) keys.push("rccatechism");
     const selected = selectedExegeteKey(settings);
     if (selected) keys.push(selected);
-    return keys;
+    return keys.filter((key) => !isTeachingKey(key));
   }
 
   function aliasesFor(key) {
@@ -160,6 +163,9 @@
     const selected = selectedExegeteKey(settings);
     for (let i = 0; i < wanted.length; i++) {
       const key = wanted[i];
+      if (isTeachingKey(key)) {
+        continue;
+      }
       if (isCodaFragment(key)) {
         skipped.push(key);
         continue;
@@ -176,7 +182,7 @@
   }
 
   function conventionUrls(stem, chapter, key, options) {
-    if (!stem || !chapter || !key) return [];
+    if (!stem || !chapter || !key || isTeachingKey(key)) return [];
     const opt = optsOf(options);
     const base = "/data/audio/" + stem + chapter;
     const urls = [];

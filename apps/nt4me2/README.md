@@ -16,13 +16,13 @@ Open `http://127.0.0.1:8787/` or `http://127.0.0.1:8787/player.html?book=galatia
 
 Top-level menu: Text, Volume, Book & Chapter, **Settings**, Help.
 
-Settings holds Voice, Bible (Berean default, then KJV), Greek, Belief, **Exegete**, plus on/off OT Ref, Teaching, Westminster, RC Catechism.
+Settings holds Voice, Bible (Berean default, then KJV), Greek, Belief, **Exegete**, plus on/off OT Ref, Westminster, RC Catechism. Teaching is not a Settings control and is never sewn.
 
 Exegete voices (on/off): Matthew Henry, Albert Barnes, Henry Alford, Spurgeon, Wesley. Closed commentaries stay locked.
 
 Artwork does not rotate.
 
-Chapter audio is sewn from one Kokoro main (Bible × Greek-on/off × Voice), then OT Ref (if on and present), Teaching, Westminster, RC Catechism, then the one selected exegete (`settings.exegete[0]` only). Greek is baked into the main — not a separate sew fragment. Missing pieces, including OT Ref or a missing selected exegete file, are skipped — no stub and no substitute voice. The dock hint always lists the queue (`Sew: reading · exegete-matthew-henry`) even for one clip, and appends skipped keys (` · skipped otref`). `buildSewQueue` returns `{items,wanted,skipped,settings}`; `load` stores that plus the selected exegete on `window._lastSewDebug`. The chapter queue never appends a closer/coda clip (Kokoro mains may still speak “That is the chapter.” in the main file). Picking an exegete in Settings rebuilds the chapter sew; it is audio-only (no text overlay) and does not side-play a name clip. `advanceSew` moves to the next queued file with no interstitial tone. Do not invent Teaching body text.
+Chapter audio is sewn from one Kokoro main (Bible × Greek-on/off × Voice), then OT Ref (if on and present), Westminster, RC Catechism, then the one selected exegete (`settings.exegete[0]` only). Greek is baked into the main — not a separate sew fragment. Teaching is never queued, even if a leftover `daily-chapter-teaching` pref or `teaching` fragment key is present. Missing pieces, including OT Ref or a missing selected exegete file, are skipped — no stub and no substitute voice. The dock hint always lists the queue (`Sew: reading · exegete-matthew-henry`) even for one clip, and appends skipped keys (` · skipped otref`); it never lists teaching. `buildSewQueue` returns `{items,wanted,skipped,settings}`; `load` stores that plus the selected exegete on `window._lastSewDebug`. The chapter queue never appends a closer/coda clip (Kokoro mains may still speak “That is the chapter.” in the main file). Picking an exegete in Settings rebuilds the chapter sew; it is audio-only (no text overlay) and does not side-play a name clip. `advanceSew` moves to the next queued file with no interstitial tone.
 
 ### Main-read paths (kjv|bsb × greekon|greekoff × british|american)
 
@@ -36,7 +36,6 @@ If a Kokoro main is missing, the player also probes `galatians-{n}-{berean|kjv}-
 
 ### Shared fragment paths
 
-`/data/audio/galatians-{1|2}-teaching.mp3`  
 `/data/audio/galatians-{1|2}-westminster.mp3`  
 `/data/audio/galatians-{1|2}-ccc.mp3` (rccatechism)  
 `/data/audio/galatians-{1|2}-exegete-{henry|barnes|alford|spurgeon|wesley}.mp3`  

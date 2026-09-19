@@ -10,12 +10,16 @@ test("sewHintText always lists Sew keys and appends skipped", () => {
   );
   assert.equal(
     sew.sewHintText([{ key: "reading" }], ["otref", "teaching"]),
-    "Sew: reading · skipped otref · teaching"
+    "Sew: reading · skipped otref"
+  );
+  assert.equal(
+    sew.sewHintText([{ key: "reading" }, { key: "teaching" }], ["teaching"]),
+    "Sew: reading"
   );
   assert.equal(sew.sewHintText([], ["otref"]), "Sew: skipped otref");
 });
 
-test("wantedKeys is reading, optional teaching/westminster/rccatechism, then exegete[0] only", () => {
+test("wantedKeys is reading, optional westminster/rccatechism, then exegete[0] only — never teaching", () => {
   assert.deepEqual(sew.wantedKeys({}), ["reading"]);
   assert.deepEqual(
     sew.wantedKeys({
@@ -28,10 +32,11 @@ test("wantedKeys is reading, optional teaching/westminster/rccatechism, then exe
       closer: true,
       coda: true
     }),
-    ["reading", "otref", "teaching", "westminster", "rccatechism", "exegete-matthew-henry"]
+    ["reading", "otref", "westminster", "rccatechism", "exegete-matthew-henry"]
   );
   assert.deepEqual(sew.wantedKeys({ exegete: ["wesley", "spurgeon"] }), ["reading", "exegete-wesley"]);
   assert.equal(sew.wantedKeys({ exegete: [] }).some((k) => k.indexOf("exegete") === 0), false);
+  assert.equal(sew.wantedKeys({ teaching: true }).indexOf("teaching"), -1);
 });
 
 test("sewPlan skips missing fragments and never substitutes an unselected exegete", () => {
@@ -52,8 +57,10 @@ test("sewPlan skips missing fragments and never substitutes an unselected exeget
     },
     { voiceAccent: "british", bibleVersion: "berean", hearGreek: true }
   );
-  assert.deepEqual(plan.items.map((i) => i.key), ["reading", "teaching", "exegete-wesley"]);
+  assert.deepEqual(plan.items.map((i) => i.key), ["reading", "exegete-wesley"]);
   assert.deepEqual(plan.skipped, ["otref", "westminster", "rccatechism"]);
+  assert.equal(plan.items.some((i) => i.key === "teaching"), false);
+  assert.equal(plan.skipped.indexOf("teaching"), -1);
   assert.equal(plan.items.some((i) => i.key === "exegete-spurgeon"), false);
   assert.equal(plan.items.some((i) => /closer|coda/i.test(i.key)), false);
   assert.equal(plan.items.some((i) => /stub|silence|empty/i.test(i.url)), false);
@@ -188,7 +195,7 @@ test("conventionUrls emit Kokoro main / shared / mapped exegete names", () => {
   );
   assert.deepEqual(
     sew.conventionUrls("galatians-", 2, "teaching", { voiceAccent: "british", bibleVersion: "berean" }),
-    ["/data/audio/galatians-2-teaching.mp3"]
+    []
   );
   const rcc = sew.conventionUrls("galatians-", 2, "rccatechism", { voiceAccent: "british", bibleVersion: "berean" });
   assert.equal(rcc[0], "/data/audio/galatians-2-ccc.mp3");
