@@ -51,7 +51,7 @@ function normalizeLiveTable(data) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260919e"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919f"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -80,7 +80,7 @@ function applyCatalogLiveFallback(catalog) {
 async function loadFragmentOverlay() {
   const pack = packBase();
   try {
-    const res = await fetch((pack || "") + "/data/fragments.json?v=20260919e", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/fragments.json?v=20260919f", { cache: "no-store" });
     if (!res.ok) return;
     const data = await res.json();
     mergeHomeFragments((data && data.fragments) || data);
@@ -117,7 +117,7 @@ function packBase() {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260919e"] : ["/data/books.json?v=20260919e"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919f"] : ["/data/books.json?v=20260919f"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });

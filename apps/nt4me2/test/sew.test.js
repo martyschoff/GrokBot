@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const sew = require("../assets/sew.js");
 
-test("wantedKeys starts with reading and adds Settings and exegete-* (Greek is not a fragment)", () => {
+test("wantedKeys starts with reading and adds Settings (never exegete or coda)", () => {
   assert.deepEqual(sew.wantedKeys({}), ["reading"]);
   assert.deepEqual(
     sew.wantedKeys({
@@ -11,18 +11,13 @@ test("wantedKeys starts with reading and adds Settings and exegete-* (Greek is n
       teaching: true,
       westminster: true,
       rcCatechism: true,
-      exegete: ["matthew-henry", "spurgeon"]
+      exegete: ["matthew-henry", "spurgeon"],
+      closer: true,
+      coda: true
     }),
-    [
-      "reading",
-      "otref",
-      "teaching",
-      "westminster",
-      "rccatechism",
-      "exegete-matthew-henry",
-      "exegete-spurgeon"
-    ]
+    ["reading", "otref", "teaching", "westminster", "rccatechism"]
   );
+  assert.equal(sew.wantedKeys({ exegete: ["wesley"] }).some((k) => k.indexOf("exegete") === 0), false);
 });
 
 test("sewPlan skips missing ot-ref and other fragments instead of inventing stubs", () => {
@@ -42,9 +37,36 @@ test("sewPlan skips missing ot-ref and other fragments instead of inventing stub
     },
     { voiceAccent: "british", bibleVersion: "berean", hearGreek: true }
   );
-  assert.deepEqual(plan.items.map((i) => i.key), ["reading", "teaching", "exegete-wesley"]);
-  assert.deepEqual(plan.skipped, ["otref", "westminster", "rccatechism", "exegete-spurgeon"]);
+  assert.deepEqual(plan.items.map((i) => i.key), ["reading", "teaching"]);
+  assert.deepEqual(plan.skipped, ["otref", "westminster", "rccatechism"]);
+  assert.equal(plan.items.some((i) => /exegete|closer|coda/i.test(i.key)), false);
   assert.equal(plan.items.some((i) => /stub|silence|empty/i.test(i.url)), false);
+});
+
+test("chapter queue drops closer/coda and never auto-queues exegete", () => {
+  const plan = sew.sewPlan(
+    {
+      "reading-bsb-main-greekon-british": "/data/audio/galatians-1-bsb-main-greekon-british.mp3",
+      closer: "/data/audio/galatians-1-closer.mp3",
+      coda: "/data/audio/galatians-1-coda.mp3",
+      "exegete-wesley": "/data/audio/galatians-1-exegete-wesley.mp3"
+    },
+    { exegete: ["wesley"] },
+    { voiceAccent: "british", bibleVersion: "berean", hearGreek: true }
+  );
+  assert.deepEqual(plan.items.map((i) => i.key), ["reading"]);
+  assert.equal(plan.items.some((i) => sew.isCodaFragment(i.key, i.url)), false);
+  assert.deepEqual(
+    sew.chapterQueueItems([
+      { key: "reading", url: "/data/audio/galatians-1-bsb-main-greekon-british.mp3" },
+      { key: "closer", url: "/data/audio/galatians-1-closer.mp3" },
+      { key: "coda", url: "/data/audio/galatians-1-coda.mp3" },
+      { key: "exegete-wesley", url: "/data/audio/galatians-1-exegete-wesley.mp3" }
+    ]).map((i) => i.key),
+    ["reading"]
+  );
+  assert.equal(sew.isCodaFragment("closer", "/data/audio/galatians-1-closer.mp3"), true);
+  assert.equal(sew.isCodaFragment("reading", "/data/audio/galatians-1-bsb-main-greekon-british.mp3"), false);
 });
 
 test("reading prefers kjv|bsb main greekon|greekoff × british|american keys", () => {

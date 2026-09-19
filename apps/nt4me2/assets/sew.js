@@ -57,17 +57,34 @@
     return EXEGETE_FILE[id] || id;
   }
 
+  function isCodaFragment(key, url) {
+    const hit = (s) => {
+      const t = String(s || "").toLowerCase();
+      if (!t) return false;
+      if (t === "closer" || t === "coda") return true;
+      return /(?:^|[-_./])(closer|coda)(?:[-_.]|$|\.mp3)/.test(t);
+    };
+    return hit(key) || hit(url);
+  }
+
+  function dropCoda(items) {
+    return (items || []).filter((item) => !isCodaFragment(item && item.key, item && item.url));
+  }
+
+  function isExegeteKey(key) {
+    return String(key || "").indexOf("exegete-") === 0;
+  }
+
+  function chapterQueueItems(items) {
+    return dropCoda(items).filter((item) => !isExegeteKey(item && item.key));
+  }
+
   function wantedKeys(settings) {
     const keys = ["reading"];
     if (settings && settings.otRef) keys.push("otref");
     if (settings && settings.teaching) keys.push("teaching");
     if (settings && settings.westminster) keys.push("westminster");
     if (settings && settings.rcCatechism) keys.push("rccatechism");
-    const voices = (settings && settings.exegete) || [];
-    for (let i = 0; i < voices.length; i++) {
-      const id = String(voices[i] || "").trim();
-      if (id) keys.push("exegete-" + id);
-    }
     return keys;
   }
 
@@ -114,11 +131,15 @@
     const skipped = [];
     for (let i = 0; i < wanted.length; i++) {
       const key = wanted[i];
+      if (isCodaFragment(key) || isExegeteKey(key)) {
+        skipped.push(key);
+        continue;
+      }
       const url = pickUrl(availableMap, key, options);
-      if (url) items.push({ key: key, url: url });
+      if (url && !isCodaFragment(key, url)) items.push({ key: key, url: url });
       else skipped.push(key);
     }
-    return { items: items, skipped: skipped };
+    return { items: chapterQueueItems(items), skipped: skipped };
   }
 
   function conventionUrls(stem, chapter, key, options) {
@@ -203,6 +224,9 @@
   const api = {
     SEW_KEYS: SEW_KEYS,
     EXEGETE_IDS: EXEGETE_IDS,
+    isCodaFragment: isCodaFragment,
+    dropCoda: dropCoda,
+    chapterQueueItems: chapterQueueItems,
     wantedKeys: wantedKeys,
     aliasesFor: aliasesFor,
     pickUrl: pickUrl,
