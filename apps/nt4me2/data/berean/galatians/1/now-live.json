@@ -1,0 +1,18 @@
+{
+  "title": "Galatians 1",
+  "book": "galatians",
+  "chapter": 1,
+  "audio": "/data/audio/galatians-1.mp3",
+  "hymn": "",
+  "waiting_audio": false,
+  "waiting_hymn": true,
+  "waiting_art": true,
+  "art": [],
+  "fragments": {
+    "reading": "/data/audio/galatians-1.mp3",
+    "reading-american": "/data/audio/galatians-1-american.mp3",
+    "greek": "/data/audio/galatians-1-greek.mp3",
+    "otref": "/data/audio/galatians-1-otref.mp3",
+    "teaching": "/data/audio/galatians-1-teaching.mp3"
+  }
+}

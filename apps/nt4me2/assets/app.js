@@ -1,6 +1,5 @@
 const HYMN_ENABLED = false;
 const HYMN_GAIN = 0.15;
-const ART_MS = 12500;
 let art = [];
 let artRaw = [];
 let artIndex = 0;
@@ -18,11 +17,14 @@ let hearGreek = true;
 let showText = true;
 let voiceAccent = "british";
 const BELIEF_OPTIONS = ["evangelical", "roman catholic", "orthodox", "none"];
+const BIBLE_OPTIONS = ["berean", "kjv"];
 let beliefs = "evangelical";
+let bibleVersion = "berean";
 const PREF_KEY = "daily-chapter-hear-greek";
 const TEXT_KEY = "daily-chapter-show-text";
 const VOICE_KEY = "daily-chapter-voice-accent";
 const BELIEF_KEY = "daily-chapter-beliefs";
+const BIBLE_KEY = "daily-chapter-bible-version";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
 const OTREF_KEY = "daily-chapter-ot-ref";
@@ -84,7 +86,7 @@ function mergeFragmentTable(raw) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260919a"];
+  const urls = [(pack || "") + "/data/live.json?v=20260919b"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -99,7 +101,7 @@ async function loadLiveTable() {
 
 async function loadFragmentOverlay() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/fragments.json?v=20260919a"];
+  const urls = [(pack || "") + "/data/fragments.json?v=20260919b"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -155,6 +157,24 @@ function artFile(item) {
 function normalizeBeliefs(v) {
   const s = String(v || "").trim().toLowerCase();
   return BELIEF_OPTIONS.indexOf(s) >= 0 ? s : "evangelical";
+}
+
+function normalizeBible(v) {
+  const s = String(v || "").trim().toLowerCase();
+  if (s === "bsb" || s === "berean standard" || s === "berean standard bible") return "berean";
+  return BIBLE_OPTIONS.indexOf(s) >= 0 ? s : "berean";
+}
+
+function bibleDir() {
+  return bibleVersion === "kjv" ? "kjv" : "berean";
+}
+
+function bibleLabel(v) {
+  return normalizeBible(v) === "kjv" ? "KJV" : "Berean";
+}
+
+function nowLivePath(book, chapter) {
+  return (packBase() || "") + "/data/" + bibleDir() + "/" + book + "/" + chapter + "/now-live.json";
 }
 
 function mergeTraditionMap(data) {
@@ -240,7 +260,7 @@ function applyArtPool(list, force) {
   const id = String(currentChapter || 0) + "::" + beliefs + "::" + artListKey(next);
   if (!force && id === artSourceKey) return;
   artSourceKey = id;
-  art = shuffleArt(next);
+  art = next.slice();
   artIndex = 0;
   lastKey = id;
   if (!art.length) {
@@ -249,8 +269,7 @@ function applyArtPool(list, force) {
     setInterpretRim();
     return;
   }
-  if (!interpretFrozen) startSlideshow();
-  else showArt(artIndex);
+  holdStillArt();
 }
 
 function artListKey(list) {
@@ -293,15 +312,13 @@ function stopSlideshow() {
   }
 }
 
-function startSlideshow() {
+function holdStillArt() {
   stopSlideshow();
-  if (!art.length) {
-    showArt(0);
-    return;
-  }
   showArt(artIndex);
-  if (interpretFrozen) return;
-  artTimer = setInterval(() => showArt(artIndex + 1), ART_MS);
+}
+
+function startSlideshow() {
+  holdStillArt();
 }
 
 function showArt(i) {
@@ -455,7 +472,7 @@ async function openHelp() {
   const pack = packBase();
   let text = "";
   try {
-    const res = await fetch((pack || "") + "/data/help.txt", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/help.txt?v=20260919b", { cache: "no-store" });
     if (res.ok) text = await res.text();
   } catch (e) {}
   const p = document.createElement("p");
@@ -492,6 +509,7 @@ async function openExegeteVoice(id) {
   box.textContent = "";
   const pack = packBase();
   const paths = [
+    (pack || "") + "/data/" + bibleDir() + "/" + (savedBook || "") + "/" + (currentChapter || "") + "/exegete/" + id + ".json",
     (pack || "") + "/data/kjv/" + (savedBook || "") + "/" + (currentChapter || "") + "/exegete/" + id + ".json",
     (pack || "") + "/data/exegete/" + (savedBook || "") + "/" + (currentChapter || "") + "/" + id + ".json"
   ];
@@ -576,7 +594,7 @@ function restoreCompleted() {
   if (!isLiveChapter(done.book, done.chapter)) return;
   savedBook = done.book;
   currentChapter = done.chapter;
-  nowPick = (packBase() || "") + "/data/kjv/" + done.book + "/" + done.chapter + "/now-live.json";
+  nowPick = nowLivePath(done.book, done.chapter);
 }
 
 function showVerseOverlay() {
@@ -607,7 +625,7 @@ function setPlaying(on) {
     if (btn) btn.textContent = "Pause";
     if (!interpretOpen && interpretFrozen) {
       interpretFrozen = false;
-      startSlideshow();
+      holdStillArt();
     }
   } else {
     voice.pause();
@@ -674,6 +692,7 @@ async function loadPrefs() {
   showText = true;
   voiceAccent = "british";
   beliefs = "evangelical";
+  bibleVersion = "berean";
   hearOtRef = false;
   hearTeaching = false;
   hearWestminster = false;
@@ -695,6 +714,9 @@ async function loadPrefs() {
   } catch (e) {}
   try {
     beliefs = normalizeBeliefs(localStorage.getItem(BELIEF_KEY));
+  } catch (e) {}
+  try {
+    bibleVersion = normalizeBible(localStorage.getItem(BIBLE_KEY));
   } catch (e) {}
   try { hearOtRef = localStorage.getItem(OTREF_KEY) === "1"; } catch (e) {}
   try { hearTeaching = localStorage.getItem(TEACH_KEY) === "1"; } catch (e) {}
@@ -720,6 +742,7 @@ async function loadPrefs() {
   paintText();
   paintVoice();
   paintBeliefs();
+  paintBible();
   paintSewToggles();
 }
 
@@ -728,6 +751,7 @@ async function savePrefs() {
   try { localStorage.setItem(TEXT_KEY, showText ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(VOICE_KEY, voiceAccent); } catch (e) {}
   try { localStorage.setItem(BELIEF_KEY, beliefs); } catch (e) {}
+  try { localStorage.setItem(BIBLE_KEY, bibleVersion); } catch (e) {}
   try { localStorage.setItem(OTREF_KEY, hearOtRef ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(TEACH_KEY, hearTeaching ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(WCF_KEY, hearWestminster ? "1" : "0"); } catch (e) {}
@@ -768,6 +792,12 @@ function paintVoice() {
 function paintBeliefs() {
   document.querySelectorAll("[data-ur=beliefs], [data-set=belief]").forEach((btn) => {
     btn.textContent = "Belief: " + beliefs;
+  });
+}
+
+function paintBible() {
+  document.querySelectorAll("[data-set=bible]").forEach((btn) => {
+    btn.textContent = "Bible: " + bibleLabel(bibleVersion);
   });
 }
 
@@ -845,16 +875,31 @@ function synthesizeNow() {
   return data;
 }
 
+async function fetchNowLive(url) {
+  if (!url) return null;
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data && typeof data === "object") return decorateNow(data);
+  } catch (e) {}
+  return null;
+}
+
+function otherBibleDir() {
+  return bibleDir() === "kjv" ? "berean" : "kjv";
+}
+
 async function fetchNow() {
   const pack = packBase();
   if (nowPick) {
-    try {
-      const res = await fetch(nowPick, { cache: "no-store" });
-      if (res.ok) {
-        const data = await res.json();
-        if (data && typeof data === "object") return decorateNow(data);
-      }
-    } catch (e) {}
+    const picked = await fetchNowLive(nowPick);
+    if (picked) return picked;
+    const alt = nowPick.replace("/data/" + bibleDir() + "/", "/data/" + otherBibleDir() + "/");
+    if (alt !== nowPick) {
+      const fallback = await fetchNowLive(alt);
+      if (fallback) return fallback;
+    }
     // Explicit chapter pick must stay on that book. Never fall back to root now-live (Romans).
     return synthesizeNow();
   }
@@ -906,15 +951,61 @@ function renderVersesToScroller(verses) {
   });
 }
 
-async function fetchKJVText(book, chapter) {
+function flattenHelloaoContent(content) {
+  if (typeof content === "string") return content;
+  if (!Array.isArray(content)) return "";
+  return content.map((part) => {
+    if (typeof part === "string") return part;
+    if (part && typeof part === "object") {
+      if (typeof part.text === "string") return part.text;
+      if (Array.isArray(part.content)) return flattenHelloaoContent(part.content);
+    }
+    return "";
+  }).join("");
+}
+
+async function fetchRemoteVerses(book, chapter, version) {
   const bookName = bookNameForAPI(book);
-  const reference = encodeURIComponent(bookName + " " + chapter);
+  const ver = normalizeBible(version);
+  if (ver === "kjv") {
+    const reference = encodeURIComponent(bookName + " " + chapter);
+    try {
+      const res = await fetch("https://bible-api.com/" + reference + "?translation=kjv", { cache: "force-cache" });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (data && Array.isArray(data.verses)) return data.verses;
+    } catch (e) {}
+    return null;
+  }
   try {
-    const res = await fetch("https://bible-api.com/" + reference + "?translation=kjv", { cache: "force-cache" });
+    const res = await fetch("https://bible.helloao.org/api/BSB/" + encodeURIComponent(bookName) + "/" + chapter + ".json", { cache: "force-cache" });
     if (!res.ok) return null;
     const data = await res.json();
-    if (data && Array.isArray(data.verses)) {
-      return data.verses;
+    const rows = data && data.chapter && Array.isArray(data.chapter.content) ? data.chapter.content : [];
+    const verses = rows.filter((row) => row && row.type === "verse").map((row) => ({
+      verse: row.number || row.verse || "",
+      text: flattenHelloaoContent(row.content).replace(/\s+/g, " ").trim()
+    })).filter((v) => v.text);
+    return verses.length ? verses : null;
+  } catch (e) {}
+  return null;
+}
+
+async function loadLocalVerses(book, chapter, version) {
+  try {
+    var pack = packBase();
+    var path = (pack || "") + "/data/" + normalizeBible(version) + "/" + book + "/" + chapter + "/verses.json";
+    var res = await fetch(path, { cache: "no-store" });
+    if (res.ok) {
+      var data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        if (data[0].text) return data;
+        if (data[0].lines) {
+          return data.map(function (v) {
+            return { verse: v.verse || "", text: (v.lines || []).join(" ") || "" };
+          });
+        }
+      }
     }
   } catch (e) {}
   return null;
@@ -924,26 +1015,12 @@ async function loadVerses(book, chapter) {
   var scroller = document.getElementById("verse-text-scroller");
   if (scroller) scroller.innerHTML = "";
   if (!book || !chapter) return;
-  var versesData = null;
-  try {
-    var pack = packBase();
-    var path = (pack || "") + "/data/kjv/" + book + "/" + chapter + "/verses.json";
-    var res = await fetch(path, { cache: "no-store" });
-    if (res.ok) {
-      var data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
-        if (data[0].text) {
-          versesData = data;
-        } else if (data[0].lines) {
-          versesData = data.map(function (v) {
-            return { verse: v.verse || "", text: (v.lines || []).join(" ") || "" };
-          });
-        }
-      }
-    }
-  } catch (e) {}
+  var versesData = await loadLocalVerses(book, chapter, bibleVersion);
+  if (!versesData && bibleVersion !== "kjv") {
+    versesData = await loadLocalVerses(book, chapter, "kjv");
+  }
   if (!versesData) {
-    versesData = await fetchKJVText(book, chapter);
+    versesData = await fetchRemoteVerses(book, chapter, bibleVersion);
   }
   if (versesData && versesData.length > 0) {
     renderVersesToScroller(versesData);
@@ -1151,27 +1228,32 @@ function showSettings() {
   showUrPanel(
     '<p class="ur-head">Settings</p>' +
     '<button type="button" data-set="voice"></button>' +
-    '<button type="button" data-set="bible">Bible</button>' +
+    '<button type="button" data-set="bible"></button>' +
     '<button type="button" data-set="greek"></button>' +
     '<button type="button" data-set="belief"></button>' +
     '<button type="button" data-set="otref"></button>' +
     '<button type="button" data-set="teaching"></button>' +
     '<button type="button" data-set="westminster"></button>' +
-    '<button type="button" data-set="rccatechism"></button>'
+    '<button type="button" data-set="rccatechism"></button>' +
+    '<button type="button" data-set="exegete">Exegete</button>'
   );
   paintVoice();
+  paintBible();
   paintGreek();
   paintBeliefs();
   paintSewToggles();
 }
 
 function showVersion() {
-  showUrPanel(
-    '<button type="button" class="ur-back" data-back="settings">Settings</button>' +
-    '<p class="ur-head">Bible</p>' +
-    '<button type="button" class="ur-live">KJV</button>' +
-    '<button type="button" class="ur-dead" disabled>NIV</button>'
-  );
+  const rows = [
+    '<button type="button" class="ur-back" data-back="settings">Settings</button>',
+    '<p class="ur-head">Bible</p>'
+  ];
+  BIBLE_OPTIONS.forEach((opt) => {
+    const cls = opt === bibleVersion ? "ur-live" : "";
+    rows.push('<button type="button" class="' + cls + '" data-bible="' + opt + '">' + bibleLabel(opt) + "</button>");
+  });
+  showUrPanel(rows.join(""));
 }
 
 function showBeliefs() {
@@ -1188,11 +1270,14 @@ function showBeliefs() {
 
 function showExegete() {
   showUrPanel(
+    '<button type="button" class="ur-back" data-back="settings">Settings</button>' +
     '<p class="ur-head">Exegete</p>' +
     '<button type="button" class="ur-dead" disabled>Closed commentaries</button>' +
     '<button type="button" class="ur-live" data-exegete="matthew-henry">Matthew Henry</button>' +
     '<button type="button" class="ur-live" data-exegete="albert-barnes">Albert Barnes</button>' +
-    '<button type="button" class="ur-live" data-exegete="henry-alford">Henry Alford</button>'
+    '<button type="button" class="ur-live" data-exegete="henry-alford">Henry Alford</button>' +
+    '<button type="button" class="ur-live" data-exegete="charles-spurgeon">Charles Spurgeon</button>' +
+    '<button type="button" class="ur-live" data-exegete="john-wesley">John Wesley</button>'
   );
 }
 
@@ -1279,7 +1364,7 @@ const NT_FALLBACK = {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260919a"] : ["/data/books.json?v=20260919a"];
+  const urls = pack ? [pack + "/data/books.json?v=20260919b"] : ["/data/books.json?v=20260919b"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -1311,7 +1396,7 @@ function chapterFromData(data) {
     savedBook = "galatians";
     return Number(m[1]);
   }
-  const p = String(nowPick || "").match(/kjv\/([^/]+)\/(\d+)\//);
+  const p = String(nowPick || "").match(/(?:kjv|berean)\/([^/]+)\/(\d+)\//);
   if (p) {
     savedBook = p[1];
     return Number(p[2]);
@@ -1328,7 +1413,7 @@ async function pickChapter(n, bookId) {
   currentChapter = n;
   savedBook = book;
   const pack = packBase();
-  nowPick = (pack || "") + "/data/kjv/" + book + "/" + n + "/now-live.json";
+  nowPick = nowLivePath(book, n);
   closeUr();
   showFallbackArt();
   artSourceKey = "";
@@ -1373,7 +1458,6 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
     else hideVerseOverlay();
   }
   if (kind === "settings") showSettings();
-  if (kind === "exegete") showExegete();
   if (kind === "volume") showVolume();
   if (kind === "book") {
     const catalog = await loadCatalog();
@@ -1404,6 +1488,10 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
   }
   if (set === "bible") {
     showVersion();
+    return;
+  }
+  if (set === "exegete") {
+    showExegete();
     return;
   }
   if (set === "greek") {
@@ -1450,6 +1538,16 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
     openExegeteVoice(exegete);
     return;
   }
+  const bible = btn.getAttribute("data-bible");
+  if (bible) {
+    bibleVersion = normalizeBible(bible);
+    paintBible();
+    savePrefs();
+    if (savedBook && currentChapter) nowPick = nowLivePath(savedBook, currentChapter);
+    showSettings();
+    load(playing);
+    return;
+  }
   const belief = btn.getAttribute("data-belief");
   if (belief) {
     beliefs = normalizeBeliefs(belief);
@@ -1478,7 +1576,7 @@ document.addEventListener("click", (e) => {
     if (!e.target.closest("[data-ur=help]")) hideHelp();
   }
   if (!e.target.closest("#exegete-bubble") && exegeteOpen) {
-    if (!e.target.closest("[data-ur=exegete]")) hideExegete();
+    if (!e.target.closest("[data-exegete], [data-set=exegete]")) hideExegete();
   }
 });
 
@@ -1521,7 +1619,7 @@ function getQueryParam(name) {
     const ch = Number(chapterParam);
     if (ch >= 1 && isLiveChapter(savedBook, ch)) {
       currentChapter = ch;
-      nowPick = (packBase() || "") + "/data/kjv/" + savedBook + "/" + ch + "/now-live.json";
+      nowPick = nowLivePath(savedBook, ch);
     }
   }
   
@@ -1547,6 +1645,7 @@ window.ntSewState = function () {
     book: savedBook,
     chapter: currentChapter,
     voiceAccent: voiceAccent,
+    bibleVersion: bibleVersion,
     settings: sewSettings(),
     queue: playQueue.slice(),
     index: queueIndex

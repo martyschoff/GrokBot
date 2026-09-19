@@ -4,29 +4,28 @@ MENU (gold bar at top):
 
 Text — Toggle Bible verses on or off. When on, the verses from the current chapter display as scrollable text over the artwork.
 
-Settings — Voice, Bible, Greek, Belief, and the sew toggles live here:
-  • Voice — Switch between British and American English narration. When unavailable, the app falls back to the available accent.
-  • Bible — Currently KJV only.
-  • Greek — Toggle Greek words on or off in the chapter audio stream.
-  • Belief — Choose which theological tradition filters the artwork (evangelical hides Roman Catholic tagged art; roman catholic, orthodox, and none show the full pool).
-  • OT Ref — On/off. When on, an Old Testament reference fragment is sewn into the chapter audio if that fragment exists.
-  • Teaching — On/off. When on, a teaching fragment is sewn in if it exists.
-  • Westminster — On/off. When on, a Westminster Confession fragment is sewn in if it exists.
-  • RC Catechism — On/off. When on, a Catechism of the Catholic Church fragment is sewn in if it exists.
-
-Green labels mean a setting is on. Missing audio for a turned-on section is skipped — the player stays silent for that section and does not invent a stub clip.
-
-Exegete — Open free online commentary voices (Matthew Henry, Albert Barnes, Henry Alford) beside the closed commentary set. Closed commentaries stay locked.
-
 Volume — Adjust the voice narration volume with a slider.
 
 Book & Chapter — Jump to a different New Testament book and chapter. Live chapters are selectable; chapters not yet released appear dimmed. The app remembers your last selection and resumes there next time.
+
+Settings — Voice, Bible, Greek, Belief, sew toggles, and Exegete live here:
+  • Voice — Switch between British and American English narration. When unavailable, the app falls back to the available accent.
+  • Bible — Berean (default) or KJV. Berean is listed first. NIV is not offered.
+  • Greek — Toggle Greek words on or off in the chapter audio stream.
+  • Belief — Choose which theological tradition filters the artwork (evangelical hides Roman Catholic tagged art; roman catholic, orthodox, and none show the full pool).
+  • OT Ref — On/off. When on, an Old Testament reference fragment is sewn into the chapter audio if that fragment exists. Missing OT Ref audio is silence.
+  • Teaching — On/off. When on, a teaching fragment is sewn in if it exists.
+  • Westminster — On/off. When on, a Westminster Confession fragment is sewn in if it exists.
+  • RC Catechism — On/off. When on, a Catechism of the Catholic Church fragment is sewn in if it exists.
+  • Exegete — Open free online commentary voices (Matthew Henry, Albert Barnes, Henry Alford, Charles Spurgeon, John Wesley) beside the closed commentary set. Closed commentaries stay locked.
+
+Green labels mean a setting is on. Missing audio for a turned-on section is skipped — the player stays silent for that section and does not invent a stub clip.
 
 Help — Display this guide.
 
 DOCK BUTTONS (at the bottom):
 
-Play/Pause — Begin or pause the narration. When playing, the artwork cycles automatically through related pieces every 12.5 seconds. Chapter audio is sewn from the reading plus any Settings fragments that are on and present.
+Play/Pause — Begin or pause the narration. Artwork holds on the first picture; it does not cycle. Chapter audio is sewn from the reading plus any Settings fragments that are on and present.
 
 Repeat — Restart the sewn chapter from the first piece.
 
@@ -46,7 +45,7 @@ The home page (Bible Vision) displays New Testament books organized in columns. 
 
 ARTWORK AND CAPTIONS:
 
-While a chapter plays, artwork rotates automatically. The artwork title, artist, and place of origin appear below the image. Roman Catholic traditions are never labeled with (rc) in the caption display.
+The first picture for the chapter is held still. The artwork title, artist, and place of origin appear below the image. Roman Catholic traditions are never labeled with (rc) in the caption display.
 
 UNDERSTANDING COLOR CODES:
 

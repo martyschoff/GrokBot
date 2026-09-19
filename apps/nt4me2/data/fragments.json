@@ -6,6 +6,10 @@
       "greek": "/data/audio/galatians-1-greek.mp3",
       "otref": "/data/audio/galatians-1-otref.mp3",
       "teaching": "/data/audio/galatians-1-teaching.mp3"
+    },
+    "2": {
+      "reading": "/data/audio/galatians-2.mp3",
+      "reading-american": "/data/audio/galatians-2-american.mp3"
     }
   }
 }
