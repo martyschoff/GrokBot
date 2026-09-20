@@ -358,6 +358,18 @@ test("sewPlan does not invent OT Ref URLs when missing", () => {
   assert.equal(plan.items.some((i) => /otref|ot.ref|ot-ref/i.test(i.url || "")), false);
 });
 
+test("conventionUrls lists American ot-ref names first for otref with American accent", () => {
+  const americanOtRef = sew.conventionUrls("galatians-", 1, "otref", { voiceAccent: "american", bibleVersion: "berean" });
+  assert.equal(americanOtRef[0], "/data/audio/galatians-1-ot-ref-american.mp3");
+  assert.equal(americanOtRef[1], "/data/audio/galatians-1-otref-american.mp3");
+  assert.ok(americanOtRef.indexOf("/data/audio/galatians-1-ot-ref.mp3") >= 0);
+  assert.ok(americanOtRef.indexOf("/data/audio/galatians-1-otref.mp3") >= 0);
+  
+  const britishOtRef = sew.conventionUrls("galatians-", 1, "otref", { voiceAccent: "british", bibleVersion: "berean" });
+  assert.equal(britishOtRef[0], "/data/audio/galatians-1-ot-ref.mp3");
+  assert.equal(britishOtRef.indexOf("/data/audio/galatians-1-ot-ref-american.mp3"), -1);
+});
+
 test("normalizeFragmentBook + chapterFragments read live.json overlay shape", () => {
   const table = sew.normalizeFragmentBook({
     galatians: {

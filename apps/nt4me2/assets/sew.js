@@ -263,6 +263,10 @@
       return urls;
     }
     if (key === "otref") {
+      if (opt.voiceAccent === "american") {
+        push(base + "-ot-ref-american.mp3");
+        push(base + "-otref-american.mp3");
+      }
       push(base + "-ot-ref.mp3");
       push(base + "-otref.mp3");
       return urls;
