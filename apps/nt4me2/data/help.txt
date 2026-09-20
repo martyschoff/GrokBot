@@ -1,0 +1,54 @@
+living words Help
+
+MENU (gold bar at top):
+
+Text — Toggle Bible verses on or off. When on, the verses from the current chapter display as scrollable text over the artwork.
+
+Volume — Adjust the voice narration volume with a slider.
+
+Book & Chapter — Jump to a different New Testament book and chapter. Live chapters are selectable; chapters not yet released appear dimmed. The app remembers your last selection and resumes there next time.
+
+Settings — Voice, Bible, Greek, Belief, Exegete, and the sew toggles live here:
+  • Voice — Switch between British and American English narration. When unavailable, the app falls back to the available accent.
+  • Bible — Berean (default) or KJV. Berean is listed first.
+  • Greek — Toggle Greek words on or off in the chapter audio stream.
+  • Belief — Choose which theological tradition filters the artwork (evangelical hides Roman Catholic tagged art; roman catholic, orthodox, and none show the full pool).
+  • Exegete — Commentary after the main reading. Choose None (no commentary audio), Random (one voice that has playable audio for this chapter; silence if none do), or a named voice: Matthew Henry, Albert Barnes, Henry Alford, Spurgeon, Wesley. The selection is remembered. A named voice plays only if its file exists — otherwise that slot stays silent. Commentary is audio only: it does not open a text overlay or play a name clip by itself.
+  • OT Ref — On/off. When on, an Old Testament reference fragment is sewn in only if that file exists. Missing OT Ref stays silent — no stub and no tone.
+  • Westminster — On/off. When on, a Westminster Confession fragment is sewn in if it exists.
+  • RC Catechism — On/off. When on, a Catechism of the Catholic Church fragment is sewn in if it exists.
+
+Green labels mean a setting is on. Missing audio for a turned-on section is skipped — the player stays silent for that section and does not invent a stub clip or tone.
+
+Help — Display this guide.
+
+DOCK BUTTONS (at the bottom):
+
+Play/Pause — Begin or pause the narration. Artwork rotates through the art pool. Chapter audio is sewn from the Berean or KJV reading (British or American), then any Settings fragments that are on and present (OT Ref, Westminster, RC Catechism), then the exegete choice (None, Random, or one named voice) if that clip exists. Teaching is not a Settings option and is never sewn. No separate closer clip is appended. Clips follow one another with no interstitial tone.
+
+Repeat — Restart the sewn chapter from the first piece.
+
+Back — Go to the previous chapter in the current book. Only available for live chapters.
+
+Next — Go to the next chapter in the current book. Only available for live chapters.
+
+ART INTERPRETATION BUTTON:
+
+Located near the bottom-right of the artwork, the Art Interpretation button opens a card with scholarly commentary and citations when available. The button color indicates availability:
+  • Green (live button) — An interpretation card is ready for this artwork.
+  • Soft red (no card) — No interpretation is available yet.
+
+PARCHMENT HOME:
+
+The home page (living words) displays New Testament books organized in columns. Green text or buttons indicate books and chapters that are live and ready to read. Secondary or future content appears muted.
+
+ARTWORK AND CAPTIONS:
+
+Artwork cycles through the chapter art pool. If the chapter has no art of its own, the player uses the religious album from pictures.json (files under data/pictures/religious/). Descent is shown only when that pool is empty. The title, artist, and place of origin appear below the image. Roman Catholic traditions are never labeled with (rc) in the caption display.
+
+UNDERSTANDING COLOR CODES:
+
+Gold menu — The top menu bar highlights the current section or active control.
+Green (text, buttons, cards) — Live content, or a Settings toggle that is on.
+Soft red (Art Interpretation button) — Not available.
+Muted or gray (text, buttons) — Secondary content, or a Settings toggle that is off.
