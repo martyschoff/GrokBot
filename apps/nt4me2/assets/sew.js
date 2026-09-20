@@ -273,7 +273,14 @@
       return urls;
     }
     if (key.indexOf("exegete-") === 0) {
+      const id = key.slice("exegete-".length);
       const short = exegeteFileId(key);
+      // American first when Voice:American — else British-only names remain the fallback.
+      if (opt.voiceAccent === "american") {
+        push(base + "-exegete-" + short + "-american.mp3");
+        push(base + "-exegete-" + id + "-american.mp3");
+      }
+      // Prefer AAC/m4a when present (Safari-safe); keep mp3 fallbacks.
       if (short) {
         push(base + "-exegete-" + short + ".m4a");
         push(base + "-exegete-" + short + ".mp3");

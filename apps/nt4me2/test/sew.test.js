@@ -268,6 +268,22 @@ test("conventionUrls emit Kokoro main / shared / mapped exegete names", () => {
   );
 });
 
+test("conventionUrls lists American exegete filenames first for American accent", () => {
+  const americanHenry = sew.conventionUrls("galatians-", 1, "exegete-matthew-henry", { voiceAccent: "american", bibleVersion: "berean" });
+  assert.equal(americanHenry[0], "/data/audio/galatians-1-exegete-henry-american.mp3");
+  assert.equal(americanHenry[1], "/data/audio/galatians-1-exegete-matthew-henry-american.mp3");
+  assert.ok(americanHenry.indexOf("/data/audio/galatians-1-exegete-henry.m4a") >= 0);
+  assert.ok(americanHenry.indexOf("/data/audio/galatians-1-exegete-henry.mp3") >= 0);
+  
+  const britishHenry = sew.conventionUrls("galatians-", 1, "exegete-matthew-henry", { voiceAccent: "british", bibleVersion: "berean" });
+  assert.equal(britishHenry[0], "/data/audio/galatians-1-exegete-henry.m4a");
+  assert.equal(britishHenry.indexOf("/data/audio/galatians-1-exegete-henry-american.mp3"), -1);
+  
+  const americanBarnes = sew.conventionUrls("matthew-", 5, "exegete-albert-barnes", { voiceAccent: "american", bibleVersion: "berean" });
+  assert.equal(americanBarnes[0], "/data/audio/matthew-5-exegete-barnes-american.mp3");
+  assert.equal(americanBarnes[1], "/data/audio/matthew-5-exegete-albert-barnes-american.mp3");
+});
+
 test("normalizeFragmentBook + chapterFragments read live.json overlay shape", () => {
   const table = sew.normalizeFragmentBook({
     galatians: {
