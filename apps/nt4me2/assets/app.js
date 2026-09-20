@@ -96,7 +96,7 @@ function mergeFragmentTable(raw) {
 
 async function loadLiveTable() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/live.json?v=20260919k"];
+  const urls = [(pack || "") + "/data/live.json?v=20260920a"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -124,7 +124,7 @@ function applyCatalogLiveFallback(catalog) {
 
 async function loadFragmentOverlay() {
   const pack = packBase();
-  const urls = [(pack || "") + "/data/fragments.json?v=20260919k"];
+  const urls = [(pack || "") + "/data/fragments.json?v=20260920a"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });
@@ -484,7 +484,7 @@ async function openHelp() {
   const pack = packBase();
   let text = "";
   try {
-    const res = await fetch((pack || "") + "/data/help.txt?v=20260919k", { cache: "no-store" });
+    const res = await fetch((pack || "") + "/data/help.txt?v=20260920a", { cache: "no-store" });
     if (res.ok) text = await res.text();
   } catch (e) {}
   const p = document.createElement("p");
@@ -855,8 +855,8 @@ function usableNowArt(list) {
 async function loadAlbumArtPool() {
   const pack = packBase();
   const urls = [
-    (pack || "") + "/data/pictures.json?v=20260919k",
-    (pack || "") + "/data/art/pictures.json?v=20260919k"
+    (pack || "") + "/data/pictures.json?v=20260920a",
+    (pack || "") + "/data/art/pictures.json?v=20260920a"
   ];
   const api = artAlbumApi();
   for (const url of urls) {
@@ -1244,17 +1244,34 @@ async function buildSewQueue(data) {
   const extraKeys = api.probeKeys ? api.probeKeys(settings) : wanted.filter((k) => k !== "reading");
   for (let i = 0; i < extraKeys.length; i++) {
     const key = extraKeys[i];
-    const existing = map[key] || map[key + "-american"];
-    if (existing) {
-      const ok = await firstPlayable(safariSafeAudioCandidates(existing));
-      if (ok) {
-        map[key] = ok;
-        continue;
+    
+    // When American accent: prefer *-american URLs, probe convention list for American first
+    if (voiceAccent === "american" && !map[key + "-american"]) {
+      const conv = api.conventionUrls ? api.conventionUrls(stem, ch, key, sewOptions()) : [];
+      const americanConv = conv.filter((u) => /american\.(mp3|m4a)$/i.test(u));
+      const found = await firstPlayable(americanConv.map(mediaUrl));
+      if (found) {
+        map[key + "-american"] = found;
       }
     }
-    const conv = api.conventionUrls ? api.conventionUrls(stem, ch, key, sewOptions()) : [];
-    const found = await firstPlayable(conv.map(mediaUrl));
-    if (found) map[key] = found;
+    
+    // Check if existing British map[key] is still valid (not 404)
+    if (map[key]) {
+      const ok = await firstPlayable(safariSafeAudioCandidates(map[key]));
+      if (ok) {
+        map[key] = ok;
+      } else {
+        // Delete stale 404 so convention can refill
+        delete map[key];
+      }
+    }
+    
+    // If still no map[key] or American variant, probe full convention list
+    if (!map[key] && !map[key + "-american"]) {
+      const conv = api.conventionUrls ? api.conventionUrls(stem, ch, key, sewOptions()) : [];
+      const found = await firstPlayable(conv.map(mediaUrl));
+      if (found) map[key] = found;
+    }
   }
   const planned = api.sewPlan
     ? api.sewPlan(map, settings, sewOptions())
@@ -1512,7 +1529,7 @@ const NT_FALLBACK = {
 
 async function loadCatalog() {
   const pack = packBase();
-  const urls = pack ? [pack + "/data/books.json?v=20260919k"] : ["/data/books.json?v=20260919k"];
+  const urls = pack ? [pack + "/data/books.json?v=20260920a"] : ["/data/books.json?v=20260920a"];
   for (const url of urls) {
     try {
       const res = await fetch(url, { cache: "no-store" });

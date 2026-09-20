@@ -284,6 +284,80 @@ test("conventionUrls lists American exegete filenames first for American accent"
   assert.equal(americanBarnes[1], "/data/audio/matthew-5-exegete-albert-barnes-american.mp3");
 });
 
+test("pickUrl with American accent prefers -american variant over British for exegetes", () => {
+  const map = {
+    "exegete-henry": "/data/audio/galatians-1-exegete-henry.m4a",
+    "exegete-henry-american": "/data/audio/galatians-1-exegete-henry-american.mp3"
+  };
+  assert.equal(
+    sew.pickUrl(map, "exegete-matthew-henry", { voiceAccent: "american", bibleVersion: "berean" }),
+    "/data/audio/galatians-1-exegete-henry-american.mp3"
+  );
+  assert.equal(
+    sew.pickUrl(map, "exegete-matthew-henry", { voiceAccent: "british", bibleVersion: "berean" }),
+    "/data/audio/galatians-1-exegete-henry.m4a"
+  );
+});
+
+test("westminster stays in wantedKeys when settings.westminster true", () => {
+  const withWestminster = sew.wantedKeys({
+    hearGreek: true,
+    otRef: false,
+    westminster: true,
+    rcCatechism: false,
+    exegete: []
+  });
+  assert.ok(withWestminster.indexOf("westminster") >= 0);
+  
+  const withoutWestminster = sew.wantedKeys({
+    hearGreek: true,
+    otRef: false,
+    westminster: false,
+    rcCatechism: false,
+    exegete: []
+  });
+  assert.equal(withoutWestminster.indexOf("westminster"), -1);
+});
+
+test("otRef stays in wantedKeys when settings.otRef true", () => {
+  const withOtRef = sew.wantedKeys({
+    hearGreek: true,
+    otRef: true,
+    westminster: false,
+    rcCatechism: false,
+    exegete: []
+  });
+  assert.ok(withOtRef.indexOf("otref") >= 0);
+  
+  const withoutOtRef = sew.wantedKeys({
+    hearGreek: true,
+    otRef: false,
+    westminster: false,
+    rcCatechism: false,
+    exegete: []
+  });
+  assert.equal(withoutOtRef.indexOf("otref"), -1);
+});
+
+test("sewPlan does not invent OT Ref URLs when missing", () => {
+  const plan = sew.sewPlan(
+    {
+      "reading-bsb-main-greekon-british": "/data/audio/galatians-1-bsb-main-greekon-british.mp3"
+    },
+    {
+      hearGreek: true,
+      otRef: true,
+      westminster: false,
+      rcCatechism: false,
+      exegete: []
+    },
+    { voiceAccent: "british", bibleVersion: "berean", hearGreek: true }
+  );
+  assert.deepEqual(plan.items.map((i) => i.key), ["reading"]);
+  assert.ok(plan.skipped.indexOf("otref") >= 0);
+  assert.equal(plan.items.some((i) => /otref|ot.ref|ot-ref/i.test(i.url || "")), false);
+});
+
 test("normalizeFragmentBook + chapterFragments read live.json overlay shape", () => {
   const table = sew.normalizeFragmentBook({
     galatians: {
