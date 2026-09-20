@@ -145,10 +145,10 @@
   function wantedKeys(settings) {
     const keys = ["reading"];
     if (settings && settings.otRef) keys.push("otref");
-    if (settings && settings.westminster) keys.push("westminster");
-    if (settings && settings.rcCatechism) keys.push("rccatechism");
     const selected = selectedExegeteKey(settings);
     if (selected) keys.push(selected);
+    if (settings && settings.westminster) keys.push("westminster");
+    if (settings && settings.rcCatechism) keys.push("rccatechism");
     return keys.filter((key) => !isTeachingKey(key));
   }
 

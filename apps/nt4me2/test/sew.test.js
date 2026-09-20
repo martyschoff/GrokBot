@@ -19,7 +19,7 @@ test("sewHintText always lists Sew keys and appends skipped", () => {
   assert.equal(sew.sewHintText([], ["otref"]), "Sew: skipped otref");
 });
 
-test("wantedKeys is reading, optional westminster/rccatechism, then exegete[0] only — never teaching", () => {
+test("wantedKeys is reading, optional otref, exegete (if selected), then westminster/rccatechism — never teaching", () => {
   assert.deepEqual(sew.wantedKeys({}), ["reading"]);
   assert.deepEqual(
     sew.wantedKeys({
@@ -32,7 +32,7 @@ test("wantedKeys is reading, optional westminster/rccatechism, then exegete[0] o
       closer: true,
       coda: true
     }),
-    ["reading", "otref", "westminster", "rccatechism", "exegete-matthew-henry"]
+    ["reading", "otref", "exegete-matthew-henry", "westminster", "rccatechism"]
   );
   assert.deepEqual(sew.wantedKeys({ exegete: ["wesley", "spurgeon"] }), ["reading", "exegete-wesley"]);
   assert.equal(sew.wantedKeys({ exegete: [] }).some((k) => k.indexOf("exegete") === 0), false);
