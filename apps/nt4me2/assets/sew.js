@@ -271,7 +271,18 @@
       push(base + "-otref.mp3");
       return urls;
     }
+    if (key === "westminster") {
+      if (opt.voiceAccent === "american") {
+        push(base + "-westminster-american.mp3");
+      }
+      push(base + "-westminster.mp3");
+      return urls;
+    }
     if (key === "rccatechism") {
+      if (opt.voiceAccent === "american") {
+        push(base + "-ccc-american.mp3");
+        push(base + "-rccatechism-american.mp3");
+      }
       push(base + "-ccc.mp3");
       push(base + "-rccatechism.mp3");
       return urls;

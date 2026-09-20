@@ -379,3 +379,26 @@ test("normalizeFragmentBook + chapterFragments read live.json overlay shape", ()
   const row = sew.chapterFragments(table, "galatians", 2);
   assert.equal(row["reading-bsb-main-greekon-british"], "/data/audio/galatians-2-bsb-main-greekon-british.mp3");
 });
+
+test("conventionUrls lists American westminster filenames first for American accent", () => {
+  const americanWcf = sew.conventionUrls("galatians-", 1, "westminster", { voiceAccent: "american", bibleVersion: "berean" });
+  assert.equal(americanWcf[0], "/data/audio/galatians-1-westminster-american.mp3");
+  assert.ok(americanWcf.indexOf("/data/audio/galatians-1-westminster.mp3") >= 0);
+  
+  const britishWcf = sew.conventionUrls("galatians-", 1, "westminster", { voiceAccent: "british", bibleVersion: "berean" });
+  assert.equal(britishWcf[0], "/data/audio/galatians-1-westminster.mp3");
+  assert.equal(britishWcf.indexOf("/data/audio/galatians-1-westminster-american.mp3"), -1);
+});
+
+test("conventionUrls lists American rccatechism filenames first for American accent", () => {
+  const americanCcc = sew.conventionUrls("galatians-", 1, "rccatechism", { voiceAccent: "american", bibleVersion: "berean" });
+  assert.equal(americanCcc[0], "/data/audio/galatians-1-ccc-american.mp3");
+  assert.equal(americanCcc[1], "/data/audio/galatians-1-rccatechism-american.mp3");
+  assert.ok(americanCcc.indexOf("/data/audio/galatians-1-ccc.mp3") >= 0);
+  assert.ok(americanCcc.indexOf("/data/audio/galatians-1-rccatechism.mp3") >= 0);
+  
+  const britishCcc = sew.conventionUrls("galatians-", 1, "rccatechism", { voiceAccent: "british", bibleVersion: "berean" });
+  assert.equal(britishCcc[0], "/data/audio/galatians-1-ccc.mp3");
+  assert.equal(britishCcc.indexOf("/data/audio/galatians-1-ccc-american.mp3"), -1);
+  assert.equal(britishCcc.indexOf("/data/audio/galatians-1-rccatechism-american.mp3"), -1);
+});
