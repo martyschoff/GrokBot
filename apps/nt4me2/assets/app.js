@@ -1141,6 +1141,7 @@ function probeAudio(url) {
       done = true;
       resolve(ok ? url : "");
     };
+    
     const probeWithAudio = () => {
       const probe = new Audio();
       const onOk = () => {
@@ -1164,8 +1165,28 @@ function probeAudio(url) {
       setTimeout(() => {
         cleanup();
         finish(false);
-      }, 4000);
+      }, 6000);
     };
+    
+    const probeWithPlainGet = () => {
+      fetch(url, {
+        method: "GET",
+        cache: "no-store"
+      }).then((res) => {
+        if (res.status === 200 || res.status === 206) {
+          finish(true);
+          return;
+        }
+        if (res.status === 404) {
+          finish(false);
+          return;
+        }
+        probeWithAudio();
+      }).catch(() => {
+        probeWithAudio();
+      });
+    };
+    
     fetch(url, {
       method: "GET",
       headers: { Range: "bytes=0-1" },
@@ -1179,9 +1200,9 @@ function probeAudio(url) {
         finish(false);
         return;
       }
-      probeWithAudio();
+      probeWithPlainGet();
     }).catch(() => {
-      probeWithAudio();
+      probeWithPlainGet();
     });
   });
 }
@@ -1216,14 +1237,29 @@ function storeSewDebug(built) {
   const api = sewApi();
   const items = ((built && built.items) || []).slice();
   const skipped = ((built && built.skipped) || []).slice();
+  const mapKeys = ((built && built.mapKeys) || []).slice();
+  const verified = (built && built.verified) || {};
+  
+  const skipReasons = {};
+  skipped.forEach((key) => {
+    if (!verified[key]) {
+      skipReasons[key] = "audio probe failed";
+    } else {
+      skipReasons[key] = "not requested";
+    }
+  });
+  
   window._lastSewDebug = {
     items: items,
     wanted: ((built && built.wanted) || []).slice(),
     skipped: skipped,
+    skipReasons: skipReasons,
     settings: settings,
     exegete: exegete,
     mode: api.exegeteMode ? api.exegeteMode(settings) : exegeteChoice,
-    hint: api.sewHintText ? api.sewHintText(items, skipped) : ""
+    hint: api.sewHintText ? api.sewHintText(items, skipped) : "",
+    mapKeys: mapKeys,
+    verified: Object.keys(verified)
   };
 }
 
@@ -1233,6 +1269,7 @@ async function buildSewQueue(data) {
   const stem = audioStem(savedBook);
   const ch = Number(currentChapter) || 0;
   const map = collectFragmentMap(data);
+  const verified = {};
   const picked = api.pickUrl ? api.pickUrl(map, "reading", sewOptions()) : "";
   if (picked) map.reading = picked;
   if (!map.reading) {
@@ -1240,37 +1277,42 @@ async function buildSewQueue(data) {
     if (readingUrl) map.reading = readingUrl;
     else if (data && data.audio && !data.waiting_audio) map.reading = mediaUrl(data.audio);
   }
+  if (map.reading) verified[map.reading] = true;
+  
   const wanted = api.wantedKeys ? api.wantedKeys(settings) : ["reading"];
   const extraKeys = api.probeKeys ? api.probeKeys(settings) : wanted.filter((k) => k !== "reading");
   for (let i = 0; i < extraKeys.length; i++) {
     const key = extraKeys[i];
     
-    // When American accent: prefer *-american URLs, probe convention list for American first
     if (voiceAccent === "american" && !map[key + "-american"]) {
       const conv = api.conventionUrls ? api.conventionUrls(stem, ch, key, sewOptions()) : [];
       const americanConv = conv.filter((u) => /american\.(mp3|m4a)$/i.test(u));
       const found = await firstPlayable(americanConv.map(mediaUrl));
       if (found) {
         map[key + "-american"] = found;
+        verified[found] = true;
       }
     }
     
-    // Check if existing British map[key] is still valid (not 404)
     if (map[key]) {
       const ok = await firstPlayable(safariSafeAudioCandidates(map[key]));
       if (ok) {
         map[key] = ok;
+        verified[ok] = true;
       } else {
-        // Delete stale 404 so convention can refill
-        delete map[key];
+        if (!verified[map[key]]) {
+          delete map[key];
+        }
       }
     }
     
-    // If still no map[key] or American variant, probe full convention list
     if (!map[key] && !map[key + "-american"]) {
       const conv = api.conventionUrls ? api.conventionUrls(stem, ch, key, sewOptions()) : [];
       const found = await firstPlayable(conv.map(mediaUrl));
-      if (found) map[key] = found;
+      if (found) {
+        map[key] = found;
+        verified[found] = true;
+      }
     }
   }
   const planned = api.sewPlan
@@ -1285,8 +1327,16 @@ async function buildSewQueue(data) {
       continue;
     }
     const ok = await firstPlayable(safariSafeAudioCandidates(row.url));
-    if (ok) items.push({ key: row.key, url: ok });
-    else skipped.push(row.key);
+    if (ok) {
+      items.push({ key: row.key, url: ok });
+      verified[ok] = true;
+    } else {
+      if (!verified[row.url]) {
+        skipped.push(row.key);
+      } else {
+        items.push({ key: row.key, url: row.url });
+      }
+    }
   }
   const queued = api.chapterQueueItems ? api.chapterQueueItems(items, settings) : items;
   const queuedKeys = {};
@@ -1299,7 +1349,7 @@ async function buildSewQueue(data) {
   resolvedWanted.forEach((key) => {
     if (!queuedKeys[key] && skipped.indexOf(key) < 0) skipped.push(key);
   });
-  return { items: queued, wanted: resolvedWanted, skipped: skipped, settings: settings };
+  return { items: queued, wanted: resolvedWanted, skipped: skipped, settings: settings, mapKeys: Object.keys(map), verified: verified };
 }
 
 function sewKeyOf(items) {
