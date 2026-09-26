@@ -17,7 +17,9 @@ let hearGreek = true;
 const PREF_KEY = "daily-chapter-hear-greek";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
+const INTERPRET_MODE_KEY = "daily-chapter-interpretation-mode";
 let voiceVolume = 1;
+let interpretMode = "academic"; // "academic" or "religious"
 let savedBook = "romans";
 let currentChapter = 0;
 let viewingBook = "";
@@ -96,7 +98,8 @@ function shuffleArt(list) {
 
 function cardMeta(item) {
   const file = artFile(item);
-  const row = interpretIndex[file];
+  const prefix = "__" + (interpretMode || "academic") + "__";
+  const row = interpretIndex[prefix + file];
   if (!row || typeof row !== "object") return null;
   if (String(row.status || "") !== "approved") return null;
   const card = String(row.card || "").trim();
@@ -110,6 +113,11 @@ function setInterpretRim() {
   btn.classList.toggle("interpret-yes", yes);
   btn.classList.toggle("interpret-no", !yes);
   btn.setAttribute("aria-pressed", interpretOpen ? "true" : "false");
+  // Update label based on mode
+  const label = interpretMode === "religious" 
+    ? "Religious, Art Interpretation" 
+    : "Academic, Art Interpretation.";
+  btn.textContent = label;
 }
 
 function stopSlideshow() {
@@ -371,12 +379,30 @@ function repeatFromStart() {
 }
 
 async function loadIndex() {
+  interpretIndex = {};
   try {
     const pack = (window.PACK_BASE || "").replace(/\/$/, "");
     const res = await fetch((pack || "") + "/data/art/interpretations.json", { cache: "no-store" });
-    if (!res.ok) return;
-    const data = await res.json();
-    if (data && typeof data === "object") interpretIndex = data;
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data === "object") {
+        Object.keys(data).forEach((key) => {
+          interpretIndex["__academic__" + key] = data[key];
+        });
+      }
+    }
+  } catch (e) {}
+  try {
+    const pack = (window.PACK_BASE || "").replace(/\/$/, "");
+    const res = await fetch((pack || "") + "/data/art/religious-interpretations.json", { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && typeof data === "object") {
+        Object.keys(data).forEach((key) => {
+          interpretIndex["__religious__" + key] = data[key];
+        });
+      }
+    }
   } catch (e) {}
   setInterpretRim();
 }
@@ -396,6 +422,7 @@ function mediaUrl(path) {
 async function loadPrefs() {
   hearGreek = true;
   voiceVolume = 1;
+  interpretMode = "academic";
   try {
     const v = localStorage.getItem(PREF_KEY);
     if (v === "0") hearGreek = false;
@@ -407,6 +434,10 @@ async function loadPrefs() {
       const n = Number(raw);
       if (isFinite(n)) voiceVolume = Math.max(0, Math.min(1, n));
     }
+  } catch (e) {}
+  try {
+    const mode = localStorage.getItem(INTERPRET_MODE_KEY);
+    if (mode === "religious" || mode === "academic") interpretMode = mode;
   } catch (e) {}
   try {
     const res = await fetch("/api/prefs", { cache: "no-store" });
@@ -422,6 +453,7 @@ async function loadPrefs() {
 async function savePrefs() {
   try { localStorage.setItem(PREF_KEY, hearGreek ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(VOL_KEY, String(voiceVolume)); } catch (e) {}
+  try { localStorage.setItem(INTERPRET_MODE_KEY, String(interpretMode)); } catch (e) {}
   try {
     await fetch("/api/prefs", {
       method: "POST",
@@ -434,6 +466,24 @@ async function savePrefs() {
 function paintGreek() {
   const btn = document.getElementById("ur-greek");
   if (btn) btn.textContent = hearGreek ? "Greek: on" : "Greek: off";
+}
+
+function paintInterpretation() {
+  const btn = document.getElementById("ur-interp");
+  if (btn) btn.textContent = interpretMode === "religious" ? "Interpretation: Religious" : "Interpretation: Academic";
+}
+
+function showInterpretation() {
+  const mode = interpretMode === "religious" ? "academic" : "religious";
+  interpretMode = mode;
+  paintInterpretation();
+  savePrefs();
+  // Reload card cache and update display
+  cardCache = {};
+  if (interpretOpen) {
+    fillInterpret(art[artIndex]);
+  }
+  setInterpretRim();
 }
 
 function bookLabel(id) {
@@ -753,6 +803,9 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
     paintGreek();
     savePrefs();
     load(playing);
+  }
+  if (kind === "interpretation") {
+    showInterpretation();
   }
   if (kind === "volume") showVolume();
   if (kind === "book") {
