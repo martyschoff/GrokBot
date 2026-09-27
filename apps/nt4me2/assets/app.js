@@ -151,6 +151,7 @@ function audioStem(book) {
   if (book === "mark") return "mark-";
   if (book === "luke") return "luke-";
   if (book === "john") return "john-";
+  if (book === "acts") return "acts-";
   if (book === "romans") return "romans-";
   if (book === "1corinthians") return "1cor-";
   if (book === "2corinthians") return "2cor-";
