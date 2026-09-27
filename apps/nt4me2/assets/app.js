@@ -816,33 +816,33 @@ function paintGreek() {
 }
 
 function paintInterpretation() {
-  const btn = document.getElementById("ur-interp");
-  if (btn) {
-    if (interpretMode === "none") {
-      btn.textContent = "Interpretation: None";
-    } else if (interpretMode === "religious") {
-      btn.textContent = "Interpretation: Religious";
-    } else {
-      btn.textContent = "Interpretation: Academic";
-    }
+  let text = "Interpretation: Academic";
+  if (interpretMode === "none") {
+    text = "Interpretation: None";
+  } else if (interpretMode === "religious") {
+    text = "Interpretation: Religious";
   }
+  document.querySelectorAll("[data-ur=interpretation], [data-set=interpretation]").forEach((btn) => {
+    btn.textContent = text;
+  });
 }
 
-function showInterpretation() {
-  if (interpretMode === "religious") {
-    interpretMode = "none";
-  } else if (interpretMode === "none") {
-    interpretMode = "academic";
-  } else {
-    interpretMode = "religious";
-  }
-  paintInterpretation();
-  savePrefs();
-  cardCache = {};
-  if (interpretOpen) {
-    fillInterpret(art[artIndex]);
-  }
-  setInterpretRim();
+function showInterpretationChooser() {
+  const rows = [
+    '<button type="button" class="ur-back" data-back="settings">Settings</button>',
+    '<p class="ur-head">Interpretation</p>',
+    '<button type="button" data-interpretation="none"></button>',
+    '<button type="button" data-interpretation="academic"></button>',
+    '<button type="button" data-interpretation="religious"></button>'
+  ];
+  showUrPanel(rows.join(""));
+  paintInterpretationChooser();
+}
+
+function paintInterpretationChooser() {
+  paintToggle('[data-interpretation="none"]', interpretMode === "none", "None: on", "None");
+  paintToggle('[data-interpretation="academic"]', interpretMode === "academic", "Academic: on", "Academic");
+  paintToggle('[data-interpretation="religious"]', interpretMode === "religious", "Religious: on", "Religious");
 }
 
 
@@ -1542,9 +1542,7 @@ function showSettings() {
   paintVoice();
   paintBible();
   paintGreek();
-  // settings panel mirror of cycle label
-  const sib = document.getElementById("ur-interp-settings");
-  if (sib) sib.textContent = interpretMode === "religious" ? "Interpretation: Religious" : "Interpretation: Academic";
+  paintInterpretation();
   paintBeliefs();
   paintSewToggles();
 }
@@ -1765,8 +1763,7 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
   }
   if (kind === "settings") showSettings();
   if (kind === "interpretation") {
-    showInterpretation();
-    closeUr();
+    showInterpretationChooser();
   }
   if (kind === "volume") showVolume();
   if (kind === "book") {
@@ -1790,9 +1787,20 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
   }
   const set = btn.getAttribute("data-set");
   if (set === "interpretation") {
-    showInterpretation();
-    const sib = document.getElementById("ur-interp-settings");
-    if (sib) sib.textContent = interpretMode === "religious" ? "Interpretation: Religious" : "Interpretation: Academic";
+    showInterpretationChooser();
+    return;
+  }
+  const interp = btn.getAttribute("data-interpretation");
+  if (interp) {
+    interpretMode = interp;
+    savePrefs();
+    cardCache = {};
+    paintInterpretationChooser();
+    paintInterpretation();
+    setInterpretRim();
+    if (interpretOpen) {
+      fillInterpret(art[artIndex]);
+    }
     return;
   }
   if (set === "voice") {
