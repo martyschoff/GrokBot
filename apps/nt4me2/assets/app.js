@@ -11,13 +11,19 @@ let interpretOpen = false;
 let interpretFrozen = false;
 let interpretScroll = 0;
 let interpretIndex = {};
+let interpretIndexReligious = {};
 let cardCache = {};
 let nowPick = "";
 let hearGreek = true;
 const PREF_KEY = "daily-chapter-hear-greek";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
+const INTERP_MODE_KEY = "daily-chapter-interpretation-mode";
+const EXEGETE_KEY = "daily-chapter-exegete";
 let voiceVolume = 1;
+let interpretationMode = "academic";
+let exegeteMode = "conservative-mixture";
+const EXEGETE_VOICES = ["matthew-henry", "conservative-mixture", "none"];
 let savedBook = "romans";
 let currentChapter = 0;
 let viewingBook = "";
@@ -96,7 +102,8 @@ function shuffleArt(list) {
 
 function cardMeta(item) {
   const file = artFile(item);
-  const row = interpretIndex[file];
+  const index = interpretationMode === "religious" ? interpretIndexReligious : interpretIndex;
+  const row = index[file];
   if (!row || typeof row !== "object") return null;
   if (String(row.status || "") !== "approved") return null;
   const card = String(row.card || "").trim();
@@ -106,6 +113,12 @@ function cardMeta(item) {
 
 function setInterpretRim() {
   const btn = document.getElementById("interpretation");
+  const isHidden = interpretationMode === "none";
+  btn.hidden = isHidden;
+  if (isHidden) {
+    hideInterpret();
+    return;
+  }
   const yes = !!cardMeta(art[artIndex]);
   btn.classList.toggle("interpret-yes", yes);
   btn.classList.toggle("interpret-no", !yes);
@@ -378,6 +391,13 @@ async function loadIndex() {
     const data = await res.json();
     if (data && typeof data === "object") interpretIndex = data;
   } catch (e) {}
+  try {
+    const pack = (window.PACK_BASE || "").replace(/\/$/, "");
+    const res = await fetch((pack || "") + "/data/art/religious-interpretations.json", { cache: "no-store" });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data && typeof data === "object") interpretIndexReligious = data;
+  } catch (e) {}
   setInterpretRim();
 }
 
@@ -396,6 +416,8 @@ function mediaUrl(path) {
 async function loadPrefs() {
   hearGreek = true;
   voiceVolume = 1;
+  interpretationMode = "academic";
+  exegeteMode = "none";
   try {
     const v = localStorage.getItem(PREF_KEY);
     if (v === "0") hearGreek = false;
@@ -409,6 +431,20 @@ async function loadPrefs() {
     }
   } catch (e) {}
   try {
+    const mode = localStorage.getItem(INTERP_MODE_KEY);
+    if (mode === "academic" || mode === "religious" || mode === "none") {
+      interpretationMode = mode;
+    }
+  } catch (e) {}
+  try {
+    const exegete = localStorage.getItem(EXEGETE_KEY);
+    if (exegete && EXEGETE_VOICES.indexOf(exegete) >= 0) {
+      exegeteMode = exegete;
+    } else if (!exegete) {
+      exegeteMode = "conservative-mixture";
+    }
+  } catch (e) {}
+  try {
     const res = await fetch("/api/prefs", { cache: "no-store" });
     if (res.ok) {
       const data = await res.json();
@@ -417,11 +453,14 @@ async function loadPrefs() {
   } catch (e) {}
   applyVoiceVolume();
   paintGreek();
+  paintInterpretationMode();
 }
 
 async function savePrefs() {
   try { localStorage.setItem(PREF_KEY, hearGreek ? "1" : "0"); } catch (e) {}
   try { localStorage.setItem(VOL_KEY, String(voiceVolume)); } catch (e) {}
+  try { localStorage.setItem(INTERP_MODE_KEY, interpretationMode); } catch (e) {}
+  try { localStorage.setItem(EXEGETE_KEY, exegeteMode); } catch (e) {}
   try {
     await fetch("/api/prefs", {
       method: "POST",
@@ -434,6 +473,19 @@ async function savePrefs() {
 function paintGreek() {
   const btn = document.getElementById("ur-greek");
   if (btn) btn.textContent = hearGreek ? "Greek: on" : "Greek: off";
+}
+
+function paintInterpretationMode() {
+  const btn = document.getElementById("interpretation");
+  if (!btn) return;
+  const modeLabel = interpretationMode === "none" ? "None" : interpretationMode === "religious" ? "Religious" : "Academic";
+  btn.textContent = "Art Interpretation";
+}
+
+function getInterpretationLabel() {
+  if (interpretationMode === "none") return "None";
+  if (interpretationMode === "religious") return "Religious";
+  return "Academic";
 }
 
 function bookLabel(id) {
@@ -601,6 +653,28 @@ function showVolume() {
   sl.addEventListener("click", (e) => { e.stopPropagation(); });
 }
 
+function showInterpretation() {
+  const rows = ['<p class="ur-head">Interpretation</p>'];
+  ["academic", "religious", "none"].forEach((mode) => {
+    const isActive = interpretationMode === mode;
+    const label = mode === "none" ? "None" : mode === "religious" ? "Religious" : "Academic";
+    const cls = isActive ? "ur-live" : "";
+    rows.push('<button type="button" class="' + cls + '" data-interpretation="' + mode + '">' + label + "</button>");
+  });
+  showUrPanel(rows.join(""));
+}
+
+function showExegete() {
+  const rows = ['<p class="ur-head">Exegete</p>'];
+  EXEGETE_VOICES.forEach((voice) => {
+    const isActive = exegeteMode === voice;
+    let label = voice === "matthew-henry" ? "Matthew Henry" : voice === "conservative-mixture" ? "Conservative Mixture of Experts" : "None";
+    const cls = isActive ? "ur-live" : "";
+    rows.push('<button type="button" class="' + cls + '" data-exegete="' + voice + '">' + label + "</button>");
+  });
+  showUrPanel(rows.join(""));
+}
+
 function showBooks(catalog) {
   const rows = ['<p class="ur-head">NT books</p>'];
   (catalog.books || []).forEach((b) => {
@@ -755,6 +829,8 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
     load(playing);
   }
   if (kind === "volume") showVolume();
+  if (kind === "interpretation") showInterpretation();
+  if (kind === "exegete") showExegete();
   if (kind === "book") {
     const catalog = await loadCatalog();
     window._bookCatalog = catalog;
@@ -768,6 +844,22 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
   if (!btn || btn.disabled || btn.classList.contains("ur-dead") || btn.classList.contains("ur-wait")) return;
   if (btn.getAttribute("data-back") === "books") {
     showBooks(window._bookCatalog || { books: [] });
+    return;
+  }
+  const interpMode = btn.getAttribute("data-interpretation");
+  if (interpMode) {
+    interpretationMode = interpMode;
+    savePrefs();
+    paintInterpretationMode();
+    setInterpretRim();
+    closeUr();
+    return;
+  }
+  const exegete = btn.getAttribute("data-exegete");
+  if (exegete) {
+    exegeteMode = exegete;
+    savePrefs();
+    closeUr();
     return;
   }
   const bookId = btn.getAttribute("data-book");
