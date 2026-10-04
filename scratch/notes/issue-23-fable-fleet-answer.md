@@ -1,48 +1,58 @@
-# Fable's answer to issue #23 — what to tweak across the fleet once the New Testament audio is done
+# Fable's revised answer to issue #23 — full fleet, 4 Oct 2026 survey
 
-Answer to <https://github.com/martyschoff/GrokBot/issues/23>. Posted as a note in a PR because the agent's GitHub token cannot comment on issues (read-only for issue writes); the content below is the comment as written.
+Revised against the live read-only survey posted as a comment on <https://github.com/martyschoff/GrokBot/issues/23> (4 Oct 2026, ~6:50 PM ET), which replaces the short machine list in the issue body. This file supersedes the first version of this note. Tower3 facts come only from the 3 Oct block (it was offline at the survey); WIN-DL8TC2NPBCM was not surveyed, so nothing below concerns it. **Nothing in this note should be applied by anyone until Martin has discussed it.** Posted as a note in PR #24 because the agent's GitHub token still cannot comment on issues.
 
-Fable here. I read `main`, the `house-disk-audio` branch (`apps/house-disk-audio/serve.py` + README), the `nt4me2` player tree and its README (sew paths, fragment matrix, Kimberly's `live.json` merge flow), the freeOverheard ledgers/skills, and the machine list in this issue. Answers to the four questions, in order.
+What the full survey corrects in my first answer: 3080a has a 3.7 TB D: with ~3.6 TB free, so weight/work storage there is not a weakness; tower2 carries an RTX 4080 SUPER and has ample free disk; nimo128 is a Ryzen AI MAX+ 395 with Radeon 8060S and 64 GB (no NVIDIA card), so Qwen 72B there is CPU/iGPU inference, not CUDA; upthread64 exists (second Threadripper 3960X, 3060 Ti + RX 580); the Mac mini is an M4 Pro with 48 GB and 20 GPU cores; MartyNPC1 is a Snapdragon Surface with no local Llama and Ollama banned.
 
-## 1. What is actually weak
+## 1. What is actually weak (given Cursor already does the coding)
 
-**The 3080a host, not its GPUs.** An i3-9100 (4 cores), 16 GB DDR4-2133, PCIe gen 2, and a single 250 GB SATA SSD are all undersized relative to eight 3080s. A 70 GB weight file barely fits on that disk next to the OS and `D:\kokoro-nt`, loads at SATA speed (minutes per model load), and 16 GB of system RAM is less than a quarter of the weight size you'd stream through it. Whatever the GPUs do next, the host is the ceiling. If any money is spent, it's RAM and an NVMe drive for this box, not more GPUs.
+**The 3080a host is still the mismatch, but the list shrinks to CPU, RAM, and PCIe.** Four cores and 16 GB feeding eight 3080s remains the ceiling, and the two GEIL sticks are rated DDR4-3200 CL16 but run at 2133 — XMP appears off, on a BIOS from April 2020. Enabling XMP (or a RAM upgrade) is the cheapest meaningful improvement to that box, but any BIOS change is a machine change, so it is a discussion item for Martin, not an action. Disk is no longer on the weak list there.
 
-**Finished audio has one copy.** The NT mp3s land in `I:\house-disk-audio\nt\audio\` on mlsfs, and that Storage Spaces volume is one machine. The repo carries the player, Kimberly carries the S3 live set, but the master Kokoro output sits in a single place. A scheduled one-way copy (robocopy to a disk on another tower, or into the S3 flow Kimberly already runs for `nt4me2`) is the cheapest fix for the biggest real risk here.
+**The near-full drives moved to tower1 and upthread64, and they are the fleet's most likely near-term failure.** tower1 shows C: 36 GB, D: 37 GB, E: 38 GB free; upthread64 shows C: 30 GB, G: 52 GB of 7452, H: 76 GB, I: 39 GB free. Nearly-full Windows C: drives break updates and temp-heavy jobs. Meanwhile mlsfs sits on roughly 78 TB free (I: 62.5 TB, S: 11 TB, E: 4.6 TB) and nimo128 has a nearly empty 32 TB D:. The fleet's storage is inverted: the two 24-core Threadrippers are packed, the archive machines are empty.
 
-**No machine-checkable manifest of what "done" means.** `apps/nt4me2/README.md` defines an enumerable expected-file set — book × chapter × {kjv,bsb} × {greekon,greekoff} × {british,american} mains, plus westminster/ccc/ot-ref/exegete fragments. Nothing in the tree lists which of those files exist. A checked-in manifest (or a tiny script that scans `I:\house-disk-audio\nt\audio\` against the convention) would let Kimberly verify completeness mechanically before merging `live.json`, instead of by eye.
+**Finished NT audio still has one copy.** The mp3s land in `I:\house-disk-audio\nt\audio\` on mlsfs and exist nowhere else locally (I: is otherwise essentially empty). This remains the biggest risk to the thing all the GPU time is producing. The survey makes the fix easier than before: 3080a's D: (3.6 TB free) or tower2's S:/G: are natural second copies on *different* machines; mlsfs's own S: would be a weaker same-machine mirror.
 
-**Two small weaknesses in `serve.py` on the `house-disk-audio` branch** (noting only; this issue asked for no code change):
-- Its CORS headers advertise `Range` and expose `Content-Range`, but Python's `SimpleHTTPRequestHandler` doesn't actually serve byte ranges — it returns 200 with the full body. Seeking inside a long chapter mp3 from a tailnet player will re-download the file. A range-capable handler is a one-file tweak when wanted.
-- The default `--root` is `I:\`, which exposes the entire 67 TB share read-only to everyone on the tailnet. Scoping it to `I:\house-disk-audio` serves the same audio with less surface.
+**Memory clocks are low fleet-wide.** 3080a, tower2 (96 GB), upthread64 (mixed 3200/3600-rated sticks), and tower3 all run DDR4 at 2133. For CPU-side inference and data shuffling that is real bandwidth left on the table; tower1 at DDR4-3600 shows what the platform can do. Same caveat: BIOS changes are Martin's call.
 
-**Several "do not stop / do not log off / do not reboot" machines with no heartbeat.** mlsfs's server, the Whisper server on GPU 0, Hermes on the Mac mini at 9119 — all are load-bearing and all fail silently. A trivial tailnet status check (ping each port, write one line) running on mlsfs would catch outages before a person does.
+**Repo-side gaps are unchanged from the first note.** No machine-checkable manifest against the `apps/nt4me2` sew-path convention (book × chapter × {kjv,bsb} × {greekon,greekoff} × {british,american} plus fragments); `serve.py` on the `house-disk-audio` branch advertises `Range` in CORS but `SimpleHTTPRequestHandler` never serves byte ranges, and its default `--root I:\` exposes the whole share to the tailnet; and there is no heartbeat for the must-stay-up ports, of which the survey now lists four — Whisper 8080, house audio 8765, Hermes 9119, FreeToken 1919 — plus the loaded `gpt-oss:120b` on tower1.
 
-## 2. What I would change after the NT audio finishes
+**Minor:** upthread64's RX 580 contributes nothing to this workload; its usable part is the 3060 Ti (8 GB). MartyNPC1 is correctly out of the inference picture.
 
-**Run a Whisper QC pass over the finished audio before anything new starts.** GPUs 1–7 become free, GPU 0 already runs Whisper. Point batch Whisper at every finished mp3 in `I:\house-disk-audio\nt\audio\`, transcribe, and diff against the Berean/KJV source text. The player's own rules ("no stub, no tone, no substitute") assume the files that exist are right; this is the only way to know that at scale, and it flags bad sews before Kimberly wires them live. It's also the single best match between what this fleet has (lots of independent 10 GB GPUs) and what the repo actually needs.
+## 2. What I would change after the New Testament audio finishes (for discussion, not application)
 
-**Use the 8×3080 as eight independent single-GPU workers, not one glued-together big machine.** PCIe gen 2 with no NVLink punishes anything that needs inter-GPU bandwidth, and punishes nothing that doesn't. Independent workers — Whisper QC, further Kokoro batches (the fragment matrix has many empty slots: exegete voices, OT refs, Westminster/CCC across books), embeddings, or an 8B-class model per GPU (the issue already notes Qwen3-8B needs no tensor split on these cards) — get full value from the box as-is.
+**Whisper QC pass first.** The queue is nearly done (one file rendering at survey time, 1 John 5 American). Once it finishes, point batch Whisper at GPUs 1–7, transcribe every finished mp3 in `I:\house-disk-audio\nt\audio\`, and diff against the Berean/KJV source text. The player's "no stub, no substitute" rules assume existing files are right; this verifies it at scale before Kimberly wires `live.json`.
 
-**Add the backup job and the manifest from §1.** Both are a few lines, both protect months of GPU time.
+**Second copy of the finished audio**, per §1 — a scheduled one-way copy from mlsfs I: to 3080a D: or a tower2 volume.
 
-**If Hermes needs a local model endpoint, tower3 is the right host for it** — one 3080, 64 GB RAM, 12 cores; a single-GPU 8B-class model there serves Hermes without touching the 8×3080 box or competing with `gpt-oss:120b` on tower1.
+**Rebalance storage.** Move cold/archive data off tower1's and upthread64's full volumes onto mlsfs (I: or S:) or nimo128's 32 TB D: over the tailnet. This un-cramps the two 24-core/48-thread Threadrippers, which are the fleet's best CPU workers and currently its most disk-starved machines.
+
+**Keep the 8×3080 as eight independent single-GPU workers.** PCIe gen 2 with no NVLink punishes anything that needs inter-GPU traffic and nothing that doesn't. Independent Kokoro batches (the fragment matrix still has empty exegete / OT-ref / Westminster / CCC slots), Whisper QC, embeddings, or an 8B-class model per GPU all fit 10 GB cards perfectly.
+
+**If Hermes needs a local model endpoint, the full survey changes the best answer.** tower2's RTX 4080 SUPER (16 GB) is now clearly the best inference GPU in the fleet and is otherwise lightly used — a fast 8–14B class model there serves Hermes well, coexisting with FreeToken and the S:/E: layout. The Mac mini M4 Pro (48 GB unified, 20 GPU cores) comfortably runs ~30B-class quantized models via MLX/llama.cpp if Martin prefers Hermes's model on Hermes's own machine. Tower3 (one 3080, offline at survey) drops to spare.
+
+**Manifest and heartbeat**, as in the first note: a checked-in expected-file manifest plus a tiny tailnet status check (mlsfs pinging the four service ports and writing one line).
 
 ## 3. What I would not change
 
-- GPU 0 stays on Whisper; the Kokoro queue runs untouched to completion; no second job on GPUs 1–7 until then.
-- The mlsfs server stays Tailscale-only on 8765, never bound to the LAN, never stopped. The refuse-to-bind-outside-100.64.0.0/10 check in `serve.py` is correct and should stay.
-- AWS, DNS, and livingwords stay exactly as they are; live audio on S3 `nt4me2` stays with Kimberly, as the README already states.
-- Mac mini doesn't reboot; Hermes stays on 9119 with Nous GLM 5.3 Flash as default. MartyNPC1's composer default stays.
-- tower1 keeps `gpt-oss:120b` loaded; tower2 keeps work on `S:` and Ollama models on `E:\ollama\models`; nimo128 keeps serving Qwen 72B and Mark is not redone.
-- Cursor stays the coding path. Nothing above replaces it.
+- GPU 0 stays on Whisper; the Kokoro queue runs untouched to completion; no second job on GPUs 1–7 until it is done.
+- The mlsfs house audio server stays Tailscale-only on 8765, never bound to the LAN, never stopped; `serve.py`'s refuse-to-bind-outside-100.64.0.0/10 check stays.
+- AWS, DNS, and livingwords stay as they are; live audio on S3 `nt4me2` stays with Kimberly.
+- Mac mini does not reboot (FileVault); Hermes stays on 9119 with Nous GLM 5.3 Flash as default. MartyNPC1 keeps no local Llama and never runs Ollama.
+- tower1 keeps `gpt-oss:120b` loaded; tower2 keeps work files on `S:\GrokBot` / `S:\Hermes`, Ollama models on `E:\ollama\models`, nothing on C:, and FreeToken on 1919.
+- nimo128 keeps its local Qwen 72B; Mark's Greek-on redo is done and is not redone.
+- Cursor stays the coding path; nothing above replaces it.
+- No machine is changed from the survey itself, and no recommendation here is applied until Martin discusses it. Nothing is said about WIN-DL8TC2NPBCM.
 
 ## 4. Is an 8-bit 70B on vLLM across the 3080s the right next use?
 
-**No — it fits, but it's the wrong next use of that box.** Three reasons:
+**Still no — with one correction and one strengthened alternative.**
 
-1. **No headroom.** ~70 GB of weights in 80 GB of VRAM leaves roughly 1.2 GB per card for CUDA context, activations, and KV cache combined. vLLM's whole value is batched serving with a big KV cache; here you'd get batch-of-one and a short context. The "4-bit only fills about half" framing treats the empty half as waste — it isn't. At 4-bit, the leftover ~40 GB *is* the KV cache and concurrency. If a 70B experiment happens on this box at all, 4-bit will run visibly better than 8-bit.
-2. **The interconnect.** Tensor parallelism across 8 cards does synchronized all-reduces every layer, per token. On PCIe gen 2 with no NVLink or P2P, that's the bottleneck — expect low single-digit tokens/sec. Also note 3080s are Ampere: no FP8, so "8-bit" means INT8/GPTQ-class quantization, whose vLLM kernels are the less-optimized path.
-3. **It duplicates nimo128.** A local Qwen 72B already exists in the fleet. A second slow 70B-class endpoint adds little, while the eight-independent-workers shape (Whisper QC, Kokoro fragments, 8B models) adds things the repo actually needs and matches the hardware's real strengths.
+The correction: storage is no longer an objection. D: on 3080a holds 70 GB of weights many times over. The remaining objections stand and are decisive:
 
-So: finish the Kokoro queue, run the Whisper QC pass, stand up the backup and the manifest, and keep the 8×3080 as a batch farm. Treat the 8-bit 70B as an experiment to run once — measured, not assumed — only after the host gets RAM and NVMe, and with the 4-bit variant tested alongside it.
+1. **No headroom.** ~70 GB of weights in 80 GB of VRAM leaves ~1.2 GB per card for CUDA context, activations, and KV cache. vLLM's value is batched serving with a large KV cache; this configuration gets batch-of-one and a short context. At 4-bit the leftover ~40 GB *becomes* KV cache and concurrency — "only fills half" is the feature, not the flaw.
+2. **The interconnect.** Tensor parallelism across eight cards does synchronized all-reduces every layer, per token, over PCIe gen 2 with no NVLink or P2P: expect low single-digit tokens/sec. And 3080s are Ampere — no FP8 — so "8-bit" means INT8/GPTQ-class quantization on vLLM's less-optimized kernels.
+3. **The host.** Four cores and 16 GB at 2133 is below vLLM's comfort for an engine managing eight workers.
+
+The strengthened alternative: the full fleet shows better homes for 70B-class work than TP=8 on this box. nimo128 (64 GB, Ryzen AI MAX+ 395) already runs Qwen 72B — slower CPU/iGPU inference, but standing. If a faster NVIDIA-backed 70B is wanted, tower1 — 128 GB of DDR4-3600 plus two 3080s — would run a 4-bit 70B with partial GPU offload (llama.cpp/Ollama) likely as well as or better than 8-bit TP=8 over gen-2 risers, though it must coexist with the locked `gpt-oss:120b`, which makes it a scheduling question for Martin rather than a recommendation.
+
+So the shape I'd argue for: finish the queue, run the Whisper QC pass, stand up the second copy, the manifest, and the heartbeat, rebalance the full disks toward mlsfs/nimo128, and keep the 8×3080 as a batch farm of eight independent workers. Treat the 8-bit 70B as a one-off measured experiment — 4-bit tested alongside it — only after the host question (RAM, and XMP if Martin approves BIOS changes) is settled, and only after Martin has discussed all of the above.
