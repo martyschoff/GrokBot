@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Hebrews 12",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Hebrews, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Hebrews, chapter 12. In his Commentary on the Epistle to the Hebrews, in the John Owen translation, Calvin writes at Hebrews 12, verse 1: This conclusion is, as it were, an epilogue to the former chapter, by which he shows the end for which he gave a catalogue of the saints who excelled in faith under the Law, even that every one should be prepared to imitate them; and he calls a large multitude metaphorically a cloud, for he sets what is dense in opposition to what is thinly scattered. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 11.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Hebrews",
+    "translator": "John Owen",
+    "at": "Hebrews 12:1",
+    "ccel_volume": "calcom44"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 11,
+    "section": 9,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

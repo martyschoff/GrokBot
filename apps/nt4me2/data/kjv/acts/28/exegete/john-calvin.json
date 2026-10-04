@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 28",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 28. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 28, verse 1: That doleful spectacle is described in the beginning of the chapter, when so many men being wet, and also all berayed with the foam and filth of the sea, and stiff with cold, did with much ado crawl to the shore; for that was all one as if they had been cast up by the sea to die some other death. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 13.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 28:1",
+    "ccel_volume": "calcom37"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 13,
+    "section": 15,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

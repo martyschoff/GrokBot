@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Mark 11",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Mark, chapter 11. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Mark 11, verse 25: Here Christ only explains the reason why that condition was added, Forgive us, as we forgive The reason is, that God will not be ready to hear us, unless we also show ourselves ready to grant forgiveness to those who have offended us. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 20.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Mark 11:25",
+    "ccel_volume": "calcom31"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 20,
+    "section": 11,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

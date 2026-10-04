@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Mark 9",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Mark, chapter 9. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Mark 9, verse 41: He who loveth father or mother As it is exceedingly harsh, and is contrary to natural feelings, to make enemies of those who ought to have been in closest alliance with us, so Christ now says that we cannot be his disciples on any other condition. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 14.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Mark 9:41",
+    "ccel_volume": "calcom31"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 14,
+    "section": 7,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

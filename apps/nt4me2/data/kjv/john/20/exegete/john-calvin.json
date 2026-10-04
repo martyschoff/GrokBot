@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 20",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 20. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 20, verse 1: Now, on the first day of the week. As the resurrection of Christ is the most important article of our faith, and without it the hope of eternal life is extinguished, for this reason the Evangelists are the more careful to prove it, as John here collects many proofs, in order to assure us that Christ is risen from the dead. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 19.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 20:1",
+    "ccel_volume": "calcom35"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 19,
+    "section": 7,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

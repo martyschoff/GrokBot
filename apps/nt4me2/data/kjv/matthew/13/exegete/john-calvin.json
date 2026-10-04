@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Matthew 13",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Matthew, chapter 13. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Matthew 13, verse 1: What I have here introduced from Luke belongs, perhaps, to another time; but I saw no necessity for separating what he has placed in immediate connection. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 24.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Matthew 13:1",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 24,
+    "section": 13,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

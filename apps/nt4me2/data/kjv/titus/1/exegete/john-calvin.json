@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Titus 1",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to Timothy, Titus, and Philemon, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Titus, chapter 1. In his Commentary on the Epistles to Timothy, Titus, and Philemon, in the William Pringle translation, Calvin writes at Titus 1, verse 1: A servant of God This extended and laborious commendation of his apostleship shows that Paul had in view the whole Church, and not Titus alone; for his apostleship was not disputed by Titus, and Paul is in the habit of proclaiming the titles of his calling, in order to maintain his authority. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 3.",
+  "cite": {
+    "work": "Commentary on the Epistles to Timothy, Titus, and Philemon",
+    "translator": "William Pringle",
+    "at": "Titus 1:1",
+    "ccel_volume": "calcom43"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 3,
+    "section": 6,
+    "citations_of_this_chapter": 5,
+    "translator": "Henry Beveridge"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Thessalonians 2",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Philippians, Colossians, and Thessalonians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Thessalonians, chapter 2. In his Commentary on Philippians, Colossians, and Thessalonians, in the John Pringle translation, Calvin writes at First Thessalonians 2, verse 1: He now, leaving out of view the testimony of other Churches, reminds the Thessalonians of what they had themselves experienced, and explains at large in what way he, and in like manner the two others, his associates, had conducted themselves among them, inasmuch as this was of the greatest importance for confirming their faith. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 25.",
+  "cite": {
+    "work": "Commentary on Philippians, Colossians, and Thessalonians",
+    "translator": "John Pringle",
+    "at": "1 Thessalonians 2:1",
+    "ccel_volume": "calcom42"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 25,
+    "section": 10,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

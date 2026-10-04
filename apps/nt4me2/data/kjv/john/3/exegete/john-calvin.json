@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 3",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 3. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 3, verse 1: Now there was a man of the Pharisees. In the person of Nicodemus the Evangelist now exhibits to our view how vain and fleeting was the faith of those who, having been excited by miracles, suddenly professed to be the disciples of Christ. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 3.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 3:1",
+    "ccel_volume": "calcom34"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 3,
+    "section": 1,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

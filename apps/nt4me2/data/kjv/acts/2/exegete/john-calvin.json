@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 2",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 2. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 2, verse 1: And when. To be fulfilled is taken in this place for to come. For Luke beareth record again of their perseverance, when he saith that they stood all in one place until the time which was set them. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 16.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 2:1",
+    "ccel_volume": "calcom36"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 16,
+    "section": 11,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

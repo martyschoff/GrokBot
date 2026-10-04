@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Philippians 2",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Philippians, Colossians, and Thessalonians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Philippians, chapter 2. In his Commentary on Philippians, Colossians, and Thessalonians, in the John Pringle translation, Calvin writes at Philippians 2, verse 1: If there is therefore any consolation. There is an extraordinary tenderness in this exhortation, in which he entreats by all means the Philippians mutually to cherish harmony among themselves, lest, in the event of their being torn asunder by intestine contentions, they should expose themselves to the impostures of the false apostles. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 13.",
+  "cite": {
+    "work": "Commentary on Philippians, Colossians, and Thessalonians",
+    "translator": "John Pringle",
+    "at": "Philippians 2:1",
+    "ccel_volume": "calcom42"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 13,
+    "section": 11,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

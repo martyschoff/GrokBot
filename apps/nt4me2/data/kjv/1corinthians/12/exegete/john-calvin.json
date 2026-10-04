@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Corinthians 12",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Corinthians, chapter 12. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at First Corinthians 12, verse 1: Now concerning spiritual things. He goes on to correct another fault. As the Corinthians abused the gifts of God for ostentation and show, and love was little, if at all, regarded, he shows them for what purpose believers are adorned by God with spiritual gifts — for the edification of their brethren. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 13.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "1 Corinthians 12:1",
+    "ccel_volume": "calcom39"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 13,
+    "section": 14,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

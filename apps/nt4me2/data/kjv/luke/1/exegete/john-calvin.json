@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Luke 1",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Luke, chapter 1. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Luke 1, verse 1: Luke is the only Evangelist who makes a preface to his Gospel, for the purpose of explaining briefly the motive which induced him to write. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 14.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Luke 1:1",
+    "ccel_volume": "calcom31"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 14,
+    "section": 4,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

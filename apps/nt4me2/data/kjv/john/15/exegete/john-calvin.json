@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 15",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 15. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 15, verse 1: I am the true Vine. The general meaning of this comparison is, that we are, by nature, barren and dry, except in so far as we have been engrafted into Christ, and draw from him a power which is new, and which does not proceed from ourselves. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 22.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 15:1",
+    "ccel_volume": "calcom35"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 22,
+    "section": 3,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

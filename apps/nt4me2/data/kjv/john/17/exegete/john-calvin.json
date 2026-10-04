@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 17",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 17. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 17, verse 1: These words spake Jesus. After having preached to the disciples about bearing the cross, the Lord exhibited to them those consolations, by relying on which they would be enabled to persevere. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 13.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 17:1",
+    "ccel_volume": "calcom35"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 13,
+    "section": 8,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

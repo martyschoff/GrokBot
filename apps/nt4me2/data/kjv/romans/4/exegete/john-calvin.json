@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Romans 4",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Romans, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Romans, chapter 4. In his Commentary on the Epistle to the Romans, in the John Owen translation, Calvin writes at Romans 4, verse 1: This is a confirmation by example; and it is a very strong one, since all things are alike with regard to the subject and the person; for he was the father of the faithful, to whom we ought all to be conformed; and there is also but one way and not many ways by which righteousness may be obtained by all. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 11.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Romans",
+    "translator": "John Owen",
+    "at": "Romans 4:1",
+    "ccel_volume": "calcom38"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 11,
+    "section": 4,
+    "citations_of_this_chapter": 9,
+    "translator": "Henry Beveridge"
+  }
+}

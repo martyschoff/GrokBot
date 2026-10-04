@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 John 5",
+  "source": "Public domain. Consolidated from John Calvin, Commentaries on the Catholic Epistles, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First John, chapter 5. In his Commentaries on the Catholic Epistles, in the John Owen translation, Calvin writes at First John 5, verse 1: Whosoever believeth He confirms by another reason, that faith and brotherly love are united; for since God regenerates us by faith he must necessarily be loved by us as a Father; and this love embraces all his children. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 5.",
+  "cite": {
+    "work": "Commentaries on the Catholic Epistles",
+    "translator": "John Owen",
+    "at": "1 John 5:1",
+    "ccel_volume": "calcom45"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 5,
+    "section": 11,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

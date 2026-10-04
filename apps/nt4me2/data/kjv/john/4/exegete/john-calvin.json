@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 4",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 4. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 4, verse 1: When, therefore, the Lord knew. The Evangelist, intending now to give an account of the conversation which Christ had with a Samaritan woman, begins with explaining the cause of his journey. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 5.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 4:1",
+    "ccel_volume": "calcom34"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 5,
+    "section": 13,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 10",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 10. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 10, verse 1: Luke passeth over now unto a worthy history, to wit, that God vouchsafeth to advance a stranger, and one uncircumcised, unto singular honor above all the Jews, because he doth both send his angel unto him, and for his sake bringeth Peter to Cesarea, that he may instruct him in the gospel. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 17.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 10:1",
+    "ccel_volume": "calcom36"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 17,
+    "section": 4,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

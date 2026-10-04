@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Thessalonians 3",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Philippians, Colossians, and Thessalonians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Thessalonians, chapter 3. In his Commentary on Philippians, Colossians, and Thessalonians, in the John Pringle translation, Calvin writes at First Thessalonians 3, verse 1: Wherefore, when we could no longer endure. By the detail which follows, he assures them of the desire of which he had spoken. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 5.",
+  "cite": {
+    "work": "Commentary on Philippians, Colossians, and Thessalonians",
+    "translator": "John Pringle",
+    "at": "1 Thessalonians 3:1",
+    "ccel_volume": "calcom42"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 5,
+    "section": 6,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Corinthians 4",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Corinthians, chapter 4. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at First Corinthians 4, verse 1: Let a man so account of us As it was a matter of no little importance to see the Church in this manner torn by corrupt factions, from the likings or dislikings that were entertained towards individuals, he enters into a still more lengthened discussion as to the ministry of the word. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 5.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "1 Corinthians 4:1",
+    "ccel_volume": "calcom39"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 5,
+    "section": 2,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

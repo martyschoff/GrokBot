@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "2 Corinthians 10",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Second Corinthians, chapter 10. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at Second Corinthians 10, verse 1: Having finished his exhortation, he now proceeds partly to refute the calumnies with which he had been defamed by the false apostles, and partly to repress the insolence of certain wicked persons, who could not bear to be under restraint. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 8.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "2 Corinthians 10:1",
+    "ccel_volume": "calcom40"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 8,
+    "section": 1,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

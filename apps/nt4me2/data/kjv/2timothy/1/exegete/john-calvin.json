@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "2 Timothy 1",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to Timothy, Titus, and Philemon, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Second Timothy, chapter 1. In his Commentary on the Epistles to Timothy, Titus, and Philemon, in the William Pringle translation, Calvin writes at Second Timothy 1, verse 1: Paul an Apostle From the very preface we already perceive that Paul had not in view Timothy alone; other wise he would not have employed such lofty titles in asserting his apostleship; for what purpose would it have served to employ these ornaments of language in writing to one who was fully convinced of the fact? In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 25.",
+  "cite": {
+    "work": "Commentary on the Epistles to Timothy, Titus, and Philemon",
+    "translator": "William Pringle",
+    "at": "2 Timothy 1:1",
+    "ccel_volume": "calcom43"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 25,
+    "section": 4,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

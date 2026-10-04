@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 1",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 1. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 1, verse 1: As to the Evangelist calling the Son of God the Speech, the simple reason appears to me to be, first, because he is the eternal Wisdom and Will of God; and, secondly, because he is the lively image of His purpose; for, as Speech is said to be among men the image of the mind, so it is not inappropriate to apply this to God, and to say that He reveals himself to us by his Speech. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 13.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 1:1",
+    "ccel_volume": "calcom34"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 13,
+    "section": 11,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

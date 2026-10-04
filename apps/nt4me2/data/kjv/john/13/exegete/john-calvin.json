@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 13",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 13. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 13, verse 1: Before the feast of the passover. John intentionally passes by many things which, he knew, had been related by Matthew and others. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 22.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 13:1",
+    "ccel_volume": "calcom35"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 22,
+    "section": 7,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

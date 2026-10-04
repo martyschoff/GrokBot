@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Corinthians 9",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Corinthians, chapter 9. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at First Corinthians 9, verse 1: Am I not free? He confirms by facts what he had stated immediately before, — that he would rather never taste of flesh during his whole life, than give occasion of stumbling to a brother, and, at the same time, he shows that he requires nothing more from them than what he had himself practiced. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 14.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "1 Corinthians 9:1",
+    "ccel_volume": "calcom39"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 14,
+    "section": 15,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

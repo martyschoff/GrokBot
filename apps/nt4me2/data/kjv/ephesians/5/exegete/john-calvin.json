@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Ephesians 5",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Galatians and Ephesians, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Ephesians, chapter 5. In his Commentary on Galatians and Ephesians, in the William Pringle translation, Calvin writes at Ephesians 5, verse 1: Be ye therefore followers. The same principle is followed out and enforced by the consideration that children ought to be like their father. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 6.",
+  "cite": {
+    "work": "Commentary on Galatians and Ephesians",
+    "translator": "William Pringle",
+    "at": "Ephesians 5:1",
+    "ccel_volume": "calcom41"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 6,
+    "section": 5,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

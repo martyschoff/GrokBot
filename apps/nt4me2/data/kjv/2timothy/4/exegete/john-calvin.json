@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "2 Timothy 4",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to Timothy, Titus, and Philemon, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Second Timothy, chapter 4. In his Commentary on the Epistles to Timothy, Titus, and Philemon, in the William Pringle translation, Calvin writes at Second Timothy 4, verse 1: I charge thee, therefore, before God and the Lord Jesus Christ It is proper to observe carefully the word therefore, by means of which he appropriately connects Scripture with preaching. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 5.",
+  "cite": {
+    "work": "Commentary on the Epistles to Timothy, Titus, and Philemon",
+    "translator": "William Pringle",
+    "at": "2 Timothy 4:1",
+    "ccel_volume": "calcom43"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 5,
+    "section": 2,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Luke 19",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Luke, chapter 19. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Luke 19, verse 1: This shows how little attention Luke paid to observing the order of dates; for, after having detailed the miracle, he now relates what happened in the city of Jericho He tells us that, while Christ presented himself to the view of all, as he went along the streets, Zaccheus alone was very desirous to see him. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 3.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Luke 19:1",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 3,
+    "section": 11,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

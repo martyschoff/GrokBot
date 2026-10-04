@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Corinthians 7",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Corinthians, chapter 7. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at First Corinthians 7, verse 1: As he had spoken of fornication, he now appropriately proceeds to speak of marriage which is the remedy for avoiding fornication. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 8.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "1 Corinthians 7:1",
+    "ccel_volume": "calcom39"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 8,
+    "section": 42,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

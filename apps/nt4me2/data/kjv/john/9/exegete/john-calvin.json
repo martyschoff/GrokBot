@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 9",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 9. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 9, verse 1: Jesus saw a man blind. In this chapter, the Evangelist describes the restoration of sight to the blind man, at the same time mingling doctrine, to point out the fruit of the miracle. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 17.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 9:1",
+    "ccel_volume": "calcom34"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 17,
+    "section": 1,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

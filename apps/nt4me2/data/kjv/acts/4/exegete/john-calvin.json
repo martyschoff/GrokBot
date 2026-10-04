@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 4",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 4. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 4, verse 1: And as they spoke Hereby it appeareth how watchful the wicked be, because they are always ready at an inch to stop the mouth of the servants of Christ. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 18.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 4:1",
+    "ccel_volume": "calcom36"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 18,
+    "section": 1,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

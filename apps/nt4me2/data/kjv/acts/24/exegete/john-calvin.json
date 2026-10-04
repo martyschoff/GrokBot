@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 24",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 24. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 24, verse 1: Seeing Ananias goeth down to Cesarea to accuse Paul, it maketh the conjecture more probable, which I brought before touching his priesthood. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 19.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 24:1",
+    "ccel_volume": "calcom37"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 19,
+    "section": 16,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 19",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 19. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 19, verse 1: Luke showeth here that the Church of Ephesus was not only confirmed and increased by Paul's return, but also that there was a miracle wrought there, because the visible graces of the Spirit were given to certain rude and new disciples. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 15.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 19:1",
+    "ccel_volume": "calcom37"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 15,
+    "section": 8,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

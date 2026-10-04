@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Matthew 19",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Matthew, chapter 19. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Matthew 19, verse 1: Master, we saw one. Hence it is evident that the name of Christ was at that time so celebrated, that persons who were not of the number of his intimate disciples used that name, or perhaps even abused it, for I will not venture to avouch any thing on this point as certain. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 8.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Matthew 19:1",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 8,
+    "section": 12,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

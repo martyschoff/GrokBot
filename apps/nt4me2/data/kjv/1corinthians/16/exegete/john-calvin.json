@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Corinthians 16",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Corinthians, chapter 16. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at First Corinthians 16, verse 1: But concerning the collection Luke relates (Acts 11:28) that the prediction of Agabus, foretelling that there would be a famine under Claudius Caesar, gave occasion for alms being collected by the saints, with the view of affording help to the brethren in Jerusalem. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 17.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "1 Corinthians 16:1",
+    "ccel_volume": "calcom40"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 17,
+    "section": 11,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

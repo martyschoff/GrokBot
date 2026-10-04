@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Luke 2",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Luke, chapter 2. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Luke 2, verse 1: Luke relates how it happened, that Christ was born in the city of Bethlehem, as his mother was living at a distance from her home, when she was approaching to her confinement. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 14.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Luke 2:1",
+    "ccel_volume": "calcom31"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 14,
+    "section": 8,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

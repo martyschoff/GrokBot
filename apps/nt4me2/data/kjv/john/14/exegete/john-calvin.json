@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 14",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 14. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 14, verse 1: Let not your heart be troubled. Not without good reason does Christ confirm his disciples by so many words, since a contest so arduous and so terrible awaited them; for it was no ordinary temptation, that soon afterwards they would see him hanging on the cross; a spectacle in which nothing was to be seen but ground for the lowest despair. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 13.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 14:1",
+    "ccel_volume": "calcom35"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 13,
+    "section": 17,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

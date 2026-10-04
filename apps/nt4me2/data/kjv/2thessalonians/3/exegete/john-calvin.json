@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "2 Thessalonians 3",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Philippians, Colossians, and Thessalonians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Second Thessalonians, chapter 3. In his Commentary on Philippians, Colossians, and Thessalonians, in the John Pringle translation, Calvin writes at Second Thessalonians 3, verse 1: Pray for us. Though the Lord powerfully aided him, and though he surpassed all others in earnestness of prayer, he nevertheless does not despise the prayers of believers, by which the Lord would have us aided. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 12.",
+  "cite": {
+    "work": "Commentary on Philippians, Colossians, and Thessalonians",
+    "translator": "John Pringle",
+    "at": "2 Thessalonians 3:1",
+    "ccel_volume": "calcom42"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 12,
+    "section": 5,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 5",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 5. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 5, verse 1: Those things which Luke hath reported hitherto did show that that company, which was gathered together under the name of Christ, was rather a company of angels than of men, Moreover, that was incredible virtue, that the rich men did despoil themselves of their own accord, not only of their money, but also of their land, that they might relieve the poor. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 3.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 5:1",
+    "ccel_volume": "calcom36"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 3,
+    "section": 19,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

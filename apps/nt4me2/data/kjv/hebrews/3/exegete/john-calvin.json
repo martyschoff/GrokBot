@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Hebrews 3",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Hebrews, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Hebrews, chapter 3. In his Commentary on the Epistle to the Hebrews, in the John Owen translation, Calvin writes at Hebrews 3, verse 1: He concludes the preceding doctrine with a necessary exhortation, that the Jews should attentively consider what sort of being and how great Christ is. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 8.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Hebrews",
+    "translator": "John Owen",
+    "at": "Hebrews 3:1",
+    "ccel_volume": "calcom44"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 8,
+    "section": 29,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

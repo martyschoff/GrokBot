@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Matthew 22",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Matthew, chapter 22. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Matthew 22, verse 1: And Jesus answering. Though Matthew relates this parable among other discourses which were delivered by Christ about the time of the last Passover, yet as he does not specify any particular time, and as Luke expressly affirms that Christ delivered this discourse while he sat at table in the house of a Pharisee, I have thought it better to follow this order. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 24.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Matthew 22:1",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 24,
+    "section": 6,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

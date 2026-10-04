@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "2 Corinthians 1",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Second Corinthians, chapter 1. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at Second Corinthians 1, verse 1: Paul an Apostle As to the reasons why he designates himself an Apostle of Christ, and adds that he has obtained this honor by the will of God, see the foregoing Epistle, where it has been observed that none are to be listened to but those, who have been sent by God, and speak from his mouth, and that, consequently, to secure authority for any one, two things are required — a call, and fidelity on the part of the person who is called, in the execution of his office. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 8.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "2 Corinthians 1:1",
+    "ccel_volume": "calcom40"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 8,
+    "section": 27,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

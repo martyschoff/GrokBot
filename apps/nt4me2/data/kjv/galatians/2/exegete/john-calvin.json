@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Galatians 2",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Galatians and Ephesians, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Galatians, chapter 2. In his Commentary on Galatians and Ephesians, in the William Pringle translation, Calvin writes at Galatians 2, verse 1: Fourteen years after. This cannot with certainty be affirmed to be the same journey mentioned by Luke. (Acts 15:2.) The connection of the history leads us rather to an opposite conclusion. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 19.",
+  "cite": {
+    "work": "Commentary on Galatians and Ephesians",
+    "translator": "William Pringle",
+    "at": "Galatians 2:1",
+    "ccel_volume": "calcom41"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 19,
+    "section": 12,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

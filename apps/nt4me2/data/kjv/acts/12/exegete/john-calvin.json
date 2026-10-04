@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 12",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 12. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 12, verse 1: Here followeth new persecution raised by Herod. We see that the Church had some short truce, that it might, as it were, by a short breathing, recover some courage against the time to come, and that it might then fight afresh. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 14.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 12:1",
+    "ccel_volume": "calcom36"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 14,
+    "section": 22,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

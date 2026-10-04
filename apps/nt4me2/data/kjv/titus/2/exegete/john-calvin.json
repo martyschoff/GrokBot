@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Titus 2",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to Timothy, Titus, and Philemon, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Titus, chapter 2. In his Commentary on the Epistles to Timothy, Titus, and Philemon, in the William Pringle translation, Calvin writes at Titus 2, verse 1: But speak thou the things which become sound doctrine He points out the remedy for driving away fables, namely, that Titus should devote himself to edification. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 12.",
+  "cite": {
+    "work": "Commentary on the Epistles to Timothy, Titus, and Philemon",
+    "translator": "William Pringle",
+    "at": "Titus 2:1",
+    "ccel_volume": "calcom43"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 12,
+    "section": 4,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

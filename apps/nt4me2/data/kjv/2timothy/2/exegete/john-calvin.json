@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "2 Timothy 2",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to Timothy, Titus, and Philemon, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Second Timothy, chapter 2. In his Commentary on the Epistles to Timothy, Titus, and Philemon, in the William Pringle translation, Calvin writes at Second Timothy 2, verse 1: Be strong in the grace As he had formerly commanded him to keep, by the Spirit, that which was committed to him, so now he likewise enjoins him \"to be strengthened in grace.\" By this expression he intends to shake off sloth and indifference; for the flesh is so sluggish, that even those who are endued with eminent gifts are found to slacken in the midst of their course, if they be not frequently aroused. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 15.",
+  "cite": {
+    "work": "Commentary on the Epistles to Timothy, Titus, and Philemon",
+    "translator": "William Pringle",
+    "at": "2 Timothy 2:1",
+    "ccel_volume": "calcom43"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 15,
+    "section": 8,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

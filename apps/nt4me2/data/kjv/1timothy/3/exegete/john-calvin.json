@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Timothy 3",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to Timothy, Titus, and Philemon, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Timothy, chapter 3. In his Commentary on the Epistles to Timothy, Titus, and Philemon, in the William Pringle translation, Calvin writes at First Timothy 3, verse 1: It is a true saying Chrysostom thinks, that this is the conclusion of the preceding doctrine. But I do not approve of the opinion; for Paul commonly makes use of this form of expression as a prelude to what he is about to introduce, Besides, in the former discourse there was no need of so strong an affirmation; but what he is now about to say, is somewhat more weighty. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 4.",
+  "cite": {
+    "work": "Commentary on the Epistles to Timothy, Titus, and Philemon",
+    "translator": "William Pringle",
+    "at": "1 Timothy 3:1",
+    "ccel_volume": "calcom43"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 4,
+    "section": 7,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

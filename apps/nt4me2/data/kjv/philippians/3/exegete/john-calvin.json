@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Philippians 3",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Philippians, Colossians, and Thessalonians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Philippians, chapter 3. In his Commentary on Philippians, Colossians, and Thessalonians, in the John Pringle translation, Calvin writes at Philippians 3, verse 1: Rejoice in the Lord This is a conclusion from what goes before, for as Satan never ceased to distress them with daily rumors, he bids them divest themselves of anxiety and be of good courage. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 25.",
+  "cite": {
+    "work": "Commentary on Philippians, Colossians, and Thessalonians",
+    "translator": "John Pringle",
+    "at": "Philippians 3:1",
+    "ccel_volume": "calcom42"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 25,
+    "section": 2,
+    "citations_of_this_chapter": 5,
+    "translator": "Henry Beveridge"
+  }
+}

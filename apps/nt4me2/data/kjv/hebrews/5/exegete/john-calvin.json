@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Hebrews 5",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Hebrews, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Hebrews, chapter 5. In his Commentary on the Epistle to the Hebrews, in the John Owen translation, Calvin writes at Hebrews 5, verse 1: He compares Christ with the Levitical priests, and he teaches us what is the likeness and the difference between them; and the object of the whole discourse is, to show what Christ's office really is, and also to prove that whatever was ordained under the law was ordained on his account. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 17.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Hebrews",
+    "translator": "John Owen",
+    "at": "Hebrews 5:1",
+    "ccel_volume": "calcom44"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 17,
+    "section": 9,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

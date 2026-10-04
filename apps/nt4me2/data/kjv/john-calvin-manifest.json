@@ -1,0 +1,460 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "books": {
+    "matthew": {
+      "label": "Matthew",
+      "chapters": 28,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "silent": []
+    },
+    "mark": {
+      "label": "Mark",
+      "chapters": 16,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "silent": []
+    },
+    "luke": {
+      "label": "Luke",
+      "chapters": 24,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "silent": []
+    },
+    "john": {
+      "label": "John",
+      "chapters": 21,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "silent": []
+    },
+    "acts": {
+      "label": "Acts",
+      "chapters": 28,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "silent": []
+    },
+    "romans": {
+      "label": "Romans",
+      "chapters": 16,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "silent": []
+    },
+    "1corinthians": {
+      "label": "1 Corinthians",
+      "chapters": 16,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "silent": []
+    },
+    "2corinthians": {
+      "label": "2 Corinthians",
+      "chapters": 13,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "silent": []
+    },
+    "galatians": {
+      "label": "Galatians",
+      "chapters": 6,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "silent": []
+    },
+    "ephesians": {
+      "label": "Ephesians",
+      "chapters": 6,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "silent": []
+    },
+    "philippians": {
+      "label": "Philippians",
+      "chapters": 4,
+      "notes": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "silent": []
+    },
+    "colossians": {
+      "label": "Colossians",
+      "chapters": 4,
+      "notes": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "silent": []
+    },
+    "1thessalonians": {
+      "label": "1 Thessalonians",
+      "chapters": 5,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "silent": []
+    },
+    "2thessalonians": {
+      "label": "2 Thessalonians",
+      "chapters": 3,
+      "notes": [
+        1,
+        2,
+        3
+      ],
+      "silent": []
+    },
+    "1timothy": {
+      "label": "1 Timothy",
+      "chapters": 6,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "silent": []
+    },
+    "2timothy": {
+      "label": "2 Timothy",
+      "chapters": 4,
+      "notes": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "silent": []
+    },
+    "titus": {
+      "label": "Titus",
+      "chapters": 3,
+      "notes": [
+        1,
+        2,
+        3
+      ],
+      "silent": []
+    },
+    "philemon": {
+      "label": "Philemon",
+      "chapters": 1,
+      "notes": [
+        1
+      ],
+      "silent": []
+    },
+    "hebrews": {
+      "label": "Hebrews",
+      "chapters": 13,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "silent": []
+    },
+    "james": {
+      "label": "James",
+      "chapters": 5,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "silent": []
+    },
+    "1peter": {
+      "label": "1 Peter",
+      "chapters": 5,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "silent": []
+    },
+    "2peter": {
+      "label": "2 Peter",
+      "chapters": 3,
+      "notes": [
+        1,
+        2,
+        3
+      ],
+      "silent": []
+    },
+    "1john": {
+      "label": "1 John",
+      "chapters": 5,
+      "notes": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "silent": []
+    },
+    "2john": {
+      "label": "2 John",
+      "chapters": 1,
+      "notes": [],
+      "silent": [
+        1
+      ]
+    },
+    "3john": {
+      "label": "3 John",
+      "chapters": 1,
+      "notes": [],
+      "silent": [
+        1
+      ]
+    },
+    "jude": {
+      "label": "Jude",
+      "chapters": 1,
+      "notes": [],
+      "silent": [
+        1
+      ]
+    },
+    "revelation": {
+      "label": "Revelation",
+      "chapters": 22,
+      "notes": [],
+      "silent": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    }
+  },
+  "totals": {
+    "chapters": 260,
+    "notes": 235,
+    "silent": 25
+  }
+}

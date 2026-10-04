@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 19",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 19. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 19, verse 1: Then Pilate therefore took Jesus. Pilate adheres to his original intention; but to the former ignominy he adds a second, hoping that, when Christ shall have been scourged, the Jews will be satisfied with this light chastisement. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 16.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 19:1",
+    "ccel_volume": "calcom35"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 16,
+    "section": 9,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}
