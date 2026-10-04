@@ -27,6 +27,7 @@ const EXEGETE_VOICES = [
   { id: "henry-alford", label: "Henry Alford" },
   { id: "spurgeon", label: "Spurgeon" },
   { id: "wesley", label: "Wesley" },
+  { id: "john-calvin", label: "Calvin" },
   { id: "conservative-mixture", label: "Conservative Mixture of Experts" }
 ];
 let beliefs = "evangelical";

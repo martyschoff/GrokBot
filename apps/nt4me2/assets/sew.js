@@ -13,6 +13,7 @@
     "henry-alford",
     "spurgeon",
     "wesley",
+    "john-calvin",
     "conservative-mixture"
   ];
 
@@ -152,7 +153,8 @@
         "albert-barnes": "barnes",
         "henry-alford": "alford",
         "spurgeon": "spurgeon",
-        "wesley": "wesley"
+        "wesley": "wesley",
+        "john-calvin": "calvin"
       };
       const short = shortMap[id] || id;
       // American first when Voice:American — else British-only names remain the fallback.
