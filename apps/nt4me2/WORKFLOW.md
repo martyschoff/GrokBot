@@ -30,7 +30,7 @@ This is the workflow Kimberly and the fleet follow for the NT app (`ntapp`): the
 | House player | Settings toggles (tracks that should skip when a toggle is off), Beliefs filter (`tradition: rc` art pool on load and on a mid-session switch), art rotation, audio picks |
 | NT chrome (`apps/nt4me2/`) | Menu, Settings, Beliefs, Interpretation, book/chapter picker, Back/Next, Art Interpretation |
 | Content fixes | `pictures.json` tags, art filenames, chapter JSON, audio file mapping |
-| Interpretation cards | House player Academic and Religious modes for one named picture: Interpretation button green in both modes, card body loads, Beliefs filters still work, no AWS upload |
+| Interpretation cards | After Martin approves a named picture and it is installed: Interpretation button green in Academic and Religious modes, card body loads, Beliefs filters still work, no AWS upload. Before that approval the button stays off |
 
 ## CADev's coding role is unchanged
 
@@ -54,11 +54,15 @@ Run a card only for a painting Martin names, and only for the chapter he names. 
 
 House share only, until Martin says AWS. This pipeline has no AWS upload step.
 
-1. **Picture.** Save the picture under house interpret-weights (`I:\GrokBot\content\interpret-weights\`). The copy into the house-player pictures pool happens at install.
+**Martin lock (5 Oct 2026).** An interpretation card does not go live in the house player until Martin explicitly approves it. The words that count are approve, put in the app, or go live.
+
+1. **Picture.** Save the picture under house interpret-weights (`I:\GrokBot\content\interpret-weights\`). The copy into the house-player pictures pool is part of install, and install waits for Martin's approval.
 2. **Chapter draft.** If that chapter's draft is missing, run t2Research wrightstyle on tower2 / the house share. Drafts follow `I:\GrokBot\content\nt-wright-style\drafts\…`.
-3. **Both cards.** freeInterpret writes the Academic card and the Religious card into `I:\GrokBot\content\interpret-weights\<slug>\`: the academic `.md`, the card-w040 Religious `.md`, the jpg, and a weights entry.
-4. **Index.** Update `weights.json` on the interpret-weights folder (`I:\GrokBot\content\interpret-weights\weights.json`).
-5. **Install.** Put the pair on the house player (see Install below) so Settings → Interpretation, Academic and Religious, can open the cards.
+3. **Both cards, pending.** freeInterpret writes the Academic card and the Religious card into `I:\GrokBot\content\interpret-weights\<slug>\`: the academic `.md`, the card-w040 Religious `.md`, the jpg, and a weights entry. The verdict is `pending` (status is not `approved`).
+4. **Index.** Update `weights.json` on the interpret-weights folder (`I:\GrokBot\content\interpret-weights\weights.json`) with that pending verdict. This is the house-share index. It is not the house-player `data/art` indexes.
+5. **Show Martin.** Kimberly shows Martin both cards in chat, Academic and Religious, full text.
+6. **Hold.** Until Martin says approve, put in the app, or go live, the cards may stay on the house share as drafts. Do not mark them `approved` in the house-player `data/art` indexes. The Interpretation button stays off for that picture.
+7. **Install.** After that approval, install the pair and set it `approved` in the house player (Install below) so Settings → Interpretation, Academic and Religious, can open the cards.
 
 Recent named examples. These are examples, not an open queue:
 
@@ -72,11 +76,17 @@ Recent named examples. These are examples, not an open queue:
 
 ## Install: house player (interpret + picture)
 
-A finished card pair becomes live on the house player at `http://100.73.201.124:8765/house-player/?v=houseN`.
+Order: show Martin the full cards, then Martin approves, then install and approve in the player. The live player is `http://100.73.201.124:8765/house-player/?v=houseN`. A card is live there only after Martin has approved it and the steps under **Then install** are done.
+
+1. **Show.** Kimberly shows Martin the Academic card and the Religious card in chat, full text.
+2. **Martin approves.** Wait for Martin to say approve, put in the app, or go live. Until then the cards may exist on the house share as drafts, with verdict `pending` (status not `approved`). Do not mark them `approved` in `I:\house-player\data\art\interpretations.json` or `I:\house-player\data\art\religious-interpretations.json`. Do not set the player card `status` to `approved`. The Interpretation button stays off for that picture.
+3. **Then install.** After that approval, do the file steps below. That is when the player card `status` becomes `approved`, the house-player art indexes are added or updated, and `?v=` is bumped.
+
+**Then install** (only after step 2):
 
 1. **Picture file.** Copy the display/source jpg into `I:\house-player\data\pictures\religious\` with a stable filename.
 2. **Picture index.** Add an entry to `I:\house-player\data\pictures.json` under `albums.religious.images`. Fields: `file`, `src`, `title`, `artist`, `place`. Set `tradition` to `rc` only when Martin marks that picture RC.
-3. **Interpretation indexes.** Create or update `I:\house-player\data\art\interpretations.json` (Academic) and `I:\house-player\data\art\religious-interpretations.json` (Religious). The key must equal the `file` name from `pictures.json`. Academic value: `{ "status": "approved", "card": "interpretations/<slug>.json" }`. Religious value: `{ "status": "approved", "card": "religious/<slug>-card.json" }`.
-4. **Player JSON.** Convert the markdown cards into player JSON with the same fields as the existing academic mounts: `status`, `sources_header`, `body`, `citations`. `sources_header` is a list of strings. `body` is the card text; the player splits paragraphs on a blank line. Each citation may include `author`, `title`, `publication`, `date`, and `url`. Write the Academic card to `I:\house-player\data\art\interpretations\<slug>.json`. Write the Religious card to `I:\house-player\data\art\religious\<slug>-card.json`.
+3. **Player JSON.** Convert the markdown cards into player JSON with the same fields as the existing academic mounts: `status`, `sources_header`, `body`, `citations`. Set `status` to `approved` on both cards. `sources_header` is a list of strings. `body` is the card text; the player splits paragraphs on a blank line. Each citation may include `author`, `title`, `publication`, `date`, and `url`. Write the Academic card to `I:\house-player\data\art\interpretations\<slug>.json`. Write the Religious card to `I:\house-player\data\art\religious\<slug>-card.json`.
+4. **Interpretation indexes.** Create or update `I:\house-player\data\art\interpretations.json` (Academic) and `I:\house-player\data\art\religious-interpretations.json` (Religious). The key must equal the `file` name from `pictures.json`. Academic value: `{ "status": "approved", "card": "interpretations/<slug>.json" }`. Religious value: `{ "status": "approved", "card": "religious/<slug>-card.json" }`.
 5. **Cache key.** Bump `?v=houseN` (`index.html` / `live.json` / `now-live.json`, as used) so a reload is not stale.
-6. **QA.** CADev checks the install read-only before anyone tells Martin it is done. Same rule as **Always QA independently** above. Example pass criteria for the picture just installed: the Interpretation button is green in Academic mode and in Religious mode; the body loads; Beliefs filters still work; nothing was uploaded to AWS.
+6. **QA.** CADev checks the install read-only before anyone tells Martin it is done. Same rule as **Always QA independently** above. Example pass criteria after approval and install: the Interpretation button is green in Academic mode and in Religious mode; the body loads; Beliefs filters still work; nothing was uploaded to AWS. Before approval, the pass check for that picture is: the Interpretation button stays off, and those art indexes are not `approved`.
