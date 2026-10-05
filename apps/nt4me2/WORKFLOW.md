@@ -18,14 +18,27 @@ Harness changes means start or stop workers, remake bats, set the CUDA/ONNX prov
 
 **LOCKED:** Other bots talk to DESKTOP-TJ1RMNK only through Llama / local Ollama (status/ask). They do not run Shell or change the harness. Only Kimberly's bot entity on that machine uses Shell for harness changes.
 
-**Standing harness:**
+**Standing GPU layout:**
 
-- **GPU 0** — Whisper voice server.
-- **GPUs 1–7** — **seven** Kokoro workers (one chapter / one job per GPU; data parallel). Not Ollama layer-split for this lane.
+- **GPU 0** — Whisper voice server. Off during a Kokoro remake unless Martin wants ASR. The Whisper bat is parked under `D:\whisper\disabled-startup\`. Skip Whisper until Martin asks for ASR.
+- **GPUs 1–7** — **seven** Kokoro `nt_bake_worker` processes (one chapter / one job per GPU; data parallel). Not Ollama layer-split for this lane.
+- Clear Ollama and vLLM off GPUs 1–7 before starting remake bats.
 - When Kimberly's bot on the machine sets or changes that harness, she **remakes the bats** from her Shell on TJ1RMNK.
-- Current remake bake may run CPU ONNX until Kimberly applies the CUDA fork after a staging target finishes (`ONNX_PROVIDER=CUDAExecutionProvider` plus onnxruntime `preload_dlls` / nvidia PATH).
 
-**Qmanager (Q)** reports status and copies packs only. Qmanager does not start or stop GPU workers, load models, or change the harness layout.
+**CUDA is the standing bake path.** The worker forces `ONNX_PROVIDER=CUDAExecutionProvider` plus onnxruntime `preload_dlls` / nvidia PATH. A CPU-only fallback hard-fails with exit code 3. Smoke verified: the GPU shows `CUDA_OK` and VRAM rises (~1 GB model load).
+
+**Paths on the machine** (operational; not checked into this repo):
+
+- Worker: `C:\Users\AB\nt_bake_worker.py`
+- Normal launch: `C:\Users\AB\start-nt-bake-7gpu.bat` (skips files that already exist in out-staging)
+- Pre-CUDA script backups: `*.bak-pre-cuda` beside those files
+- Texts: `D:\kokoro-nt\texts`
+- Out staging: `D:\kokoro-nt\out-staging`
+- Kokoro venv and models: `D:\kokoro-stress-redo\`
+
+**Force remake.** When existing staging files must be rewritten (for example a commentary-bleed remake), launch the seven workers with `--force` so they remake instead of skipping. The normal bat without `--force` skips existing mp3s.
+
+**Qmanager (Q)** reports status and copies packs only. Qmanager does not start or stop GPU workers, load models, or change the harness layout. During Kimberly's harness work on TJ1, Qmanager stays away from harness start/stop and from `status.json`.
 
 **Exception (only when Martin says):** stop Whisper and use all eight GPUs for a vLLM / Llama tensor-parallel run. Otherwise do not steal cards 1–7 from Kokoro while the NT batch is the standing job.
 
@@ -33,7 +46,7 @@ Keep NT Kokoro going on GPUs 1–7 until Martin says suspend. On suspend, finish
 
 ### 2. How to read status
 
-Prefer **Kimberly's Shell on TJ1RMNK** for hard status: out-staging counts, `nvidia-smi`, and worker processes.
+Prefer **Kimberly's Shell on TJ1RMNK** for hard status: out-staging counts, `nvidia-smi`, worker processes, and worker logs.
 
 The LAN status page on port **8767** may be dead. Do not depend on it.
 
@@ -41,9 +54,34 @@ Do not invent GPU numbers from Ollama or llama. Those figures are not a measurem
 
 **martynpc1-coder** may still answer a read-only status ask if Kimberly asks. It is not the standing path for harness changes, and it is not the default for remake watch.
 
-### 3. After reboot, reconnect Grok Bot before harness work
+### 3. After reboot
 
-The Grok Bot desktop app may not auto-start after a reboot. Reconnect Grok Bot on DESKTOP-TJ1RMNK before any harness work (loading models, remaking bats, or changing which GPU runs Whisper or Kokoro).
+1. Start the Grok Bot desktop app if it did not auto-start. Reconnect Grok Bot on DESKTOP-TJ1RMNK before harness work.
+2. Kill leftover Ollama, vLLM, or a wrong harness if any are still on the cards.
+3. Start the seven Kokoro workers via `C:\Users\AB\start-nt-bake-7gpu.bat`. Use `--force` when existing staging files must be rewritten.
+4. Start Whisper on GPU 0 only when Martin wants ASR.
+
+### 4. Five-minute watch, then ASR and house
+
+While a CUDA remake bake is running, Kimberly runs a Grok Bot routine **"CUDA / 3080 bake 5-min check"** every 5 minutes (`@every 5m`).
+
+Each tick:
+
+- Count rewritten staging files against the total.
+- Confirm the seven workers are healthy (`CUDA_OK`, no `FAIL`).
+- Note book progress, and an ETA when it is useful.
+
+Brief Martin only on meaningful progress, or when the remake is DONE. Do not send a "no change" update.
+
+**DONE** means every target file has been rewritten and the workers have exited, or they are idle with no `FAIL`.
+
+When the remake is DONE:
+
+1. **ASR gate.** Check one chapter per remake book. Fail the gate on commentary bleed.
+2. **House overwrite/swap.** Put the staging packs on the mlsfs house serve root `I:\ntappserve`. Audio and the app shell stay on mlsfs. The public URL is livingwords.art, via the Cloudflare tunnel.
+3. Pause or delete the 5-minute check routine after ASR and the house overwrite are reported.
+
+**LOCKED 5 Oct 26 ~6:51 PM ET:** After the CUDA force remake finishes, Kimberly proceeds to ASR, then the house overwrite, without waiting for further Martin approval.
 
 ## Rule
 
