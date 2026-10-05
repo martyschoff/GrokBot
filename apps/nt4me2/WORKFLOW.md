@@ -56,6 +56,8 @@ House share only, until Martin says AWS. This pipeline has no AWS upload step.
 
 **Martin lock (5 Oct 2026).** An interpretation card does not go live in the house player until Martin explicitly approves it. The words that count are approve, put in the app, or go live.
 
+**Religious card style (5 Oct 2026, standing ban).** On Religious interpretation cards, never use "codebook", "not a codebook for the curious", or similar wording. Martin banned that forever. Prefer the passage's own language. On a Revelation card, use Revelation's own words.
+
 1. **Picture.** Save the picture under house interpret-weights (`I:\GrokBot\content\interpret-weights\`). The copy into the house-player pictures pool is part of install, and install waits for Martin's approval.
 2. **Chapter draft.** If that chapter's draft is missing, run t2Research wrightstyle on tower2 / the house share. Drafts follow `I:\GrokBot\content\nt-wright-style\drafts\…`.
 3. **Both cards, pending.** freeInterpret writes the Academic card and the Religious card into `I:\GrokBot\content\interpret-weights\<slug>\`: the academic `.md`, the card-w040 Religious `.md`, the jpg, and a weights entry. The verdict is `pending` (status is not `approved`).
