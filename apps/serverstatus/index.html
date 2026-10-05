@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset=utf-8>
+  <title>Martin Server Status</title>
+  <link rel=stylesheet href=assets/app.css>
+</head>
+<body>
+  <header>
+    <h1>Martin Server Status</h1>
+  </header>
+  <table id=board>
+    <thead>
+      <tr>
+        <th>name</th>
+        <th>up/down</th>
+        <th>whatsinuse</th>
+        <th>working on</th>
+        <th class=pc-only>cpuU</th>
+        <th class=pc-only>memU</th>
+        <th class=pc-only>VRAM</th>
+        <th class=pc-only>queue1</th>
+        <th class=pc-only>queue2</th>
+        <th class=pc-only>queue3</th>
+      </tr>
+    </thead>
+    <tbody id=rows></tbody>
+  </table>
+  <div id=clock></div>
+  <button id=refresh>Refresh</button>
+  <script src=assets/app.js defer></script>
+</body>
+</html>
