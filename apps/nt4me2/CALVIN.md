@@ -42,19 +42,15 @@ removed or replaced. Westminster and the RC Catechism keep their own slots.
 - No URLs in any spoken body. No pronunciation guides, so no stress
   apostrophes. No modern weapon metaphors in the framing.
 
-## How Kimberly cuts the audio (unchanged pipeline, new stem)
+## Audio
 
-This tree does not touch AWS, DNS, netfs, Kokoro, or GPU 0, and no existing
-audio is regenerated. When the Calvin bodies are cut to audio and mounted,
-the player probes the same convention paths as the other exegetes:
+The 235 spoken notes are already cut. They are not on the pack CDN. Selecting
+Calvin asks the tailnet house server (the same one that serves
+`I:\house-disk-audio`), and leaves Wesley and the other exegetes on their
+existing `/data/audio/` paths. AWS, DNS, and livingwords are unchanged.
 
-- `/data/audio/<stem><chapter>-exegete-calvin.m4a` (preferred, Safari-safe)
-- `/data/audio/<stem><chapter>-exegete-calvin.mp3`
-- `-american` variants first when Voice:American, e.g.
-  `/data/audio/galatians-1-exegete-calvin-american.mp3`
-- or a `fragments` key `exegete-john-calvin` in `now-live.json` / `live.json`.
-
-Until those files exist, selecting Calvin behaves like any other exegete with
-no audio: the slot is skipped — no stub, no tone, no substitute voice. For
-silent chapters the body is a short spoken line saying Calvin is silent;
-cut it or omit the file, either works (a missing file is skipped).
+- `http://100.73.201.124:8765/house-disk-audio/calvin/<book>/<stem><chapter>-exegete-calvin.mp3`
+- `1 Corinthians` files use the stem `1cor-` inside the folder `1corinthians`
+  (same for `2cor-` / `2corinthians`). Every other book folder matches its stem.
+- Revelation, 2 John, 3 John, and Jude are not requested. No file was invented
+  for them, and a missing file is skipped.

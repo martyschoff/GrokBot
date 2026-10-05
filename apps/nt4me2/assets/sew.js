@@ -92,6 +92,24 @@
     return { items: items, skipped: skipped };
   }
 
+
+  // Calvin mp3s live on the tailnet house server, not the pack CDN.
+  // Silent books have no file: Revelation, 2 John, 3 John, Jude.
+  function calvinHouseUrls(stem, chapter) {
+    const silent = {
+      "revelation-": true,
+      "2john-": true,
+      "3john-": true,
+      "jude-": true
+    };
+    if (!stem || !chapter || silent[stem]) return [];
+    const folder = stem === "1cor-" ? "1corinthians"
+      : stem === "2cor-" ? "2corinthians"
+      : stem.replace(/-$/, "");
+    const file = stem + chapter + "-exegete-calvin.mp3";
+    return ["http://100.73.201.124:8765/house-disk-audio/calvin/" + folder + "/" + file];
+  }
+
   function conventionUrls(stem, chapter, key, options) {
     if (!stem || !chapter || !key) return [];
     const opt = optsOf(options);
@@ -148,6 +166,7 @@
     }
     if (key.indexOf("exegete-") === 0) {
       const id = key.slice("exegete-".length);
+      if (id === "john-calvin") return calvinHouseUrls(stem, chapter);
       const shortMap = {
         "matthew-henry": "henry",
         "albert-barnes": "barnes",

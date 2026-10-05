@@ -148,17 +148,33 @@ function isLiveChapter(book, n) {
 }
 
 function audioStem(book) {
-  if (book === "matthew") return "matthew-";
-  if (book === "mark") return "mark-";
-  if (book === "luke") return "luke-";
-  if (book === "john") return "john-";
-  if (book === "acts") return "acts-";
-  if (book === "romans") return "romans-";
-  if (book === "1corinthians") return "1cor-";
-  if (book === "2corinthians") return "2cor-";
-  if (book === "galatians") return "galatians-";
-  if (book === "hebrews") return "hebrews-";
-  return "";
+  const stems = {
+    matthew: "matthew-",
+    mark: "mark-",
+    luke: "luke-",
+    john: "john-",
+    acts: "acts-",
+    romans: "romans-",
+    "1corinthians": "1cor-",
+    "2corinthians": "2cor-",
+    galatians: "galatians-",
+    ephesians: "ephesians-",
+    philippians: "philippians-",
+    colossians: "colossians-",
+    "1thessalonians": "1thessalonians-",
+    "2thessalonians": "2thessalonians-",
+    "1timothy": "1timothy-",
+    "2timothy": "2timothy-",
+    titus: "titus-",
+    philemon: "philemon-",
+    hebrews: "hebrews-",
+    james: "james-",
+    "1peter": "1peter-",
+    "2peter": "2peter-",
+    "1john": "1john-"
+  };
+  // Revelation, 2 John, 3 John, and Jude stay unstemmed: Calvin is silent there.
+  return stems[book] || "";
 }
 
 function artFile(item) {
