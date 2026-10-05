@@ -98,20 +98,128 @@ def fetch(ip, timeout):
 
 
 
-def place_loaded(use, work):
-    """A held model says loaded beside its name, not in working_on."""
-    pieces = [part.strip() for part in (work or "").split(".")]
-    held = any(part.lower() == "loaded" for part in pieces)
-    pieces = [part for part in pieces if part and part.lower() != "loaded"]
-    work = ". ".join(pieces)
-    if held and use and "loaded" not in use.lower():
-        use = use + " loaded"
-    return use, work
+
+def clean_work(work):
+    """Drop queue counts and a bare 'loaded' note. Those are not a job."""
+    kept = []
+    for part in (work or "").split("."):
+        part = part.strip()
+        if not part:
+            continue
+        low = part.lower()
+        if low == "loaded" or low == "kokoro off":
+            continue
+        if low.startswith("queue ") or low.startswith("inflight "):
+            continue
+        kept.append(part)
+    return ". ".join(kept)
 
 
-def row_from(name, data):
+def with_loaded(label):
+    label = (label or "").strip()
+    if not label:
+        return ""
+    if "loaded" in label.lower():
+        return label
+    return label + " loaded"
+
+
+def jobs_from(data):
+    """One entry per loaded model or running job. Empty means the machine is idle."""
+    if isinstance(data.get("jobs"), list):
+        jobs = []
+        for item in data["jobs"]:
+            if isinstance(item, str) and item.strip():
+                jobs.append({"whatsinuse": item.strip(), "working_on": ""})
+            elif isinstance(item, dict):
+                use = (item.get("whatsinuse") or "").strip()
+                work = clean_work(item.get("working_on") or "")
+                if use or work:
+                    jobs.append({"whatsinuse": use, "working_on": work})
+        return jobs
+    jobs = []
+    ollama = data.get("ollama")
+    if isinstance(ollama, list):
+        for name in ollama:
+            name = str(name).strip()
+            if not name:
+                continue
+            label = name if name.startswith("llama:") else "llama:" + name
+            jobs.append({"whatsinuse": with_loaded(label), "working_on": ""})
+    freetoken = data.get("freetoken") if isinstance(data.get("freetoken"), dict) else {}
+    if freetoken.get("up"):
+        model = str(freetoken.get("model") or "").strip()
+        label = ("freetoken:" + model) if model else "freetoken"
+        jobs.append({"whatsinuse": with_loaded(label), "working_on": ""})
+    whisper = data.get("whisper") if isinstance(data.get("whisper"), dict) else {}
+    if whisper.get("up"):
+        jobs.append({"whatsinuse": "whisper", "working_on": "whisper :8080"})
+    elif whisper.get("process"):
+        jobs.append({"whatsinuse": "whisper", "working_on": "whisper process, port 8080 down"})
+    try:
+        workers = int(data.get("kokoro_workers") or 0)
+    except Exception:
+        workers = 0
+    if workers > 0:
+        jobs.append({"whatsinuse": "kokoro", "working_on": "kokoro workers %s" % workers})
+    vllm = data.get("vllm") if isinstance(data.get("vllm"), dict) else {}
+    if vllm.get("up"):
+        models = vllm.get("models")
+        if not isinstance(models, list) or not models:
+            models = [vllm.get("model") or ""]
+        for model in models:
+            model = str(model or "").strip()
+            label = ("vllm:" + model) if model else "vllm"
+            jobs.append({
+                "whatsinuse": with_loaded(label),
+                "working_on": clean_work(vllm.get("working_on") or ""),
+            })
+    elif vllm.get("starting"):
+        jobs.append({"whatsinuse": "vllm", "working_on": "starting"})
+    if jobs:
+        return jobs
+    use = (data.get("whatsinuse") or "").strip()
+    work = clean_work(data.get("working_on") or "")
+    parts = [part.strip() for part in use.split(",") if part.strip()]
+    if len(parts) > 1:
+        return [{"whatsinuse": part, "working_on": work if i == 0 else ""} for i, part in enumerate(parts)]
+    if parts or work:
+        return [{"whatsinuse": parts[0] if parts else "", "working_on": work}]
+    return []
+
+
+def probe_vllm(ip):
+    """Read-only. A model line only if port 8000 is already serving one."""
+    url = "http://%s:8000/v1/models" % ip
+    try:
+        with urllib.request.urlopen(url, timeout=1.5) as resp:
+            body = json.loads(resp.read().decode())
+    except Exception:
+        return None
+    if not isinstance(body, dict) or not isinstance(body.get("data"), list):
+        return None
+    models = []
+    for item in body["data"]:
+        if isinstance(item, dict) and item.get("id"):
+            models.append(str(item["id"]))
+    return {"up": True, "starting": False, "model": models[0] if models else "", "models": models, "port": 8000}
+
+
+def attach_vllm(ip, data):
     if not isinstance(data, dict):
-        return down_row(name)
+        return data
+    current = data.get("vllm")
+    if isinstance(current, dict) and (current.get("up") or current.get("starting")):
+        return data
+    found = probe_vllm(ip)
+    if not found:
+        return data
+    data = dict(data)
+    data["vllm"] = found
+    return data
+
+
+def machine_stats(data):
     cpu = data.get("cpu_percent")
     cpu_u = ""
     if cpu is not None and cpu != "":
@@ -136,15 +244,27 @@ def row_from(name, data):
             except Exception:
                 pass
         vram = fmt_mib(used)
-    use, work = place_loaded(data.get("whatsinuse") or "", data.get("working_on") or "")
+    return cpu_u, mem_u, vram
+
+
+def row_from(name, data):
+    """One board record per machine. lines is one entry per model or job."""
+    if not isinstance(data, dict):
+        return down_row(name)
+    cpu_u, mem_u, vram = machine_stats(data)
+    lines = jobs_from(data)
+    if not lines:
+        lines = [{"whatsinuse": "", "working_on": ""}]
+    first = lines[0]
     return {
         "name": name,
         "up": True,
-        "whatsinuse": use,
-        "working_on": work,
+        "whatsinuse": first.get("whatsinuse") or "",
+        "working_on": first.get("working_on") or "",
         "cpuU": cpu_u,
         "memU": mem_u,
         "vram": vram,
+        "lines": lines,
     }
 
 
@@ -153,11 +273,11 @@ def build_rows():
     with ThreadPoolExecutor(max_workers=len(HOSTS)) as pool:
         futures = {}
         for name, ip, timeout in HOSTS:
-            futures[pool.submit(fetch, ip, timeout)] = name
+            futures[pool.submit(fetch, ip, timeout)] = (name, ip)
         for future in as_completed(futures):
-            name = futures[future]
+            name, ip = futures[future]
             try:
-                results[name] = future.result()
+                results[name] = attach_vllm(ip, future.result())
             except Exception:
                 results[name] = None
     return [row_from(name, results.get(name)) for name, _ip, _timeout in HOSTS]

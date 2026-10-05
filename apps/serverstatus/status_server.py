@@ -288,34 +288,102 @@ def freetoken_state():
     return {"up": True, "model": model}
 
 
-def whats_in_use(ollama, freetoken, whisper, workers) -> str:
-    parts = []
+def model_ids(data):
+    if not isinstance(data, dict):
+        return []
+    ids = []
+    for item in data.get("data") or []:
+        if isinstance(item, dict) and item.get("id"):
+            ids.append(str(item["id"]))
+    return ids
+
+
+def vllm_commands(procs):
+    cmds = []
+    if SYSTEM == "Windows":
+        for proc in procs:
+            cmd = proc.get("CommandLine") or ""
+            name = (proc.get("Name") or "")
+            if "vllm" in cmd.lower() or "vllm" in name.lower():
+                cmds.append(cmd)
+        return cmds
+    try:
+        out = subprocess.check_output(["ps", "-ax", "-o", "args="], text=True, errors="replace", timeout=5)
+    except Exception:
+        return []
+    for line in out.splitlines():
+        if "vllm" in line.lower():
+            cmds.append(line)
+    return cmds
+
+
+def vllm_state(procs) -> dict:
+    """Read-only. A loaded model only if vLLM is already answering. Does not start it."""
+    cmds = vllm_commands(procs)
+    if not cmds:
+        return {"up": False, "starting": False, "model": "", "models": []}
+    port = 8000
+    arg_model = ""
+    for cmd in cmds:
+        port_match = re.search(r"--port(?:=|\s+)(\d+)", cmd)
+        if port_match:
+            port = int(port_match.group(1))
+        served = re.search(r"--served-model-name(?:=|\s+)(\S+)", cmd)
+        if served:
+            arg_model = served.group(1).strip('"\'')
+        elif not arg_model:
+            model_match = re.search(r"--model(?:=|\s+)(\S+)", cmd)
+            if model_match:
+                arg_model = model_match.group(1).strip('"\'')
+    ids = model_ids(get_json("http://127.0.0.1:%s/v1/models" % port, 1.5))
+    if ids or port_answers(port):
+        models = ids or ([arg_model] if arg_model else [])
+        return {
+            "up": True,
+            "starting": False,
+            "model": models[0] if models else "",
+            "models": models,
+            "port": port,
+        }
+    return {"up": False, "starting": True, "model": "", "models": [], "port": port}
+
+
+def job_list(ollama, freetoken, whisper, workers, vllm) -> list:
+    jobs = []
     for name in ollama:
         label = name if name.startswith("llama:") else "llama:" + name
-        parts.append(label + " loaded")
+        jobs.append({"whatsinuse": label + " loaded", "working_on": ""})
     if freetoken.get("up"):
         model = freetoken.get("model") or ""
-        parts.append(("freetoken:" + model if model else "freetoken") + " loaded")
+        label = ("freetoken:" + model if model else "freetoken") + " loaded"
+        jobs.append({"whatsinuse": label, "working_on": ""})
     if whisper.get("up"):
-        parts.append("whisper")
-    if workers > 0:
-        parts.append("kokoro")
-    return ", ".join(parts)
-
-
-def working_line(whisper, workers, queue, inflight, use) -> str:
-    parts = []
-    if whisper.get("up"):
-        parts.append("whisper :8080")
+        jobs.append({"whatsinuse": "whisper", "working_on": "whisper :8080"})
     elif whisper.get("process"):
-        parts.append("whisper process, port 8080 down")
-    if SYSTEM == "Windows" and KOKORO_ROOT.is_dir():
-        if workers > 0:
-            parts.append("kokoro workers %s" % workers)
-        else:
-            parts.append("kokoro off")
-        parts.append("queue %s" % queue)
-        parts.append("inflight %s" % inflight)
+        jobs.append({"whatsinuse": "whisper", "working_on": "whisper process, port 8080 down"})
+    if workers > 0:
+        jobs.append({"whatsinuse": "kokoro", "working_on": "kokoro workers %s" % workers})
+    if vllm.get("up"):
+        models = vllm.get("models") or ([vllm.get("model")] if vllm.get("model") else [""])
+        for model in models:
+            model = str(model or "").strip()
+            label = ("vllm:" + model if model else "vllm") + " loaded"
+            jobs.append({"whatsinuse": label, "working_on": ""})
+    elif vllm.get("starting"):
+        jobs.append({"whatsinuse": "vllm", "working_on": "starting"})
+    return jobs
+
+
+def whats_in_use(jobs) -> str:
+    return ", ".join(job.get("whatsinuse") or "" for job in jobs if job.get("whatsinuse"))
+
+
+def working_line(jobs) -> str:
+    parts = []
+    for job in jobs:
+        work = (job.get("working_on") or "").strip()
+        if work and work not in parts:
+            parts.append(work)
     return ". ".join(parts)
 
 
@@ -327,15 +395,17 @@ def status() -> dict:
     inflight = file_count(INFLIGHT)
     ollama = ollama_models()
     token = freetoken_state()
-    use = whats_in_use(ollama, token, whisper, workers)
+    vllm = vllm_state(procs)
+    jobs = job_list(ollama, token, whisper, workers, vllm)
     memory = None
     if used_mib is not None and total_mib:
         memory = {"used_mib": round(used_mib, 1), "total_mib": round(total_mib, 1)}
     return {
         "cpu_percent": cpu,
         "memory": memory,
-        "whatsinuse": use,
-        "working_on": working_line(whisper, workers, queue, inflight, use),
+        "whatsinuse": whats_in_use(jobs),
+        "working_on": working_line(jobs),
+        "jobs": jobs,
         "whisper": whisper,
         "kokoro_workers": workers,
         "queue": queue,
@@ -343,6 +413,7 @@ def status() -> dict:
         "gpus": gpu_memory(),
         "ollama": ollama,
         "freetoken": token,
+        "vllm": vllm,
     }
 
 

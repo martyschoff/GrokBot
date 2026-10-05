@@ -43,7 +43,23 @@
       .then(data => {
         const tbody = document.getElementById("rows");
         tbody.innerHTML = "";
-        data.rows.forEach(row => {
+        function linesOf(row) {
+          if (row.up && Array.isArray(row.lines) && row.lines.length) {
+            return row.lines.map(line => ({
+              name: row.name,
+              up: true,
+              whatsinuse: line.whatsinuse || "",
+              working_on: line.working_on || "",
+              cpuU: row.cpuU,
+              memU: row.memU,
+              vram: row.vram
+            }));
+          }
+          return [row];
+        }
+
+        data.rows.forEach(machine => {
+          linesOf(machine).forEach(row => {
           const tr = document.createElement("tr");
           const nameTd = document.createElement("td");
           nameTd.textContent = row.name;
@@ -72,7 +88,7 @@
           } else if (!row.up) {
             for (let i = 0; i < 5; i++) tr.appendChild(emptyTd());
           } else {
-            const fields = [row.whatsinuse, row.working_on, row.cpuU, row.memU, row.vram];
+            const fields = [shortUse(row.whatsinuse), row.working_on, row.cpuU, row.memU, row.vram];
             fields.forEach(field => {
               const td = document.createElement("td");
               if (field === undefined || field === "") td.className = "empty";
@@ -81,6 +97,7 @@
             });
           }
           tbody.appendChild(tr);
+          });
         });
         refreshBtn.textContent = "Refresh";
       })
