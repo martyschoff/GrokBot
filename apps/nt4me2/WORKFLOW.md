@@ -2,24 +2,45 @@
 
 This is the workflow Kimberly and the fleet follow for the NT app (`ntapp`): the `nt4me2` player in this tree, the house player, and the NT chrome (menus, Settings, Beliefs, art rotation, audio selection).
 
-NT Kokoro on the 8×3080 uses the standing GPU partition in the next section.
+NT Kokoro on the 8×3080 follows the LOCKED standing rules in the next section.
 
-## 8×3080 standing layout (Kokoro + Whisper)
+## LOCKED — 8×3080 standing rules (DESKTOP-TJ1RMNK)
 
-Martin confirmed this on 5 Oct 2026. This is the locked standing partition for NT Kokoro work.
+Martin confirmed the partition on 5 Oct 2026. The three rules below are locked standing rules for this machine. They stay in force until Martin changes them.
 
 **Machine:** DESKTOP-TJ1RMNK (8× RTX 3080 10 GB). Tailscale is typically `100.124.236.23`.
 
-**Standing default for NT Kokoro work:**
+### 1. Kimberly owns models and the harness
 
-- **GPU 0** — Whisper voice server (keep it).
+Kimberly loads models and changes the harness.
+
+**Standing harness:**
+
+- **GPU 0** — Whisper voice server.
 - **GPUs 1–7** — **seven** Kokoro workers (one chapter / one job per GPU; data parallel). Not Ollama layer-split for this lane.
+- When Kimberly sets or changes that harness, she **remakes the bats**.
+
+**Qmanager (Q)** reports status and copies packs only. Qmanager does not start or stop GPU workers, load models, or change the harness layout.
 
 **Exception (only when Martin says):** stop Whisper and use all eight GPUs for a vLLM / Llama tensor-parallel run. Otherwise do not steal cards 1–7 from Kokoro while the NT batch is the standing job.
 
 Keep NT Kokoro going on GPUs 1–7 until Martin says suspend. On suspend, finish only a reasonable chapter/book mark, then hold until the following Saturday.
 
-**Status board:** the on-demand page on the 3080 at port **8767** reports Whisper / Kokoro workers / GPU use (`nimo serverstatus` asks that, not only Ollama 11434).
+### 2. How to read status (Cursor Shell on TJ1RMNK hangs)
+
+Cursor Shell on TJ1RMNK often hangs. Do not rely on a long Shell for status.
+
+Prefer one of these:
+
+- **(a) LAN status page.** The local Whisper/Kokoro status page on the LAN at port **8767** (on the machine, or `http://100.124.236.23:8767` over Tailscale). It reports Whisper, Kokoro workers, and GPU use. `nimo serverstatus` asks that page, not only Ollama on 11434.
+- **(b) `status.json` on the machine.** When a brief Shell works, read the short `status.json` it writes on the machine.
+- **(c) One capped Shell.** One Shell capped at about **20 seconds**, killed if it hangs.
+
+Do not take GPU numbers from Ollama or llama. `martynpc1-coder` `/api/generate` cannot run `nvidia-smi`. Figures that call returns are invented, not a measurement.
+
+### 3. After reboot, reconnect Grok Bot before harness work
+
+The Grok Bot desktop app may not auto-start after a reboot. Reconnect Grok Bot on DESKTOP-TJ1RMNK before any harness work (loading models, remaking bats, or changing which GPU runs Whisper or Kokoro).
 
 ## Rule
 
