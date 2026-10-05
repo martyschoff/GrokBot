@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Matthew 15",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Matthew, chapter 15. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Matthew 15, verse 1: Then scribes and Pharisees. As the fault that is here corrected is not only common but highly dangerous, the passage is particularly worthy of our attention. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 10.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Matthew 15:1",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 10,
+    "section": 15,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 John 1",
+  "source": "Public domain. Consolidated from John Calvin, Commentaries on the Catholic Epistles, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First John, chapter 1. In his Commentaries on the Catholic Epistles, in the John Owen translation, Calvin writes at First John 1, verse 1: He shows, first, that life has been exhibited to us in Christ; which, as it is an incomparable good, ought to rouse and inflame all our powers with a marvelous desire for it, and with the love of it. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 20.",
+  "cite": {
+    "work": "Commentaries on the Catholic Epistles",
+    "translator": "John Owen",
+    "at": "1 John 1:1",
+    "ccel_volume": "calcom45"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 20,
+    "section": 9,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

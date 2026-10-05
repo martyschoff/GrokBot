@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 15",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 15. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 15, verse 1: When Paul and Barnabas had endured many combats against the professed enemies of the gospel, Luke doth now begin to declare that they were tried by domestic war; so that it was meet that their doctrine and ministry should be proved by all means, to the end it might the better appear that they were furnished by God, and armed against all the assaults of the world and Satan. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 6.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 15:1",
+    "ccel_volume": "calcom37"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 6,
+    "section": 7,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

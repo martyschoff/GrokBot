@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 3",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 3. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 3, verse 1: We saw before that many signs were showed by the hands of the apostles; now Luke reciteth one of many for example's sake, after his common custom; namely, that a lame man, which was lame of his feet from his mother's womb, was perfectly restored to his limbs. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 13.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 3:1",
+    "ccel_volume": "calcom36"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 13,
+    "section": 13,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

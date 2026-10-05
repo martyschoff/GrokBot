@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Luke 6",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Luke, chapter 6. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Luke 6, verse 12: And he went up into a mountain. By this election he does not yet ordain them to be Apostles, to enter immediately into the discharge of their office, but merely admits them to enjoy his private instructions with a view to the apostleship. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 18.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Luke 6:12",
+    "ccel_volume": "calcom31"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 18,
+    "section": 10,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

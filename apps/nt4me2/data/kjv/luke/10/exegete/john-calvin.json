@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Luke 10",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Luke, chapter 10. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Luke 10, verse 1: And after these things the Lord appointed That the Apostles had returned to Christ before these seventy were substituted in their room, may be inferred from many circumstances. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 3.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Luke 10:1",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 3,
+    "section": 3,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

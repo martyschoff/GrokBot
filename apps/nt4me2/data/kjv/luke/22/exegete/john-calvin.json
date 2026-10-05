@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Luke 22",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Luke, chapter 22. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Luke 22, verse 24: And when the ten heard it. Luke appears to refer this dispute to a different time. But any one who shall carefully examine that twenty-second chapter will plainly see that discourses delivered at different times are there brought together, without any regard to order. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 17.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Luke 22:24",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 17,
+    "section": 6,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

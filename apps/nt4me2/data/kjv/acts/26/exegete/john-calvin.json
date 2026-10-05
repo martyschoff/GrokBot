@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 26",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 26. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 26, verse 1: We have declared to what end Paul was brought before that assembly, to wit, that Festus might write unto Caesar as he should be counseled by Agrippa and the rest. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 3.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 26:1",
+    "ccel_volume": "calcom37"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 3,
+    "section": 25,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

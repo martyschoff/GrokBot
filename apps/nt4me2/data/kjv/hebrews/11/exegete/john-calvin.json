@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Hebrews 11",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Hebrews, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Hebrews, chapter 11. In his Commentary on the Epistle to the Hebrews, in the John Owen translation, Calvin writes at Hebrews 11, verse 1: Whoever made this the beginning of the eleventh chapter, has unwisely disjointed the context; for the object of the Apostle was to prove what he had already said that there is need of patience. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 2.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Hebrews",
+    "translator": "John Owen",
+    "at": "Hebrews 11:1",
+    "ccel_volume": "calcom44"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 2,
+    "section": 30,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 18",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 18. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 18, verse 1: The chief thing to be considered is, the intention of the Evangelist in pointing out the place; for his object was, to show that Christ went to death willingly. He came into a place which, he knew, was well known to Judas. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 15.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 18:1",
+    "ccel_volume": "calcom35"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 15,
+    "section": 3,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

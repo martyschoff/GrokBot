@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Galatians 3",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Galatians and Ephesians, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Galatians, chapter 3. In his Commentary on Galatians and Ephesians, in the William Pringle translation, Calvin writes at Galatians 3, verse 1: O foolish Galatians. An expostulation is here interwoven — I should rather say, inserted — amidst his doctrinal statements. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 11.",
+  "cite": {
+    "work": "Commentary on Galatians and Ephesians",
+    "translator": "William Pringle",
+    "at": "Galatians 3:1",
+    "ccel_volume": "calcom41"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 11,
+    "section": 3,
+    "citations_of_this_chapter": 10,
+    "translator": "Henry Beveridge"
+  }
+}

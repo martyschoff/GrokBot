@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Timothy 5",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to Timothy, Titus, and Philemon, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Timothy, chapter 5. In his Commentary on the Epistles to Timothy, Titus, and Philemon, in the William Pringle translation, Calvin writes at First Timothy 5, verse 1: Do not harshly rebuke an elder He now recommends to Timothy gentleness and moderation in correcting faults. Correction is a medicine, which has always some bitterness, and consequently is disagreeable. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 3.",
+  "cite": {
+    "work": "Commentary on the Epistles to Timothy, Titus, and Philemon",
+    "translator": "William Pringle",
+    "at": "1 Timothy 5:1",
+    "ccel_volume": "calcom43"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 3,
+    "section": 9,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

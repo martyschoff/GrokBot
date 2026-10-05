@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "James 1",
+  "source": "Public domain. Consolidated from John Calvin, Commentaries on the Catholic Epistles, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on James, chapter 1. In his Commentaries on the Catholic Epistles, in the John Owen translation, Calvin writes at James 1, verse 1: To the twelve tribes. When the ten tribes were banished, the Assyrian king placed them in different parts. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 20.",
+  "cite": {
+    "work": "Commentaries on the Catholic Epistles",
+    "translator": "John Owen",
+    "at": "James 1:1",
+    "ccel_volume": "calcom45"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 20,
+    "section": 11,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

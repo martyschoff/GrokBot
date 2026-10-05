@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Hebrews 4",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Hebrews, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Hebrews, chapter 4. In his Commentary on the Epistle to the Hebrews, in the John Owen translation, Calvin writes at Hebrews 4, verse 1: He concludes that there was reason to fear lest the Jews to whom he was writing should be deprived of the blessing offered to them; and then he says, lest anyone, intimating that it was his anxious desire to lead them, one and all, to God; for it is the duty of a good shepherd, in watching over the whole flock so to care for every sheep that no one may be lost; nay, we ought also so to feel for one another that every one should fear for his neighbors as well as for himself. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 12.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Hebrews",
+    "translator": "John Owen",
+    "at": "Hebrews 4:1",
+    "ccel_volume": "calcom44"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 12,
+    "section": 1,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

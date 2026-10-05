@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 11",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 11. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 11, verse 1: And the apostles. Whereas Luke declareth that the fame of one house which was converted was spread abroad everywhere amongst the brethren, that did arise by reason of admiration; for the Jews accounted it as a monster that the Gentiles should be gathered unto them as if they should have heard that there had been men made of stones. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 1.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 11:1",
+    "ccel_volume": "calcom36"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 1,
+    "section": 4,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

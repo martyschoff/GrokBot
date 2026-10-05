@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Hebrews 1",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Hebrews, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Hebrews, chapter 1. In his Commentary on the Epistle to the Hebrews, in the John Owen translation, Calvin writes at Hebrews 1, verse 1: This beginning is for the purpose of commending the doctrine taught by Christ; for it shows that we ought not only reverently to receive it, but also to be satisfied with it alone. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 13.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Hebrews",
+    "translator": "John Owen",
+    "at": "Hebrews 1:1",
+    "ccel_volume": "calcom44"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 13,
+    "section": 2,
+    "citations_of_this_chapter": 6,
+    "translator": "Henry Beveridge"
+  }
+}

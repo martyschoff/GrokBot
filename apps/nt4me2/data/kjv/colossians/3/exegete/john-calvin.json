@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Colossians 3",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Philippians, Colossians, and Thessalonians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Colossians, chapter 3. In his Commentary on Philippians, Colossians, and Thessalonians, in the John Pringle translation, Calvin writes at Colossians 3, verse 1: To those fruitless exercises which the false apostles urged, as though perfection consisted in them, he opposes those true exercises in which it becomes Christians to employ themselves; and this has no slight bearing upon the point in hand; for when we see what God would have us do, we afterwards easily despise the inventions of men. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 16.",
+  "cite": {
+    "work": "Commentary on Philippians, Colossians, and Thessalonians",
+    "translator": "John Pringle",
+    "at": "Colossians 3:1",
+    "ccel_volume": "calcom42"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 16,
+    "section": 7,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

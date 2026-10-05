@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Romans 2",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Romans, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Romans, chapter 2. In his Commentary on the Epistle to the Romans, in the John Owen translation, Calvin writes at Romans 2, verse 1: Therefore inexcusable art thou, O man. This reproof is directed against hypocrites, who dazzle the eyes of men by displays of outward sanctity, and even think themselves to be accepted before God, as though they had given him full satisfaction. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 17.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Romans",
+    "translator": "John Owen",
+    "at": "Romans 2:1",
+    "ccel_volume": "calcom38"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 17,
+    "section": 13,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

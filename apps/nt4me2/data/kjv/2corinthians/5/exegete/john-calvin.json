@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "2 Corinthians 5",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Second Corinthians, chapter 5. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at Second Corinthians 5, verse 1: For we know. Here follows an amplification (epexergasia) or embellishment of the foregoing statement. For Paul has it in view, to correct in us impatience, dread, and dislike of the cross, contempt for what is mean, and in fine, pride, and effeminacy; and this can only be accomplished by raising up our minds as high as heaven, through contempt of the world. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 11.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "2 Corinthians 5:1",
+    "ccel_volume": "calcom40"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 11,
+    "section": 4,
+    "citations_of_this_chapter": 4,
+    "translator": "Henry Beveridge"
+  }
+}

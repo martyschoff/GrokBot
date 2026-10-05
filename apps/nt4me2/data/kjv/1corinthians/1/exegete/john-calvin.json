@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Corinthians 1",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Corinthians, chapter 1. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at First Corinthians 1, verse 1: Paul, called to be an Apostle In this manner does Paul proceed, in almost all the introductions to his Epistles, with the view of procuring for his doctrine authority and favor. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 5.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "1 Corinthians 1:1",
+    "ccel_volume": "calcom39"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 5,
+    "section": 2,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

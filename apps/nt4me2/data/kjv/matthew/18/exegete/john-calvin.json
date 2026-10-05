@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Matthew 18",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Matthew, chapter 18. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Matthew 18, verse 1: And while they remained in Galilee. The nearer that the time of his death approached, the more frequently did Christ warn his disciples, lest that melancholy spectacle might give a violent shock to their faith. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 1.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Matthew 18:1",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 1,
+    "section": 9,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

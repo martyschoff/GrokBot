@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Colossians 1",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Philippians, Colossians, and Thessalonians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Colossians, chapter 1. In his Commentary on Philippians, Colossians, and Thessalonians, in the John Pringle translation, Calvin writes at Colossians 1, verse 1: Paul an Apostle. I have already, in repeated instances, explained the design of such inscriptions. As, however, the Colossians had never seen him, and on that account his authority was not as yet so firmly established among them as to make his private name by itself sufficient, he premises that he is an Apostle of Christ set apart by the will of God. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 12.",
+  "cite": {
+    "work": "Commentary on Philippians, Colossians, and Thessalonians",
+    "translator": "John Pringle",
+    "at": "Colossians 1:1",
+    "ccel_volume": "calcom42"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 12,
+    "section": 4,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

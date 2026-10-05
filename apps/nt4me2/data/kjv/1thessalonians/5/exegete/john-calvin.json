@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Thessalonians 5",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Philippians, Colossians, and Thessalonians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Thessalonians, chapter 5. In his Commentary on Philippians, Colossians, and Thessalonians, in the John Pringle translation, Calvin writes at First Thessalonians 5, verse 1: But as to times. He now, in the third place, calls them back from a curious and unprofitable inquiry as to times, but in the mean time admonishes them to be constantly in a state of preparation for receiving Christ. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 9.",
+  "cite": {
+    "work": "Commentary on Philippians, Colossians, and Thessalonians",
+    "translator": "John Pringle",
+    "at": "1 Thessalonians 5:1",
+    "ccel_volume": "calcom42"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 9,
+    "section": 3,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

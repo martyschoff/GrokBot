@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Romans 11",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Romans, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Romans, chapter 11. In his Commentary on the Epistle to the Romans, in the John Owen translation, Calvin writes at Romans 11, verse 1: What he has hitherto said of the blindness and obstinacy of the Jews, might seem to import that Christ at his coming had transferred elsewhere the promises of God, and deprived the Jews of every hope of salvation. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 24.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Romans",
+    "translator": "John Owen",
+    "at": "Romans 11:1",
+    "ccel_volume": "calcom38"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 24,
+    "section": 7,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

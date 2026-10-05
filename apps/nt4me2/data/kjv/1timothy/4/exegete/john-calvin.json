@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Timothy 4",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to Timothy, Titus, and Philemon, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Timothy, chapter 4. In his Commentary on the Epistles to Timothy, Titus, and Philemon, in the William Pringle translation, Calvin writes at First Timothy 4, verse 1: Now the Spirit plainly saith He had industriously admonished Timothy about many things; and now he shews the necessity, because it is proper to provide against the danger which the Holy Spirit forewarns to be fast approaching, namely, that false teachers will come, who shall hold out trifles as the doctrine of faith, and who, placing all holiness in outward exercises, shall throw into the shade the spiritual worship of God, which alone is lawful. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 20.",
+  "cite": {
+    "work": "Commentary on the Epistles to Timothy, Titus, and Philemon",
+    "translator": "William Pringle",
+    "at": "1 Timothy 4:1",
+    "ccel_volume": "calcom43"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 20,
+    "section": 28,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

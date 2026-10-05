@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Corinthians 11",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Corinthians, chapter 11. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at First Corinthians 11, verse 1: Imitators of me. From this it appears, how absurdly chapters are divided, inasmuch as this sentence is disjoined from what goes before, with which it ought to have been connected, and is joined to what follows, with which it has no connection. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 17.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "1 Corinthians 11:1",
+    "ccel_volume": "calcom39"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 17,
+    "section": 20,
+    "citations_of_this_chapter": 5,
+    "translator": "Henry Beveridge"
+  }
+}

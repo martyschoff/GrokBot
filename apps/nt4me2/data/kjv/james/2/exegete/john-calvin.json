@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "James 2",
+  "source": "Public domain. Consolidated from John Calvin, Commentaries on the Catholic Epistles, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on James, chapter 2. In his Commentaries on the Catholic Epistles, in the John Owen translation, Calvin writes at James 2, verse 1: This reproof seems at first sight to be hard and unreasonable; for it is one of the duties of courtesy, not to be neglected, to honor those who are elevated in the world. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 2.",
+  "cite": {
+    "work": "Commentaries on the Catholic Epistles",
+    "translator": "John Owen",
+    "at": "James 2:1",
+    "ccel_volume": "calcom45"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 2,
+    "section": 10,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

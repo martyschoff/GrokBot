@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Timothy 2",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to Timothy, Titus, and Philemon, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Timothy, chapter 2. In his Commentary on the Epistles to Timothy, Titus, and Philemon, in the William Pringle translation, Calvin writes at First Timothy 2, verse 1: I exhort therefore. These exercises of godliness maintain and even strengthen us in the sincere worship and fear of God, and cherish the good conscience of which he had spoken. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 20.",
+  "cite": {
+    "work": "Commentary on the Epistles to Timothy, Titus, and Philemon",
+    "translator": "William Pringle",
+    "at": "1 Timothy 2:1",
+    "ccel_volume": "calcom43"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 20,
+    "section": 17,
+    "citations_of_this_chapter": 7,
+    "translator": "Henry Beveridge"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Romans 5",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Romans, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Romans, chapter 5. In his Commentary on the Epistle to the Romans, in the John Owen translation, Calvin writes at Romans 5, verse 1: The Apostle begins to illustrate by the effects, what he has hitherto said of the righteousness of faith: and hence the whole of this chapter is taken up with amplifications, which are no less calculated to explain than to confirm. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 16.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Romans",
+    "translator": "John Owen",
+    "at": "Romans 5:1",
+    "ccel_volume": "calcom38"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 16,
+    "section": 4,
+    "citations_of_this_chapter": 4,
+    "translator": "Henry Beveridge"
+  }
+}

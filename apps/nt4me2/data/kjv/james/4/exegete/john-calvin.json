@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "James 4",
+  "source": "Public domain. Consolidated from John Calvin, Commentaries on the Catholic Epistles, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on James, chapter 4. In his Commentaries on the Catholic Epistles, in the John Owen translation, Calvin writes at James 4, verse 1: From whence come wars. As he had spoken of peace, and had reminded them that vices are to be exterminated in such a way as to preserve peace, he now comes to their contentions, by which they created confusion among themselves; and he shews that these arose from their invidious desires and lusts, rather than from a zeal for what was just and right; for if every one observed moderation, they would not have disturbed and annoyed one another. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 20.",
+  "cite": {
+    "work": "Commentaries on the Catholic Epistles",
+    "translator": "John Owen",
+    "at": "James 4:1",
+    "ccel_volume": "calcom45"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 20,
+    "section": 7,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

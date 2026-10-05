@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Matthew 12",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Matthew, chapter 12. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Matthew 12, verse 1: Jesus was walking on the Sabbath It was the design of the Evangelists, in this history, to show partly what a malicious disposition the Pharisees had, and partly how superstitiously they were attached to outward and slight matters, so as to make holiness to consist in them entirely. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 14.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Matthew 12:1",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 14,
+    "section": 19,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

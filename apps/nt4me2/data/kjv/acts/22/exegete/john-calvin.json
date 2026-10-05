@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 22",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 22. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 22, verse 1: Though we may guess by the beginning of this speech what was Paul's drift, yet because he was interrupted, we know not certainly what he was about to say. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 15.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 22:1",
+    "ccel_volume": "calcom37"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 15,
+    "section": 15,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

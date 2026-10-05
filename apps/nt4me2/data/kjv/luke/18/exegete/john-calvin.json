@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Luke 18",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Luke, chapter 18. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Luke 18, verse 1: We know that perseverance in prayer is a rare and difficult attainment; and it is a manifestation of our unbelief that, when our first prayers are not successful, we immediately throw away not only hope, but all the ardor of prayer. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 4.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Luke 18:1",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 4,
+    "section": 18,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

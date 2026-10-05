@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 2",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 2. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 2, verse 1: There was a marriage in Cana of Galilee. As this narrative contains the first miracle which Christ performed, it would be proper for us, were it on this ground alone, to consider the narrative attentively; though — as we shall afterwards see — there are other reasons which recommend it to our notice. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 14.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 2:1",
+    "ccel_volume": "calcom34"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 14,
+    "section": 4,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

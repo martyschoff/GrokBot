@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "2 Thessalonians 1",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Philippians, Colossians, and Thessalonians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Second Thessalonians, chapter 1. In his Commentary on Philippians, Colossians, and Thessalonians, in the John Pringle translation, Calvin writes at Second Thessalonians 1, verse 1: To the Church of the Thessalonians which is in God. As to the form of salutation, it were superfluous to speak. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 25.",
+  "cite": {
+    "work": "Commentary on Philippians, Colossians, and Thessalonians",
+    "translator": "John Pringle",
+    "at": "2 Thessalonians 1:1",
+    "ccel_volume": "calcom42"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 25,
+    "section": 4,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

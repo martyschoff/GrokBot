@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Matthew 11",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Matthew, chapter 11. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Matthew 11, verse 1: And it happened that when Jesus had made an end In this passage Matthew means nothing more than that Christ did not desist from the exercise of his office, while the Apostles were laboring in another direction. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 11.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Matthew 11:1",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 11,
+    "section": 5,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

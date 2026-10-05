@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "2 Timothy 3",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to Timothy, Titus, and Philemon, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Second Timothy, chapter 3. In his Commentary on the Epistles to Timothy, Titus, and Philemon, in the William Pringle translation, Calvin writes at Second Timothy 3, verse 1: But know this By this prediction he intended still more to sharpen his diligence; for, when matters go on to our wish, we become more careless; but necessity urges us keenly. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 9.",
+  "cite": {
+    "work": "Commentary on the Epistles to Timothy, Titus, and Philemon",
+    "translator": "William Pringle",
+    "at": "2 Timothy 3:1",
+    "ccel_volume": "calcom43"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 9,
+    "section": 1,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

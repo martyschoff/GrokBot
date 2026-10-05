@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 10",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 10. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 10, verse 1: Verily, verily, I say to you. As Christ had to do with scribes and priests, who were reckoned pastors of the Church, it was necessary that they should be divested of the honor of this title, if he wished his doctrine to be received. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 22.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 10:1",
+    "ccel_volume": "calcom34"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 22,
+    "section": 7,
+    "citations_of_this_chapter": 4,
+    "translator": "Henry Beveridge"
+  }
+}

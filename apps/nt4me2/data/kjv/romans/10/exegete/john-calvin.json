@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Romans 10",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Romans, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Romans, chapter 10. In his Commentary on the Epistle to the Romans, in the John Owen translation, Calvin writes at Romans 10, verse 1: We here see with what solicitude the holy man obviated offenses; for in order to soften whatever sharpness there may have been in his manner of explaining the rejection of the Jews, he still testifies, as before, his goodwill towards them, and proves it by the effect; for their salvation was an object of concern to him before the Lord, and such a feeling arises only from genuine love. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 2.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Romans",
+    "translator": "John Owen",
+    "at": "Romans 10:1",
+    "ccel_volume": "calcom38"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 2,
+    "section": 2,
+    "citations_of_this_chapter": 4,
+    "translator": "Henry Beveridge"
+  }
+}

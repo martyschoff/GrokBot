@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Romans 12",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Romans, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Romans, chapter 12. In his Commentary on the Epistle to the Romans, in the John Owen translation, Calvin writes at Romans 12, verse 1: After having handled those things necessary for the erection of the kingdom of God, — that righteousness is to be sought from God alone, that salvation is to come to us alone from his mercy, that all blessings are laid up and daily offered to us in Christ only, — Paul now passes on, according to the best order, to show how the life is to be formed. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 7.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Romans",
+    "translator": "John Owen",
+    "at": "Romans 12:1",
+    "ccel_volume": "calcom38"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 7,
+    "section": 1,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Peter 5",
+  "source": "Public domain. Consolidated from John Calvin, Commentaries on the Catholic Epistles, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Peter, chapter 5. In his Commentaries on the Catholic Epistles, in the John Owen translation, Calvin writes at First Peter 5, verse 1: In exhorting pastors to their duty, he points out especially three vices which are found to prevail much, even sloth, desire of gain, and lust for power. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 14.",
+  "cite": {
+    "work": "Commentaries on the Catholic Epistles",
+    "translator": "John Owen",
+    "at": "1 Peter 5:1",
+    "ccel_volume": "calcom45"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 14,
+    "section": 13,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

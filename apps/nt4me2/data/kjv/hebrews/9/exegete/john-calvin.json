@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Hebrews 9",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Hebrews, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Hebrews, chapter 9. In his Commentary on the Epistle to the Hebrews, in the John Owen translation, Calvin writes at Hebrews 9, verse 1: After having spoken generally of the abrogation of the old covenant, he now refers specially to the ceremonies. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 17.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Hebrews",
+    "translator": "John Owen",
+    "at": "Hebrews 9:1",
+    "ccel_volume": "calcom44"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 17,
+    "section": 4,
+    "citations_of_this_chapter": 4,
+    "translator": "Henry Beveridge"
+  }
+}

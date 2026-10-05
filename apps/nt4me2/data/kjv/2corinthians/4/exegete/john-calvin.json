@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "2 Corinthians 4",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Second Corinthians, chapter 4. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at Second Corinthians 4, verse 1: Having this ministry. He now returns to a commendation of himself personally, from which he had digressed into a general discussion, in reference to the dignity of the gospel. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 14.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "2 Corinthians 4:1",
+    "ccel_volume": "calcom40"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 14,
+    "section": 22,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

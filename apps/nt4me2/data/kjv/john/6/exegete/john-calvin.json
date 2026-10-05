@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 6",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 6. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 6, verse 1: Afterwards, Jesus went. Although John was accustomed to collect those actions and sayings of Christ, which the other three Evangelists had omitted, yet in this passage, contrary to his custom, he repeats the history of a miracle which they had related. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 24.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 6:1",
+    "ccel_volume": "calcom34"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 24,
+    "section": 1,
+    "citations_of_this_chapter": 7,
+    "translator": "Henry Beveridge"
+  }
+}

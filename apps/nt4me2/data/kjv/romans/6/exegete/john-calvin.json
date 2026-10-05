@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Romans 6",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistle to the Romans, translated by John Owen, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Romans, chapter 6. In his Commentary on the Epistle to the Romans, in the John Owen translation, Calvin writes at Romans 6, verse 1: What then shall we say? Throughout this chapter the Apostle proves, that they who imagine that gratuitous righteousness is given us by him, apart from newness of life, shamefully rend Christ asunder: nay, he goes further, and refers to this objection, — that there seems in this case to be an opportunity for the display of grace, if men continued fixed in sin. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 3.",
+  "cite": {
+    "work": "Commentary on the Epistle to the Romans",
+    "translator": "John Owen",
+    "at": "Romans 6:1",
+    "ccel_volume": "calcom38"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 3,
+    "section": 9,
+    "citations_of_this_chapter": 4,
+    "translator": "Henry Beveridge"
+  }
+}

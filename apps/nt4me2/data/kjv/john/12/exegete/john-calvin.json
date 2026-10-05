@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 12",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 12. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 12, verse 1: Jesus came to Bethany. We see that they judged too rashly who thought that Christ would not come to the feast, (John 11:56;) and this, reminds us that we ought not to be so hasty as not to wait patiently and quietly, till the season arrive, which is unknown to us. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 13.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 12:1",
+    "ccel_volume": "calcom35"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 13,
+    "section": 11,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

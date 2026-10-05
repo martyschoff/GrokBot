@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Thessalonians 4",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on Philippians, Colossians, and Thessalonians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Thessalonians, chapter 4. In his Commentary on Philippians, Colossians, and Thessalonians, in the John Pringle translation, Calvin writes at First Thessalonians 4, verse 1: Furthermore. This chapter contains various injunctions, by which he trains up the Thessalonians to a holy life, or confirms them in the exercise of it. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 16.",
+  "cite": {
+    "work": "Commentary on Philippians, Colossians, and Thessalonians",
+    "translator": "John Pringle",
+    "at": "1 Thessalonians 4:1",
+    "ccel_volume": "calcom42"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 16,
+    "section": 17,
+    "citations_of_this_chapter": 2,
+    "translator": "Henry Beveridge"
+  }
+}

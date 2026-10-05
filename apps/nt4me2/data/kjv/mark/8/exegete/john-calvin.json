@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Mark 8",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Mark, chapter 8. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Mark 8, verse 38: Whosoever therefore shall confess me He now applies to his present subject what he formerly said in a general manner about contempt of death: for we must struggle against the dread of death, that it may not keep us back from an open confession of faith, which God strictly demands, and which the world cannot endure. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 1.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Mark 8:38",
+    "ccel_volume": "calcom31"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 1,
+    "section": 26,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Corinthians 14",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to the Corinthians, translated by John Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Corinthians, chapter 14. In his Commentary on the Epistles to the Corinthians, in the John Pringle translation, Calvin writes at First Corinthians 14, verse 1: As he had previously exhorted them to follow after the more excellent gifts, (1 Corinthians 12:31,) so he exhorts them now to follow after love, for that was the distinguished excellence, which he had promised that he would show them. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 2, chapter 8.",
+  "cite": {
+    "work": "Commentary on the Epistles to the Corinthians",
+    "translator": "John Pringle",
+    "at": "1 Corinthians 14:1",
+    "ccel_volume": "calcom39"
+  },
+  "institutes": {
+    "book": 2,
+    "chapter": 8,
+    "section": 32,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

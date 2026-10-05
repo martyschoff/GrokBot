@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "John 21",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Gospel according to John, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on John, chapter 21. In his Commentary on the Gospel according to John, in the William Pringle translation, Calvin writes at John 21, verse 1: After these things Jesus manifested himself again. The Evangelist still labors to prove the resurrection of Christ, and relates, that he appeared to seven disciples, among whom he mentions Thomas, not out of respect to him, so much as because his testimony ought to be the more readily believed in proportion to the obstinacy of his unbelief. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 3, chapter 8.",
+  "cite": {
+    "work": "Commentary on the Gospel according to John",
+    "translator": "William Pringle",
+    "at": "John 21:1",
+    "ccel_volume": "calcom35"
+  },
+  "institutes": {
+    "book": 3,
+    "chapter": 8,
+    "section": 10,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

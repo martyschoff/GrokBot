@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Acts 14",
+  "source": "Public domain. Consolidated from John Calvin, Commentary upon the Acts of the Apostles, translated by Christopher Fetherstone, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Acts, chapter 14. In his Commentary upon the Acts of the Apostles, in the Christopher Fetherstone translation, Calvin writes at Acts 14, verse 1: In the chapter last going before, Luke declared how Paul and Barnabas took in hand their embassage unto the Gentiles. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 3.",
+  "cite": {
+    "work": "Commentary upon the Acts of the Apostles",
+    "translator": "Christopher Fetherstone",
+    "at": "Acts 14:1",
+    "ccel_volume": "calcom37"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 3,
+    "section": 7,
+    "citations_of_this_chapter": 3,
+    "translator": "Henry Beveridge"
+  }
+}

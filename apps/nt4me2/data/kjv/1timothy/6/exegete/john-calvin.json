@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "1 Timothy 6",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on the Epistles to Timothy, Titus, and Philemon, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on First Timothy, chapter 6. In his Commentary on the Epistles to Timothy, Titus, and Philemon, in the William Pringle translation, Calvin writes at First Timothy 6, verse 1: It appears that, at the beginning of the gospel, slaves cheered their hearts, as if the signal had been given for their emancipation; for Paul labors hard, in all his writings, to repress that desire; and indeed the condition of slavery was so hard that we need not wonder that it was exceedingly hateful. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 1, chapter 6.",
+  "cite": {
+    "work": "Commentary on the Epistles to Timothy, Titus, and Philemon",
+    "translator": "William Pringle",
+    "at": "1 Timothy 6:1",
+    "ccel_volume": "calcom43"
+  },
+  "institutes": {
+    "book": 1,
+    "chapter": 6,
+    "section": 3,
+    "citations_of_this_chapter": 1,
+    "translator": "Henry Beveridge"
+  }
+}

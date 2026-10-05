@@ -1,0 +1,21 @@
+{
+  "id": "john-calvin",
+  "title": "John Calvin",
+  "chapter": "Matthew 16",
+  "source": "Public domain. Consolidated from John Calvin, Commentary on a Harmony of the Evangelists, translated by William Pringle, Calvin Translation Society, and the Institutes of the Christian Religion, translated by Henry Beveridge; both as published by the Christian Classics Ethereal Library.",
+  "status": "note",
+  "body": "John Calvin on Matthew, chapter 16. In his Commentary on a Harmony of the Evangelists, in the William Pringle translation, Calvin writes in the section that includes Matthew 16, verse 1: And the Pharisees came. Mark says that they began to dispute, from which we may conjecture that, when they had been vanquished in argument, this was their last resource; as obstinate men, whenever they are reduced to extremities, to avoid being compelled to yield to the truth, are accustomed to introduce something which is foreign to the subject. In the Institutes of the Christian Religion, in the Henry Beveridge translation, Calvin draws on this chapter again in Book 4, chapter 6.",
+  "cite": {
+    "work": "Commentary on a Harmony of the Evangelists",
+    "translator": "William Pringle",
+    "at": "Matthew 16:1",
+    "ccel_volume": "calcom32"
+  },
+  "institutes": {
+    "book": 4,
+    "chapter": 6,
+    "section": 3,
+    "citations_of_this_chapter": 4,
+    "translator": "Henry Beveridge"
+  }
+}
