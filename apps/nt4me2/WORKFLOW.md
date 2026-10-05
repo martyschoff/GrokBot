@@ -6,19 +6,24 @@ NT Kokoro on the 8×3080 follows the LOCKED standing rules in the next section.
 
 ## LOCKED — 8×3080 standing rules (DESKTOP-TJ1RMNK)
 
-Martin confirmed the partition on 5 Oct 2026. The three rules below are locked standing rules for this machine. They stay in force until Martin changes them.
+Martin locked these standing rules on 5 Oct 2026. They stay in force until Martin changes them.
 
 **Machine:** DESKTOP-TJ1RMNK (8× RTX 3080 10 GB). Tailscale is typically `100.124.236.23`.
 
-### 1. Kimberly owns models and the harness
+### 1. Kimberly's bot on the machine owns the harness
 
-Kimberly loads models and changes the harness.
+All harness changes on DESKTOP-TJ1RMNK are done by **Kimberly's bot entity on that machine**, using **her Shell on TJ1RMNK**. That is the default path. Not Qmanager. Not martynpc1-coder as the operator for harness edits.
+
+Harness changes means start or stop workers, remake bats, set the CUDA/ONNX provider, load models, and set the Whisper/Kokoro layout.
+
+**LOCKED:** Other bots talk to DESKTOP-TJ1RMNK only through Llama / local Ollama (status/ask). They do not run Shell or change the harness. Only Kimberly's bot entity on that machine uses Shell for harness changes.
 
 **Standing harness:**
 
 - **GPU 0** — Whisper voice server.
 - **GPUs 1–7** — **seven** Kokoro workers (one chapter / one job per GPU; data parallel). Not Ollama layer-split for this lane.
-- When Kimberly sets or changes that harness, she **remakes the bats**.
+- When Kimberly's bot on the machine sets or changes that harness, she **remakes the bats** from her Shell on TJ1RMNK.
+- Current remake bake may run CPU ONNX until Kimberly applies the CUDA fork after a staging target finishes (`ONNX_PROVIDER=CUDAExecutionProvider` plus onnxruntime `preload_dlls` / nvidia PATH).
 
 **Qmanager (Q)** reports status and copies packs only. Qmanager does not start or stop GPU workers, load models, or change the harness layout.
 
@@ -26,17 +31,15 @@ Kimberly loads models and changes the harness.
 
 Keep NT Kokoro going on GPUs 1–7 until Martin says suspend. On suspend, finish only a reasonable chapter/book mark, then hold until the following Saturday.
 
-### 2. How to read status (Cursor Shell on TJ1RMNK hangs)
+### 2. How to read status
 
-Cursor Shell on TJ1RMNK often hangs. Do not rely on a long Shell for status.
+Prefer **Kimberly's Shell on TJ1RMNK** for hard status: out-staging counts, `nvidia-smi`, and worker processes.
 
-Prefer one of these:
+The LAN status page on port **8767** may be dead. Do not depend on it.
 
-- **(a) LAN status page.** The local Whisper/Kokoro status page on the LAN at port **8767** (on the machine, or `http://100.124.236.23:8767` over Tailscale). It reports Whisper, Kokoro workers, and GPU use. `nimo serverstatus` asks that page, not only Ollama on 11434.
-- **(b) `status.json` on the machine.** When a brief Shell works, read the short `status.json` it writes on the machine.
-- **(c) One capped Shell.** One Shell capped at about **20 seconds**, killed if it hangs.
+Do not invent GPU numbers from Ollama or llama. Those figures are not a measurement. `martynpc1-coder` `/api/generate` cannot run `nvidia-smi`.
 
-Do not take GPU numbers from Ollama or llama. `martynpc1-coder` `/api/generate` cannot run `nvidia-smi`. Figures that call returns are invented, not a measurement.
+**martynpc1-coder** may still answer a read-only status ask if Kimberly asks. It is not the standing path for harness changes, and it is not the default for remake watch.
 
 ### 3. After reboot, reconnect Grok Bot before harness work
 
