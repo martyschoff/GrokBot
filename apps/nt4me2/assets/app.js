@@ -1,9 +1,14 @@
 const HYMN_ENABLED = false;
 const HYMN_GAIN = 0.15;
 const ART_MS = 12500;
+const ART_PREFETCH = 4;
 let art = [];
 let artIndex = 0;
 let artTimer = null;
+let artPrefetchWindow = null;
+if (typeof document !== "undefined" && !(window.NT_ART_PREFETCH && window.NT_ART_PREFETCH.createArtWindow)) {
+  document.write('<script src="/assets/art-prefetch.js?v=20261005b"><\/script>');
+}
 let playing = false;
 let lastKey = "";
 let artSourceKey = "";
@@ -112,6 +117,46 @@ function setInterpretRim() {
   btn.setAttribute("aria-pressed", interpretOpen ? "true" : "false");
 }
 
+function ensureArtPrefetchWindow() {
+  if (artPrefetchWindow) return artPrefetchWindow;
+  const api = typeof window !== "undefined" ? window.NT_ART_PREFETCH : null;
+  if (!api || typeof api.createArtWindow !== "function") return null;
+  artPrefetchWindow = api.createArtWindow({
+    windowSize: ART_PREFETCH,
+    createImage: function (src) {
+      const probe = new Image();
+      try { probe.decoding = "async"; } catch (e) {}
+      probe.src = src;
+      return {
+        cancel: function () {
+          probe.onload = null;
+          probe.onerror = null;
+          try { probe.src = "data:,"; } catch (err) {}
+        }
+      };
+    }
+  });
+  return artPrefetchWindow;
+}
+
+function resetArtPrefetch() {
+  const api = ensureArtPrefetchWindow();
+  if (api) api.reset();
+  window.ntArtPrefetchState = {
+    window: ART_PREFETCH,
+    index: 0,
+    indexes: [],
+    srcs: [],
+    ahead: []
+  };
+}
+
+function syncArtPrefetch() {
+  const api = ensureArtPrefetchWindow();
+  if (!api) return;
+  window.ntArtPrefetchState = api.sync(art, artIndex);
+}
+
 function stopSlideshow() {
   if (artTimer) {
     clearInterval(artTimer);
@@ -135,6 +180,7 @@ function showArt(i) {
     document.getElementById("art").hidden = true;
     document.getElementById("art-empty").hidden = false;
     document.getElementById("caption").hidden = true;
+    resetArtPrefetch();
     setInterpretRim();
     return;
   }
@@ -152,6 +198,7 @@ function showArt(i) {
   document.getElementById("cap-place").textContent = place;
   document.getElementById("cap-artist").textContent = artist;
   document.getElementById("caption").hidden = !(title || place || artist);
+  syncArtPrefetch();
   setInterpretRim();
   if (interpretOpen) fillInterpret(item);
 }
@@ -548,6 +595,7 @@ async function load(playAfter) {
     art = shuffleArt(next);
     artIndex = 0;
     lastKey = id;
+    resetArtPrefetch();
     if (!interpretFrozen) startSlideshow();
     else showArt(artIndex);
   }
