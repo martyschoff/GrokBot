@@ -507,7 +507,7 @@ async function fetchNow() {
 
 async function load(playAfter) {
   const data = await fetchNow();
-  document.getElementById("title").textContent = data.title || "Daily reading";
+  document.getElementById("title").textContent = data.title || "living words";
   const voice = document.getElementById("voice");
   const hymn = document.getElementById("hymn");
   const hint = document.getElementById("hint");
