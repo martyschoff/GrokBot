@@ -291,10 +291,11 @@ def freetoken_state():
 def whats_in_use(ollama, freetoken, whisper, workers) -> str:
     parts = []
     for name in ollama:
-        parts.append(name if name.startswith("llama:") else "llama:" + name)
+        label = name if name.startswith("llama:") else "llama:" + name
+        parts.append(label + " loaded")
     if freetoken.get("up"):
         model = freetoken.get("model") or ""
-        parts.append("freetoken:" + model if model else "freetoken")
+        parts.append(("freetoken:" + model if model else "freetoken") + " loaded")
     if whisper.get("up"):
         parts.append("whisper")
     if workers > 0:
@@ -315,10 +316,6 @@ def working_line(whisper, workers, queue, inflight, use) -> str:
             parts.append("kokoro off")
         parts.append("queue %s" % queue)
         parts.append("inflight %s" % inflight)
-    elif use and not parts:
-        parts.append("loaded")
-    elif use:
-        parts.append("loaded")
     return ". ".join(parts)
 
 

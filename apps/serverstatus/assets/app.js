@@ -70,9 +70,9 @@
               tr.appendChild(workTd);
             }
           } else if (!row.up) {
-            for (let i = 0; i < 8; i++) tr.appendChild(emptyTd());
+            for (let i = 0; i < 5; i++) tr.appendChild(emptyTd());
           } else {
-            const fields = [row.whatsinuse, row.working_on, row.cpuU, row.memU, row.vram, row.queue1, row.queue2, row.queue3];
+            const fields = [row.whatsinuse, row.working_on, row.cpuU, row.memU, row.vram];
             fields.forEach(field => {
               const td = document.createElement("td");
               if (field === undefined || field === "") td.className = "empty";

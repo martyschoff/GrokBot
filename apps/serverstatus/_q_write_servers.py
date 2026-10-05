@@ -18,14 +18,13 @@ else:
     DATA = os.path.join(HERE, "data")
 PATH = os.path.join(DATA, "servers.json")
 
-# Tailscale addresses. desktop is left down when it does not answer.
+# Tailscale addresses. The old "desktop" row was the 8x3080 and is not listed.
 HOSTS = [
     ("nimo", "100.86.192.3", 12),
     ("T1", "100.68.43.17", 12),
     ("mini48", "100.84.167.88", 15),
     ("MartyNPC1", "100.123.159.36", 12),
     ("up", "100.120.21.39", 12),
-    ("desktop", "100.118.231.14", 3),
     ("3080", "100.124.236.23", 12),
     ("T2", "100.91.174.50", 12),
 ]
@@ -63,9 +62,6 @@ def down_row(name):
         "cpuU": "",
         "memU": "",
         "vram": "",
-        "queue1": "",
-        "queue2": "",
-        "queue3": "",
     }
 
 
@@ -101,6 +97,18 @@ def fetch(ip, timeout):
         return None
 
 
+
+def place_loaded(use, work):
+    """A held model says loaded beside its name, not in working_on."""
+    pieces = [part.strip() for part in (work or "").split(".")]
+    held = any(part.lower() == "loaded" for part in pieces)
+    pieces = [part for part in pieces if part and part.lower() != "loaded"]
+    work = ". ".join(pieces)
+    if held and use and "loaded" not in use.lower():
+        use = use + " loaded"
+    return use, work
+
+
 def row_from(name, data):
     if not isinstance(data, dict):
         return down_row(name)
@@ -128,17 +136,15 @@ def row_from(name, data):
             except Exception:
                 pass
         vram = fmt_mib(used)
+    use, work = place_loaded(data.get("whatsinuse") or "", data.get("working_on") or "")
     return {
         "name": name,
         "up": True,
-        "whatsinuse": data.get("whatsinuse") or "",
-        "working_on": data.get("working_on") or "",
+        "whatsinuse": use,
+        "working_on": work,
         "cpuU": cpu_u,
         "memU": mem_u,
         "vram": vram,
-        "queue1": "",
-        "queue2": "",
-        "queue3": "",
     }
 
 
