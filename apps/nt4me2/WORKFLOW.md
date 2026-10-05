@@ -2,6 +2,25 @@
 
 This is the workflow Kimberly and the fleet follow for the NT app (`ntapp`): the `nt4me2` player in this tree, the house player, and the NT chrome (menus, Settings, Beliefs, art rotation, audio selection).
 
+NT Kokoro on the 8×3080 uses the standing GPU partition in the next section.
+
+## 8×3080 standing layout (Kokoro + Whisper)
+
+Martin confirmed this on 5 Oct 2026. This is the locked standing partition for NT Kokoro work.
+
+**Machine:** DESKTOP-TJ1RMNK (8× RTX 3080 10 GB). Tailscale is typically `100.124.236.23`.
+
+**Standing default for NT Kokoro work:**
+
+- **GPU 0** — Whisper voice server (keep it).
+- **GPUs 1–7** — **seven** Kokoro workers (one chapter / one job per GPU; data parallel). Not Ollama layer-split for this lane.
+
+**Exception (only when Martin says):** stop Whisper and use all eight GPUs for a vLLM / Llama tensor-parallel run. Otherwise do not steal cards 1–7 from Kokoro while the NT batch is the standing job.
+
+Keep NT Kokoro going on GPUs 1–7 until Martin says suspend. On suspend, finish only a reasonable chapter/book mark, then hold until the following Saturday.
+
+**Status board:** the on-demand page on the 3080 at port **8767** reports Whisper / Kokoro workers / GPU use (`nimo serverstatus` asks that, not only Ollama 11434).
+
 ## Rule
 
 **Always QA independently.** After any code or content fix, a different agent verifies it before anyone treats it as done. For ntapp that agent is **CADev**.
