@@ -1,0 +1,54 @@
+Daily Chapter Help
+
+MENU (gold bar at top):
+
+Text — Toggle Bible verses on or off. When on, the verses from the current chapter display as scrollable text over the artwork.
+
+Voice — Switch between British and American English narration. When unavailable, the app falls back to the available accent. (American narration is added to chapters as they go live.)
+
+Bible version — Currently KJV only.
+
+Greek — Toggle Greek words on or off in the audio narration. When off, the audio skips Greek etymologies and liturgical terms, using English translations instead.
+
+Beliefs — Choose which theological tradition filters the artwork:
+  • evangelical — Hides artwork tagged as Roman Catholic (rc). Use this to focus on art aligned with evangelical tradition.
+  • roman catholic — Shows all artwork, including Roman Catholic selections.
+  • orthodox — Shows all artwork, including Orthodox selections.
+  • none — Shows all artwork without tradition filtering.
+
+Volume — Adjust the voice narration volume with a slider.
+
+book/chapter start — Jump to a different New Testament book and chapter. Live chapters are selectable; chapters not yet released appear dimmed. The app remembers your last selection and resumes there next time.
+
+Help — Display this guide.
+
+DOCK BUTTONS (at the bottom):
+
+Play/Pause — Begin or pause the narration. When playing, the artwork cycles automatically through related pieces every 12.5 seconds.
+
+Repeat — Restart the current chapter from the beginning.
+
+Back — Go to the previous chapter in the current book. Only available for live chapters.
+
+Next — Go to the next chapter in the current book. Only available for live chapters.
+
+ART INTERPRETATION BUTTON:
+
+Located near the bottom-right of the artwork, the Art Interpretation button opens a card with scholarly commentary and citations when available. The button color indicates availability:
+  • Green (live button) — An interpretation card is ready for this artwork.
+  • Soft red (no card) — No interpretation is available yet.
+
+PARCHMENT HOME:
+
+The home page displays all New Testament books organized in columns. Green text or buttons indicate books and chapters that are live and ready to read. Secondary or future content appears muted.
+
+ARTWORK AND CAPTIONS:
+
+While a chapter plays, artwork rotates automatically. The artwork title, artist, and place of origin appear below the image (for example, "Raphael, The Disputation of the Holy Sacrament, Apostolic Palace, Vatican"). Roman Catholic traditions are never labeled with (rc) in the caption display.
+
+UNDERSTANDING COLOR CODES:
+
+Gold menu — The top menu bar highlights the current section or active control.
+Green (text, buttons, cards) — Live content: a chapter, book, or interpretation card that is ready to use.
+Soft red (Art Interpretation button) — No interpretation card available for the current artwork yet.
+Muted or gray (text, buttons) — Secondary or future content, not yet available for use.
