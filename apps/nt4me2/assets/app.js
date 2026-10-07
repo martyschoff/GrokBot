@@ -24,18 +24,7 @@ let viewingBook = "";
 let liveTable = {};
 
 function normalizeLiveTable(data) {
-  const out = {};
-  if (!data || typeof data !== "object") return out;
-  const books = (data.books && typeof data.books === "object") ? data.books : data;
-  Object.keys(books).forEach((id) => {
-    const row = books[id];
-    let chapters = [];
-    if (Array.isArray(row)) chapters = row;
-    else if (row && Array.isArray(row.chapters)) chapters = row.chapters;
-    const nums = chapters.map(Number).filter((n) => n >= 1).sort((a, b) => a - b);
-    if (nums.length) out[id] = nums;
-  });
-  return out;
+  return NT4.normalizeLiveTable(data);
 }
 
 async function loadLiveTable() {
@@ -46,37 +35,36 @@ async function loadLiveTable() {
       const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) continue;
       const data = await res.json();
-      liveTable = normalizeLiveTable(data);
-      return;
+      const next = normalizeLiveTable(data);
+      if (Object.keys(next).length) {
+        liveTable = next;
+        return;
+      }
     } catch (e) {}
+  }
+  if (!Object.keys(liveTable).length) {
+    liveTable = normalizeLiveTable(NT4.NT_FALLBACK);
   }
 }
 
 function liveChapters(book) {
-  const row = liveTable[book];
-  return Array.isArray(row) ? row.slice() : [];
+  return NT4.liveChapters(liveTable, book);
 }
 
 function isLiveBook(book) {
-  return liveChapters(book).length > 0;
+  return NT4.isLiveBook(liveTable, book);
 }
 
 function isLiveChapter(book, n) {
-  return liveChapters(book).indexOf(Number(n)) >= 0;
+  return NT4.isLiveChapter(liveTable, book, n);
 }
 
 function audioStem(book) {
-  if (book === "romans") return "romans-";
-  if (book === "1corinthians") return "1cor-";
-  return "";
+  return NT4.audioStem(book);
 }
 
 function artFile(item) {
-  if (!item) return "";
-  if (item.file) return item.file;
-  const src = String(item.src || "");
-  const i = src.lastIndexOf("/");
-  return i >= 0 ? src.slice(i + 1) : src;
+  return NT4.artFile(item);
 }
 
 function artListKey(list) {
@@ -157,8 +145,7 @@ function showArt(i) {
 }
 
 function citeLine(c) {
-  const bits = [c.author, c.title, c.publication, c.date].filter(Boolean);
-  return bits.join(", ");
+  return NT4.citeLine(c);
 }
 
 function fillInterpret(item) {
@@ -340,8 +327,13 @@ function setPlaying(on) {
   const btn = document.getElementById("play");
   applyVoiceVolume();
   if (on) {
+    if (!NT4.hasMediaSrc(voice)) {
+      playing = false;
+      if (btn) btn.textContent = "Play";
+      return;
+    }
     voice.play().catch(() => {});
-    if (HYMN_ENABLED && hymn.src) {
+    if (HYMN_ENABLED && NT4.hasMediaSrc(hymn)) {
       hymn.volume = HYMN_GAIN;
       hymn.play().catch(() => {});
     } else {
@@ -362,9 +354,9 @@ function setPlaying(on) {
 function repeatFromStart() {
   const voice = document.getElementById("voice");
   const hymn = document.getElementById("hymn");
-  if (!voice.src) return;
+  if (!NT4.hasMediaSrc(voice)) return;
   try { voice.currentTime = 0; } catch (e) {}
-  try { if (hymn.src) hymn.currentTime = 0; } catch (e) {}
+  try { if (NT4.hasMediaSrc(hymn)) hymn.currentTime = 0; } catch (e) {}
   if (interpretOpen) hideInterpret();
   interpretFrozen = false;
   setPlaying(true);
@@ -386,11 +378,7 @@ function packBase() {
 }
 
 function mediaUrl(path) {
-  if (!path) return "";
-  if (/^https?:\/\//i.test(path)) return path;
-  const pack = packBase();
-  if (pack && String(path).startsWith("/")) return pack + path;
-  return path;
+  return NT4.mediaUrl(path, packBase());
 }
 
 async function loadPrefs() {
@@ -437,9 +425,7 @@ function paintGreek() {
 }
 
 function bookLabel(id) {
-  if (id === "romans") return "Romans";
-  if (id === "1corinthians") return "1 Corinthians";
-  return id || "";
+  return NT4.bookLabel(id);
 }
 
 function decorateNow(data) {
@@ -633,38 +619,7 @@ function showChapters(book) {
   showUrPanel(rows.join(""));
 }
 
-const NT_FALLBACK = {
-  version: "KJV",
-  books: [
-    {id:"matthew",label:"Matthew",live:false,chapters:0},
-    {id:"mark",label:"Mark",live:false,chapters:0},
-    {id:"luke",label:"Luke",live:false,chapters:0},
-    {id:"john",label:"John",live:false,chapters:0},
-    {id:"acts",label:"Acts",live:false,chapters:0},
-    {id:"romans",label:"Romans",live:true,chapters:16},
-    {id:"1corinthians",label:"1 Corinthians",live:true,chapters:16},
-    {id:"2corinthians",label:"2 Corinthians",live:false,chapters:0},
-    {id:"galatians",label:"Galatians",live:false,chapters:0},
-    {id:"ephesians",label:"Ephesians",live:false,chapters:0},
-    {id:"philippians",label:"Philippians",live:false,chapters:0},
-    {id:"colossians",label:"Colossians",live:false,chapters:0},
-    {id:"1thessalonians",label:"1 Thessalonians",live:false,chapters:0},
-    {id:"2thessalonians",label:"2 Thessalonians",live:false,chapters:0},
-    {id:"1timothy",label:"1 Timothy",live:false,chapters:0},
-    {id:"2timothy",label:"2 Timothy",live:false,chapters:0},
-    {id:"titus",label:"Titus",live:false,chapters:0},
-    {id:"philemon",label:"Philemon",live:false,chapters:0},
-    {id:"hebrews",label:"Hebrews",live:false,chapters:0},
-    {id:"james",label:"James",live:false,chapters:0},
-    {id:"1peter",label:"1 Peter",live:false,chapters:0},
-    {id:"2peter",label:"2 Peter",live:false,chapters:0},
-    {id:"1john",label:"1 John",live:false,chapters:0},
-    {id:"2john",label:"2 John",live:false,chapters:0},
-    {id:"3john",label:"3 John",live:false,chapters:0},
-    {id:"jude",label:"Jude",live:false,chapters:0},
-    {id:"revelation",label:"Revelation",live:false,chapters:0}
-  ]
-};
+const NT_FALLBACK = NT4.NT_FALLBACK;
 
 async function loadCatalog() {
   const pack = packBase();
@@ -682,27 +637,9 @@ async function loadCatalog() {
 }
 
 function chapterFromData(data) {
-  if (data && data.book) savedBook = String(data.book);
-  if (data && Number(data.chapter)) return Number(data.chapter);
-  const title = String((data && data.title) || "");
-  let m = title.match(/1\s*corinthians\s+(\d+)/i);
-  if (m) {
-    savedBook = "1corinthians";
-    return Number(m[1]);
-  }
-  m = title.match(/romans\s+(\d+)/i);
-  if (m) {
-    savedBook = "romans";
-    return Number(m[1]);
-  }
-  const p = String(nowPick || "").match(/kjv\/([^/]+)\/(\d+)\//);
-  if (p) {
-    savedBook = p[1];
-    return Number(p[2]);
-  }
-  const r = String(nowPick || "").match(/romans\/(\d+)\//);
-  if (r) return Number(r[1]);
-  return 0;
+  const parsed = NT4.chapterFromPayload(data, nowPick);
+  if (parsed.book) savedBook = parsed.book;
+  return parsed.chapter;
 }
 
 async function pickChapter(n, bookId) {
@@ -719,22 +656,16 @@ async function pickChapter(n, bookId) {
 
 async function nextChapter() {
   const book = savedBook || "romans";
-  const live = liveChapters(book);
-  if (!live.length) return;
-  const cur = Number(currentChapter);
-  const idx = live.indexOf(cur);
-  if (idx < 0 || idx >= live.length - 1) return;
-  await pickChapter(live[idx + 1], book);
+  const n = NT4.nextLiveChapter(liveTable, book, currentChapter);
+  if (n == null) return;
+  await pickChapter(n, book);
 }
 
 async function prevChapter() {
   const book = savedBook || "romans";
-  const live = liveChapters(book);
-  if (!live.length) return;
-  const cur = Number(currentChapter);
-  const idx = live.indexOf(cur);
-  if (idx <= 0) return;
-  await pickChapter(live[idx - 1], book);
+  const n = NT4.prevLiveChapter(liveTable, book, currentChapter);
+  if (n == null) return;
+  await pickChapter(n, book);
 }
 
 document.getElementById("ur-btn").addEventListener("click", (e) => {
@@ -792,7 +723,7 @@ document.addEventListener("click", (e) => {
 
 document.getElementById("play").addEventListener("click", () => {
   const voice = document.getElementById("voice");
-  if (!voice.src) return;
+  if (!NT4.hasMediaSrc(voice)) return;
   setPlaying(!playing);
 });
 document.getElementById("repeat").addEventListener("click", repeatFromStart);
