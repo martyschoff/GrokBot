@@ -23,12 +23,27 @@ let currentChapter = 0;
 let viewingBook = "";
 let liveTable = {};
 
+function safeBookId(id) {
+  const s = String(id || "").toLowerCase();
+  return /^[a-z0-9]+$/.test(s) ? s : "";
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
 function normalizeLiveTable(data) {
   const out = {};
   if (!data || typeof data !== "object") return out;
   const books = (data.books && typeof data.books === "object") ? data.books : data;
-  Object.keys(books).forEach((id) => {
-    const row = books[id];
+  Object.keys(books).forEach((rawId) => {
+    const id = safeBookId(rawId);
+    if (!id) return;
+    const row = books[rawId];
     let chapters = [];
     if (Array.isArray(row)) chapters = row;
     else if (row && Array.isArray(row.chapters)) chapters = row.chapters;
@@ -47,6 +62,7 @@ async function loadLiveTable() {
       if (!res.ok) continue;
       const data = await res.json();
       liveTable = normalizeLiveTable(data);
+      if (!nowPick && !currentChapter) restoreCompleted();
       return;
     } catch (e) {}
   }
@@ -220,7 +236,9 @@ async function loadCard(item) {
   if (!meta) return;
   if (cardCache[meta.file]) return;
   const pack = (window.PACK_BASE || "").replace(/\/$/, "");
-  const path = (pack || "") + "/data/art/" + meta.card.replace(/^\/+/, "");
+  const cardName = String(meta.card || "").replace(/^\/+/, "");
+  if (!cardName || cardName.includes("..") || /[\\?#]/.test(cardName)) return;
+  const path = (pack || "") + "/data/art/" + cardName;
   const res = await fetch(path, { cache: "no-store" });
   if (!res.ok) return;
   const card = await res.json();
@@ -310,7 +328,7 @@ function readCompleted() {
     if (!raw) return null;
     const p = JSON.parse(raw);
     const chapter = Number(p && p.chapter);
-    const book = String((p && p.book) || "");
+    const book = safeBookId(p && p.book);
     if (book && chapter >= 1) return { book: book, chapter: chapter };
   } catch (e) {}
   return null;
@@ -318,9 +336,10 @@ function readCompleted() {
 
 function writeCompleted(book, chapter) {
   const n = Number(chapter);
-  if (!book || !n) return;
+  const bookId = safeBookId(book);
+  if (!bookId || !n) return;
   try {
-    localStorage.setItem(DONE_KEY, JSON.stringify({ book: String(book), chapter: n }));
+    localStorage.setItem(DONE_KEY, JSON.stringify({ book: bookId, chapter: n }));
   } catch (e) {}
 }
 
@@ -511,7 +530,8 @@ async function load(playAfter) {
   const voice = document.getElementById("voice");
   const hymn = document.getElementById("hymn");
   const hint = document.getElementById("hint");
-  if (data && data.book) savedBook = String(data.book);
+  const nextBook = safeBookId(data && data.book);
+  if (nextBook) savedBook = nextBook;
   const ch = chapterFromData(data);
   if (ch) currentChapter = ch;
   const stem = audioStem(savedBook);
@@ -604,27 +624,31 @@ function showVolume() {
 function showBooks(catalog) {
   const rows = ['<p class="ur-head">NT books</p>'];
   (catalog.books || []).forEach((b) => {
-    if (isLiveBook(b.id)) {
-      rows.push('<button type="button" class="ur-book ur-live" data-book="' + b.id + '">' + (b.label || b.id) + "</button>");
+    const id = safeBookId(b && b.id);
+    const label = escapeHtml((b && b.label) || id);
+    if (!id) return;
+    if (isLiveBook(id)) {
+      rows.push('<button type="button" class="ur-book ur-live" data-book="' + escapeHtml(id) + '">' + label + "</button>");
     } else {
-      rows.push('<button type="button" class="ur-book-off" disabled tabindex="-1">' + (b.label || b.id) + "</button>");
+      rows.push('<button type="button" class="ur-book-off" disabled tabindex="-1">' + label + "</button>");
     }
   });
   showUrPanel(rows.join(""));
 }
 
 function showChapters(book) {
-  if (!book || !isLiveBook(book.id)) return;
-  const live = liveChapters(book.id);
+  const bookId = safeBookId(book && book.id);
+  if (!bookId || !isLiveBook(bookId)) return;
+  const live = liveChapters(bookId);
   let n = Number(book.chapters || 0);
   if (live.length) n = Math.max(n, live[live.length - 1]);
   if (!n) return;
-  viewingBook = book.id;
+  viewingBook = bookId;
   const on = {};
   live.forEach((c) => { on[c] = 1; });
   const rows = [
     '<button type="button" class="ur-back" data-back="books">Books</button>',
-    '<p class="ur-head">' + (book.label || book.id) + " 1–" + n + "</p>"
+    '<p class="ur-head">' + escapeHtml(book.label || bookId) + " 1–" + n + "</p>"
   ];
   for (let i = 1; i <= n; i++) {
     const cls = on[i] ? "ur-live" : "ur-wait";
@@ -682,7 +706,8 @@ async function loadCatalog() {
 }
 
 function chapterFromData(data) {
-  if (data && data.book) savedBook = String(data.book);
+  const fromData = safeBookId(data && data.book);
+  if (fromData) savedBook = fromData;
   if (data && Number(data.chapter)) return Number(data.chapter);
   const title = String((data && data.title) || "");
   let m = title.match(/1\s*corinthians\s+(\d+)/i);
@@ -697,7 +722,7 @@ function chapterFromData(data) {
   }
   const p = String(nowPick || "").match(/kjv\/([^/]+)\/(\d+)\//);
   if (p) {
-    savedBook = p[1];
+    savedBook = safeBookId(p[1]) || savedBook;
     return Number(p[2]);
   }
   const r = String(nowPick || "").match(/romans\/(\d+)\//);
@@ -707,7 +732,7 @@ function chapterFromData(data) {
 
 async function pickChapter(n, bookId) {
   n = Number(n);
-  const book = bookId || viewingBook || savedBook || "romans";
+  const book = safeBookId(bookId || viewingBook || savedBook) || "romans";
   if (!isLiveChapter(book, n)) return;
   currentChapter = n;
   savedBook = book;
@@ -770,11 +795,11 @@ document.getElementById("ur-panel").addEventListener("click", async (e) => {
     showBooks(window._bookCatalog || { books: [] });
     return;
   }
-  const bookId = btn.getAttribute("data-book");
+  const bookId = safeBookId(btn.getAttribute("data-book"));
   if (bookId) {
     const catalog = window._bookCatalog || await loadCatalog();
-    const book = (catalog.books || []).find((b) => b.id === bookId);
-    if (book && isLiveBook(book.id)) showChapters(book);
+    const book = (catalog.books || []).find((b) => safeBookId(b.id) === bookId);
+    if (book && isLiveBook(bookId)) showChapters(Object.assign({}, book, { id: bookId }));
     return;
   }
   const ch = btn.getAttribute("data-chapter");
