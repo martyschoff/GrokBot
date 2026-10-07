@@ -14,7 +14,11 @@ let interpretIndex = {};
 let cardCache = {};
 let nowPick = "";
 let hearGreek = true;
+let showText = true;
+let voiceAccent = "british";
 const PREF_KEY = "daily-chapter-hear-greek";
+const TEXT_KEY = "daily-chapter-show-text";
+const VOICE_KEY = "daily-chapter-voice-accent";
 const VOL_KEY = "daily-chapter-voice-volume";
 const DONE_KEY = "daily-chapter-completed";
 let voiceVolume = 1;
@@ -68,6 +72,9 @@ function isLiveChapter(book, n) {
 function audioStem(book) {
   if (book === "romans") return "romans-";
   if (book === "1corinthians") return "1cor-";
+  if (book === "hebrews") return "hebrews-";
+  if (book === "titus") return "titus-";
+  if (book === "philemon") return "philemon-";
   return "";
 }
 
@@ -333,6 +340,17 @@ function restoreCompleted() {
   nowPick = (packBase() || "") + "/data/kjv/" + done.book + "/" + done.chapter + "/now-live.json";
 }
 
+function showVerseOverlay() {
+  var viewport = document.getElementById("verse-text-viewport");
+  if (!viewport) return;
+  viewport.hidden = !showText;
+}
+
+function hideVerseOverlay() {
+  var viewport = document.getElementById("verse-text-viewport");
+  if (viewport) viewport.hidden = true;
+}
+
 function setPlaying(on) {
   playing = on;
   const voice = document.getElementById("voice");
@@ -347,7 +365,7 @@ function setPlaying(on) {
     } else {
       hymn.pause();
     }
-    btn.textContent = "Pause";
+    if (btn) btn.textContent = "Pause";
     if (!interpretOpen && interpretFrozen) {
       interpretFrozen = false;
       startSlideshow();
@@ -355,7 +373,7 @@ function setPlaying(on) {
   } else {
     voice.pause();
     hymn.pause();
-    btn.textContent = "Play";
+    if (btn) btn.textContent = "Play";
   }
 }
 
@@ -395,11 +413,22 @@ function mediaUrl(path) {
 
 async function loadPrefs() {
   hearGreek = true;
+  showText = true;
+  voiceAccent = "british";
   voiceVolume = 1;
   try {
     const v = localStorage.getItem(PREF_KEY);
     if (v === "0") hearGreek = false;
     if (v === "1") hearGreek = true;
+  } catch (e) {}
+  try {
+    const t = localStorage.getItem(TEXT_KEY);
+    if (t === "0") showText = false;
+    else showText = true;
+  } catch (e) {}
+  try {
+    const a = localStorage.getItem(VOICE_KEY);
+    if (a === "american" || a === "british") voiceAccent = a;
   } catch (e) {}
   try {
     const raw = localStorage.getItem(VOL_KEY);
@@ -417,10 +446,14 @@ async function loadPrefs() {
   } catch (e) {}
   applyVoiceVolume();
   paintGreek();
+  paintText();
+  paintVoice();
 }
 
 async function savePrefs() {
   try { localStorage.setItem(PREF_KEY, hearGreek ? "1" : "0"); } catch (e) {}
+  try { localStorage.setItem(TEXT_KEY, showText ? "1" : "0"); } catch (e) {}
+  try { localStorage.setItem(VOICE_KEY, voiceAccent); } catch (e) {}
   try { localStorage.setItem(VOL_KEY, String(voiceVolume)); } catch (e) {}
   try {
     await fetch("/api/prefs", {
@@ -436,10 +469,24 @@ function paintGreek() {
   if (btn) btn.textContent = hearGreek ? "Greek: on" : "Greek: off";
 }
 
+function paintText() {
+  const btn = document.getElementById("ur-text");
+  if (btn) btn.textContent = showText ? "Text" : "Notext";
+}
+
+function paintVoice() {
+  const btn = document.getElementById("ur-voice");
+  if (btn) btn.textContent = "Voice: " + (voiceAccent === "american" ? "American" : "British");
+}
+
 function bookLabel(id) {
   if (id === "romans") return "Romans";
   if (id === "1corinthians") return "1 Corinthians";
   return id || "";
+}
+
+function bookNameForDisplay(id) {
+  return bookLabel(id);
 }
 
 function decorateNow(data) {
@@ -505,6 +552,84 @@ async function fetchNow() {
   return {};
 }
 
+function bookNameForAPI(bookId) {
+  if (bookId === "1corinthians") return "1 Corinthians";
+  if (bookId === "2corinthians") return "2 Corinthians";
+  if (bookId === "1thessalonians") return "1 Thessalonians";
+  if (bookId === "2thessalonians") return "2 Thessalonians";
+  if (bookId === "1timothy") return "1 Timothy";
+  if (bookId === "2timothy") return "2 Timothy";
+  if (bookId === "1peter") return "1 Peter";
+  if (bookId === "2peter") return "2 Peter";
+  if (bookId === "1john") return "1 John";
+  if (bookId === "2john") return "2 John";
+  if (bookId === "3john") return "3 John";
+  return bookId.charAt(0).toUpperCase() + bookId.slice(1);
+}
+
+function renderVersesToScroller(verses) {
+  var scroller = document.getElementById("verse-text-scroller");
+  if (!scroller) return;
+  scroller.innerHTML = "";
+  if (!verses || verses.length === 0) return;
+  var bk = bookNameForDisplay(savedBook);
+  var ch = currentChapter || "";
+  verses.forEach(function (v, idx) {
+    var verseText = String(v.text || "").trim();
+    if (!verseText) return;
+    var verseNum = v.verse || (idx + 1);
+    var p = document.createElement("p");
+    var label = bk && ch ? (bk + " " + ch + ":" + verseNum) : verseNum;
+    p.textContent = label + " " + verseText;
+    scroller.appendChild(p);
+  });
+}
+
+async function fetchKJVText(book, chapter) {
+  const bookName = bookNameForAPI(book);
+  const reference = encodeURIComponent(bookName + " " + chapter);
+  try {
+    const res = await fetch("https://bible-api.com/" + reference + "?translation=kjv", { cache: "force-cache" });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data && Array.isArray(data.verses)) {
+      return data.verses;
+    }
+  } catch (e) {}
+  return null;
+}
+
+async function loadVerses(book, chapter) {
+  var scroller = document.getElementById("verse-text-scroller");
+  if (scroller) scroller.innerHTML = "";
+  if (!book || !chapter) return;
+  var versesData = null;
+  try {
+    var pack = packBase();
+    var path = (pack || "") + "/data/kjv/" + book + "/" + chapter + "/verses.json";
+    var res = await fetch(path, { cache: "no-store" });
+    if (res.ok) {
+      var data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        if (data[0].text) {
+          versesData = data;
+        } else if (data[0].lines) {
+          versesData = data.map(function (v) {
+            return { verse: v.verse || "", text: (v.lines || []).join(" ") || "" };
+          });
+        }
+      }
+    }
+  } catch (e) {}
+  if (!versesData) {
+    versesData = await fetchKJVText(book, chapter);
+  }
+  if (versesData && versesData.length > 0) {
+    renderVersesToScroller(versesData);
+  }
+  showVerseOverlay();
+}
+
 async function load(playAfter) {
   const data = await fetchNow();
   document.getElementById("title").textContent = data.title || "Daily reading";
@@ -514,20 +639,64 @@ async function load(playAfter) {
   if (data && data.book) savedBook = String(data.book);
   const ch = chapterFromData(data);
   if (ch) currentChapter = ch;
+  await loadVerses(savedBook, currentChapter);
   const stem = audioStem(savedBook);
   if (stem && isLiveChapter(savedBook, currentChapter)) {
-    if (!hearGreek) {
-      data.audio = mediaUrl("/data/audio/" + stem + currentChapter + "-nogrk.mp3");
+    let suffix = "";
+    if (voiceAccent === "american") suffix = "-american";
+    if (!hearGreek) suffix += "-nogrk";
+    let preferredUrl = mediaUrl("/data/audio/" + stem + currentChapter + suffix + ".mp3");
+    
+    // Always rebuild live audio URL from voiceAccent + greek-off; don't let now-live.audio lock british
+    if (voiceAccent === "american" || !hearGreek) {
+      data.audio = preferredUrl;
+      hint.textContent = "";
+      // Probe american audio existence with Audio element (avoids CORS issues)
+      if (voiceAccent === "american") {
+        const probe = new Audio();
+        let probeResolved = false;
+        const onLoadedData = () => {
+          if (!probeResolved) {
+            probeResolved = true;
+            cleanup();
+          }
+        };
+        const onError = () => {
+          if (!probeResolved) {
+            probeResolved = true;
+            // American audio not available, fall back to british equivalent
+            let fallbackSuffix = "";
+            if (!hearGreek) fallbackSuffix = "-nogrk";
+            data.audio = mediaUrl("/data/audio/" + stem + currentChapter + fallbackSuffix + ".mp3");
+            hint.textContent = "American audio not on pack yet — playing British.";
+            // Update voice element with fallback
+            if (voice.getAttribute("src") !== data.audio) voice.src = data.audio;
+            cleanup();
+          }
+        };
+        const cleanup = () => {
+          probe.removeEventListener("loadeddata", onLoadedData);
+          probe.removeEventListener("canplay", onLoadedData);
+          probe.removeEventListener("error", onError);
+          probe.src = "";
+        };
+        probe.addEventListener("loadeddata", onLoadedData);
+        probe.addEventListener("canplay", onLoadedData);
+        probe.addEventListener("error", onError);
+        probe.src = preferredUrl;
+      }
     } else if (!data.audio || data.waiting_audio) {
-      data.audio = mediaUrl("/data/audio/" + stem + currentChapter + ".mp3");
+      data.audio = preferredUrl;
     }
   }
   if (data.audio) {
     if (voice.getAttribute("src") !== data.audio) voice.src = data.audio;
     applyVoiceVolume();
-    hint.textContent = HYMN_ENABLED
-      ? (data.waiting_hymn ? "Voice ready. Waiting on a public-domain hymn." : "Hymn stays very quiet under the voice.")
-      : "";
+    if (!hint.textContent) {
+      hint.textContent = HYMN_ENABLED
+        ? (data.waiting_hymn ? "Voice ready. Waiting on a public-domain hymn." : "Hymn stays very quiet under the voice.")
+        : "";
+    }
   } else {
     voice.removeAttribute("src");
     hint.textContent = "Waiting on the audio.";
@@ -567,6 +736,8 @@ function openUrMenu() {
   document.getElementById("ur-panel").hidden = true;
   menu.hidden = !open;
   document.getElementById("ur-btn").setAttribute("aria-expanded", open ? "true" : "false");
+  paintText();
+  paintVoice();
   paintGreek();
 }
 
@@ -652,9 +823,9 @@ const NT_FALLBACK = {
     {id:"2thessalonians",label:"2 Thessalonians",live:false,chapters:0},
     {id:"1timothy",label:"1 Timothy",live:false,chapters:0},
     {id:"2timothy",label:"2 Timothy",live:false,chapters:0},
-    {id:"titus",label:"Titus",live:false,chapters:0},
-    {id:"philemon",label:"Philemon",live:false,chapters:0},
-    {id:"hebrews",label:"Hebrews",live:false,chapters:0},
+    {id:"titus",label:"Titus",live:true,chapters:3},
+    {id:"philemon",label:"Philemon",live:true,chapters:1},
+    {id:"hebrews",label:"Hebrews",live:true,chapters:13},
     {id:"james",label:"James",live:false,chapters:0},
     {id:"1peter",label:"1 Peter",live:false,chapters:0},
     {id:"2peter",label:"2 Peter",live:false,chapters:0},
@@ -747,6 +918,19 @@ document.getElementById("ur-menu").addEventListener("click", async (e) => {
   const btn = e.target.closest("button");
   if (!btn) return;
   const kind = btn.getAttribute("data-ur");
+  if (kind === "text") {
+    showText = !showText;
+    paintText();
+    savePrefs();
+    if (showText) showVerseOverlay();
+    else hideVerseOverlay();
+  }
+  if (kind === "voice") {
+    voiceAccent = voiceAccent === "british" ? "american" : "british";
+    paintVoice();
+    savePrefs();
+    load(playing);
+  }
   if (kind === "version") showVersion();
   if (kind === "greek") {
     hearGreek = !hearGreek;
@@ -802,15 +986,34 @@ document.getElementById("interpretation").addEventListener("click", (e) => {
   e.preventDefault();
   toggleInterpret();
 });
-document.getElementById("voice").addEventListener("ended", () => {
+document.getElementById("voice").addEventListener("ended", function () {
   setPlaying(false);
   if (currentChapter >= 1) writeCompleted(savedBook || "romans", currentChapter);
 });
+
+function getQueryParam(name) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(name);
+}
 
 (async function boot() {
   await loadPrefs();
   await loadLiveTable();
   restoreCompleted();
+  
+  const bookParam = getQueryParam("book");
+  if (bookParam && isLiveBook(bookParam)) {
+    savedBook = bookParam;
+  }
+  
+  const chapterParam = getQueryParam("chapter");
+  if (chapterParam) {
+    const ch = Number(chapterParam);
+    if (ch >= 1 && isLiveChapter(savedBook, ch)) {
+      currentChapter = ch;
+    }
+  }
+  
   loadIndex();
   load();
   setInterval(load, 15000);
