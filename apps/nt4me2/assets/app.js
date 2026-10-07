@@ -717,97 +717,111 @@ async function pickChapter(n, bookId) {
   await load(true);
 }
 
+function nextLiveChapterNumber(book, current) {
+  const live = liveChapters(book);
+  if (!live.length) return null;
+  const idx = live.indexOf(Number(current));
+  if (idx < 0 || idx >= live.length - 1) return null;
+  return live[idx + 1];
+}
+
+function prevLiveChapterNumber(book, current) {
+  const live = liveChapters(book);
+  if (!live.length) return null;
+  const idx = live.indexOf(Number(current));
+  if (idx <= 0) return null;
+  return live[idx - 1];
+}
+
 async function nextChapter() {
   const book = savedBook || "romans";
-  const live = liveChapters(book);
-  if (!live.length) return;
-  const cur = Number(currentChapter);
-  const idx = live.indexOf(cur);
-  if (idx < 0 || idx >= live.length - 1) return;
-  await pickChapter(live[idx + 1], book);
+  const n = nextLiveChapterNumber(book, currentChapter);
+  if (n == null) return;
+  await pickChapter(n, book);
 }
 
 async function prevChapter() {
   const book = savedBook || "romans";
-  const live = liveChapters(book);
-  if (!live.length) return;
-  const cur = Number(currentChapter);
-  const idx = live.indexOf(cur);
-  if (idx <= 0) return;
-  await pickChapter(live[idx - 1], book);
+  const n = prevLiveChapterNumber(book, currentChapter);
+  if (n == null) return;
+  await pickChapter(n, book);
 }
 
-document.getElementById("ur-btn").addEventListener("click", (e) => {
-  e.stopPropagation();
-  if (!document.getElementById("ur-menu").hidden) closeUr();
-  else openUrMenu();
-});
-document.getElementById("ur-menu").addEventListener("click", async (e) => {
-  e.stopPropagation();
-  const btn = e.target.closest("button");
-  if (!btn) return;
-  const kind = btn.getAttribute("data-ur");
-  if (kind === "version") showVersion();
-  if (kind === "greek") {
-    hearGreek = !hearGreek;
-    paintGreek();
-    savePrefs();
-    load(playing);
-  }
-  if (kind === "volume") showVolume();
-  if (kind === "book") {
-    const catalog = await loadCatalog();
-    window._bookCatalog = catalog;
-    showBooks(catalog);
-  }
-  if (kind === "help") toggleHelp();
-});
-document.getElementById("ur-panel").addEventListener("click", async (e) => {
-  e.stopPropagation();
-  const btn = e.target.closest("button");
-  if (!btn || btn.disabled || btn.classList.contains("ur-dead") || btn.classList.contains("ur-wait")) return;
-  if (btn.getAttribute("data-back") === "books") {
-    showBooks(window._bookCatalog || { books: [] });
-    return;
-  }
-  const bookId = btn.getAttribute("data-book");
-  if (bookId) {
-    const catalog = window._bookCatalog || await loadCatalog();
-    const book = (catalog.books || []).find((b) => b.id === bookId);
-    if (book && isLiveBook(book.id)) showChapters(book);
-    return;
-  }
-  const ch = btn.getAttribute("data-chapter");
-  if (ch) pickChapter(ch);
-});
-document.addEventListener("click", (e) => {
-  if (e.target.closest("#ur-btn, #ur-menu, #ur-panel")) return;
-  const menu = document.getElementById("ur-menu");
-  const panel = document.getElementById("ur-panel");
-  if (!menu.hidden || !panel.hidden) closeUr();
-  if (!e.target.closest("#help-bubble") && !document.getElementById("help-bubble").hidden) {
-    if (!e.target.closest("[data-ur=help]")) hideHelp();
-  }
-});
+function bindPlayerUi() {
+  if (bindPlayerUi.bound) return;
+  bindPlayerUi.bound = true;
+  document.getElementById("ur-btn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (!document.getElementById("ur-menu").hidden) closeUr();
+    else openUrMenu();
+  });
+  document.getElementById("ur-menu").addEventListener("click", async (e) => {
+    e.stopPropagation();
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    const kind = btn.getAttribute("data-ur");
+    if (kind === "version") showVersion();
+    if (kind === "greek") {
+      hearGreek = !hearGreek;
+      paintGreek();
+      savePrefs();
+      load(playing);
+    }
+    if (kind === "volume") showVolume();
+    if (kind === "book") {
+      const catalog = await loadCatalog();
+      window._bookCatalog = catalog;
+      showBooks(catalog);
+    }
+    if (kind === "help") toggleHelp();
+  });
+  document.getElementById("ur-panel").addEventListener("click", async (e) => {
+    e.stopPropagation();
+    const btn = e.target.closest("button");
+    if (!btn || btn.disabled || btn.classList.contains("ur-dead") || btn.classList.contains("ur-wait")) return;
+    if (btn.getAttribute("data-back") === "books") {
+      showBooks(window._bookCatalog || { books: [] });
+      return;
+    }
+    const bookId = btn.getAttribute("data-book");
+    if (bookId) {
+      const catalog = window._bookCatalog || await loadCatalog();
+      const book = (catalog.books || []).find((b) => b.id === bookId);
+      if (book && isLiveBook(book.id)) showChapters(book);
+      return;
+    }
+    const ch = btn.getAttribute("data-chapter");
+    if (ch) pickChapter(ch);
+  });
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("#ur-btn, #ur-menu, #ur-panel")) return;
+    const menu = document.getElementById("ur-menu");
+    const panel = document.getElementById("ur-panel");
+    if (!menu.hidden || !panel.hidden) closeUr();
+    if (!e.target.closest("#help-bubble") && !document.getElementById("help-bubble").hidden) {
+      if (!e.target.closest("[data-ur=help]")) hideHelp();
+    }
+  });
 
-document.getElementById("play").addEventListener("click", () => {
-  const voice = document.getElementById("voice");
-  if (!voice.src) return;
-  setPlaying(!playing);
-});
-document.getElementById("repeat").addEventListener("click", repeatFromStart);
-document.getElementById("next").addEventListener("click", () => { nextChapter(); });
-document.getElementById("back").addEventListener("click", () => { prevChapter(); });
-document.getElementById("interpretation").addEventListener("click", (e) => {
-  e.preventDefault();
-  toggleInterpret();
-});
-document.getElementById("voice").addEventListener("ended", () => {
-  setPlaying(false);
-  if (currentChapter >= 1) writeCompleted(savedBook || "romans", currentChapter);
-});
+  document.getElementById("play").addEventListener("click", () => {
+    const voice = document.getElementById("voice");
+    if (!voice.src) return;
+    setPlaying(!playing);
+  });
+  document.getElementById("repeat").addEventListener("click", repeatFromStart);
+  document.getElementById("next").addEventListener("click", () => { nextChapter(); });
+  document.getElementById("back").addEventListener("click", () => { prevChapter(); });
+  document.getElementById("interpretation").addEventListener("click", (e) => {
+    e.preventDefault();
+    toggleInterpret();
+  });
+  document.getElementById("voice").addEventListener("ended", () => {
+    setPlaying(false);
+    if (currentChapter >= 1) writeCompleted(savedBook || "romans", currentChapter);
+  });
+}
 
-(async function boot() {
+async function boot() {
   await loadPrefs();
   await loadLiveTable();
   restoreCompleted();
@@ -816,4 +830,130 @@ document.getElementById("voice").addEventListener("ended", () => {
   setInterval(load, 15000);
   setInterval(loadIndex, 15000);
   setInterval(loadLiveTable, 15000);
-})();
+}
+
+function shouldAutoStart() {
+  if (typeof document === "undefined" || !document.getElementById) return false;
+  if (!document.getElementById("ur-btn")) return false;
+  if (typeof process !== "undefined" && process.env && process.env.NODE_TEST_CONTEXT) return false;
+  return true;
+}
+
+function getState() {
+  return {
+    art,
+    artIndex,
+    playing,
+    nowPick,
+    hearGreek,
+    voiceVolume,
+    savedBook,
+    currentChapter,
+    viewingBook,
+    liveTable,
+    interpretOpen,
+    interpretFrozen,
+    interpretIndex,
+    cardCache,
+    artSourceKey,
+    lastKey,
+  };
+}
+
+function setState(next) {
+  if (!next || typeof next !== "object") return;
+  if ("art" in next) art = next.art;
+  if ("artIndex" in next) artIndex = next.artIndex;
+  if ("playing" in next) playing = next.playing;
+  if ("nowPick" in next) nowPick = next.nowPick;
+  if ("hearGreek" in next) hearGreek = next.hearGreek;
+  if ("voiceVolume" in next) voiceVolume = next.voiceVolume;
+  if ("savedBook" in next) savedBook = next.savedBook;
+  if ("currentChapter" in next) currentChapter = next.currentChapter;
+  if ("viewingBook" in next) viewingBook = next.viewingBook;
+  if ("liveTable" in next) liveTable = next.liveTable;
+  if ("interpretOpen" in next) interpretOpen = next.interpretOpen;
+  if ("interpretFrozen" in next) interpretFrozen = next.interpretFrozen;
+  if ("interpretIndex" in next) interpretIndex = next.interpretIndex;
+  if ("cardCache" in next) cardCache = next.cardCache;
+  if ("artSourceKey" in next) artSourceKey = next.artSourceKey;
+  if ("lastKey" in next) lastKey = next.lastKey;
+}
+
+function resetForTests() {
+  stopSlideshow();
+  art = [];
+  artIndex = 0;
+  playing = false;
+  lastKey = "";
+  artSourceKey = "";
+  interpretOpen = false;
+  interpretFrozen = false;
+  interpretScroll = 0;
+  interpretIndex = {};
+  cardCache = {};
+  nowPick = "";
+  hearGreek = true;
+  voiceVolume = 1;
+  savedBook = "romans";
+  currentChapter = 0;
+  viewingBook = "";
+  liveTable = {};
+}
+
+if (shouldAutoStart()) {
+  bindPlayerUi();
+  boot();
+}
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    ART_MS,
+    DONE_KEY,
+    HYMN_ENABLED,
+    NT_FALLBACK,
+    PREF_KEY,
+    VOL_KEY,
+    artFile,
+    artListKey,
+    audioStem,
+    bindPlayerUi,
+    bookLabel,
+    boot,
+    cardMeta,
+    chapterFromData,
+    citeLine,
+    decorateNow,
+    fetchNow,
+    fillInterpret,
+    getState,
+    isLiveBook,
+    isLiveChapter,
+    liveChapters,
+    load,
+    loadCatalog,
+    loadLiveTable,
+    loadPrefs,
+    mediaUrl,
+    nextChapter,
+    nextLiveChapterNumber,
+    normalizeLiveTable,
+    packBase,
+    pickChapter,
+    prevChapter,
+    prevLiveChapterNumber,
+    readCompleted,
+    resetForTests,
+    restoreCompleted,
+    savePrefs,
+    setPlaying,
+    setState,
+    setVoiceVolume,
+    showArt,
+    showBooks,
+    showChapters,
+    shuffleArt,
+    synthesizeNow,
+    writeCompleted,
+  };
+}

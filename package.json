@@ -1,0 +1,10 @@
+{
+  "name": "grokbot",
+  "private": true,
+  "scripts": {
+    "test": "node --test apps/nt4me2/test/*.test.js"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
+}
