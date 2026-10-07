@@ -1,6 +1,6 @@
 const HYMN_ENABLED = false;
 const HYMN_GAIN = 0.15;
-const ART_MS = 12500;
+const ART_MS = 25000;
 let art = [];
 let artIndex = 0;
 let artTimer = null;
